@@ -1,2 +1,2 @@
-# timetracker-infrastructure
-Infrastructure repository for Prodyna Architecture certification
+# timetracker-server
+Server for Prodyna Architecture certification project
