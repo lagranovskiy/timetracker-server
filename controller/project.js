@@ -3,74 +3,73 @@
  *
  * Controlls project entities
  **/
-var express = require('express');
 var async = require('async');
 var ProjectRepository = require('../model/ProjectRepository');
 var projectRepository = new ProjectRepository();
 
-var project = {};
-exports = module.exports = project;
-project.routes = express.Router();
-
-project.listVisibleProjects = function (req, res, next) {
-    
+/**
+ * Lists all projects where the user is assigned to and may create bookings
+ * 
+ * @param   {Object}   request  request object
+ * @param   {Object}   response response object
+ * @param   {Function} next     callback for continious process
+ * @returns {void}      
+ */
+exports.listVisibleProjects = function (request, response, next) {
      async.waterfall([
         function (callback) {
-            projectRepository.listVisibleProjects('Leonid', callback)
+            projectRepository.listVisibleProjects('mmustermann', callback)
         }
     ], function (err, results) {
-         console.info('here');
-        if (err) { return next(err); }
-        res.send(results);
+        if (err) { 
+            return next(err); 
+        }
+         
+        response.send(results);
     });
-    
-    
-    
 }
 
-project.listProjects = function (req, res, next) {
-    res.json(200, [
-        {
-            projectId: 100,
-            projectName: 'AIDA',
-            projectType: 'tm',
-            projectStartDate: '01.01.2002',
-            projectEndDate: '02.04.2005'
-        },
-        {
-            projectId: 101,
-            projectName: 'MOPITI',
-            projectType: 'tm',
-            projectStartDate: '01.01.2009',
-            projectEndDate: '02.04.2015'
-        }, {
-            projectId: 102,
-            projectName: 'LOZYR',
-            projectType: 'fixprice',
-            projectStartDate: '01.01.2000',
-            projectEndDate: '02.04.2005'
-        },
-    ]);
+exports.listAllProjects = function (request, response, next) {
+     async.waterfall([
+        function (callback) {
+            projectRepository.listAllProjects(callback)
+        }
+    ], function (err, results) {
+        if (err) { return next(err); }
+        response.send(results);
+    });
 }
 
-project.getProjectById = function (req, res, newt) {
-    res.json(200, {
-        projectId: req.param.projectId,
-        projectName: 'AIDA',
-        projectType: 'tm',
-        projectStartDate: '01.01.2002',
-        projectEndDate: '02.04.2005',
-        salesResponsible: 'Max Mustermann',
-        budget: '200000 Euro'
-    })
+
+exports.saveProject = function (request, response, next) {
+     async.waterfall([
+        function (callback) {
+            callback(null, []);
+        }
+    ], function (err, results) {
+        if (err) { return next(err); }
+        response.send(results);
+    });
 }
 
-/**
-  Returns the list of projects
-**/
-project.routes.get('/', project.listVisibleProjects);
+exports.createNewProject = function (request, response, next) {
+     async.waterfall([
+        function (callback) {
+            callback(null, []);
+        }
+    ], function (err, results) {
+        if (err) { return next(err); }
+        response.send(results);
+    });
+}
 
-/**
-  Returns the list of projects
-**/
-project.routes.get('/:projectId', project.getProjectById);
+exports.deleteProject = function (request, response, next) {
+      async.waterfall([
+        function (callback) {
+            callback(null, []);
+        }
+    ], function (err, results) {
+        if (err) { return next(err); }
+        response.send(results);
+    });
+}

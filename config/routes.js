@@ -1,23 +1,15 @@
-module.exports = function (app) {
+var project = require('../controller/Project');
 
-    //app.use(require('../middleware/authentication').authentication);
-    
-  
+module.exports = function (app) {
     // default route
     app.route('/').get(function (req, res, next) {
         res.send(200, 'PAC timetracker3')
     });
 
-    app.use('/auth', require('../controller/auth').routes);
-    app.use('/project', require('../controller/project').routes); 
+    app.get('/projects/visible', project.listVisibleProjects); 
+    app.get('/projects/', project.listAllProjects); 
+    app.put('/project/:projectId', project.saveProject); 
+    app.post('/project/:projectId', project.createNewProject); 
+    app.delete('/project/:projectId', project.deleteProject); 
     
- /*   // public / anonymous routes
-    app.use('/anonymous/sessions', require('../controller/session').routes);
-
-    // secured routes
-    app.use('/monitoring', require('../controller/monitoring').routes);
-    app.use('/planes', require('../controller/planes').routes);
-    app.use('/users', require('../controller/users').routes);
-    app.use('/reservations', require('../controller/reservation').routes);*/
-
 };
