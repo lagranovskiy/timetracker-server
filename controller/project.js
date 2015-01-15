@@ -4,10 +4,29 @@
  * Controlls project entities
  **/
 var express = require('express');
+var async = require('async');
+var ProjectRepository = require('../model/ProjectRepository');
+var projectRepository = new ProjectRepository();
 
 var project = {};
 exports = module.exports = project;
 project.routes = express.Router();
+
+project.listVisibleProjects = function (req, res, next) {
+    
+     async.waterfall([
+        function (callback) {
+            projectRepository.listVisibleProjects('Leonid', callback)
+        }
+    ], function (err, results) {
+         console.info('here');
+        if (err) { return next(err); }
+        res.send(results);
+    });
+    
+    
+    
+}
 
 project.listProjects = function (req, res, next) {
     res.json(200, [
@@ -49,7 +68,7 @@ project.getProjectById = function (req, res, newt) {
 /**
   Returns the list of projects
 **/
-project.routes.get('/', project.listProjects);
+project.routes.get('/', project.listVisibleProjects);
 
 /**
   Returns the list of projects

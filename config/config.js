@@ -2,6 +2,9 @@ var config = {
     dev: {
         port: 8080,
         env: 'dev',
+        db: {
+            url : 'http://localhost:7474'
+        },
         init: function () {
             process.env.DEBUG = '*';
             return this;
@@ -10,6 +13,9 @@ var config = {
     prod: {
         port: 8080,
         env: 'prod',
+        db: {
+            url : 'http://localhost:7474'
+        },
         init: function () {
             return this;
         }
