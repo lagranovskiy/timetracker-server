@@ -1,6 +1,6 @@
 var config = {
     dev: {
-        port: 8080,
+        port: 8484,
         env: 'dev',
         db: {
             url : 'http://localhost:7474'
@@ -11,7 +11,7 @@ var config = {
         }
     },
     prod: {
-        port: 8080,
+        port: 8484,
         env: 'prod',
         db: {
             url : 'http://localhost:7474'

@@ -1,20 +1,49 @@
-var config = require('./config/config');
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var later = require('later');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+/**
+ * Timetracker Server
+ *
+ * @ author Leonid Agranovskiy
+ **/
 
+
+// set up ======================================================================
+// get all the tools we need
+var express = require('express');
 var app = express();
 
-// configuration
-require('./config/express')(app, config);
+
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var expressSession = require('express-session');
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+// configuration ================================================================
+
+var config = require('./config/config');
+
+require('./config/passport')(passport); // pass passport for configuration
+
+// set up our express application
+app.use(morgan((config.env === 'development') ? 'dev' : 'tiny')); // log every request to the console
+
+app.use(bodyParser.json()); // get information from html forms
+app.use(methodOverride()); // simulate DELETE and PUT
+app.use(cookieParser()); // read cookies (needed for auth)
+
+// Configuring Passport
+
+
+app.use(expressSession({
+    secret: 'mySecretKey'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash()); // use connect-flash for flash messages stored in session
 
 // load routes
-require('./config/routes')(app);
+require('./config/routes')(app, passport);
 
 app.listen(config.port);
-
-console.log('Timetracker server started successfully')
+console.log('Timetracker server started successfully on port:' + config.port);

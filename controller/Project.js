@@ -27,7 +27,7 @@ exports.listVisibleProjects = function (request, response, next) {
          
         response.send(results);
     });
-}
+};
 
 exports.listAllProjects = function (request, response, next) {
      async.waterfall([
@@ -38,7 +38,7 @@ exports.listAllProjects = function (request, response, next) {
         if (err) { return next(err); }
         response.send(results);
     });
-}
+};
 
 
 exports.saveProject = function (request, response, next) {
@@ -50,7 +50,7 @@ exports.saveProject = function (request, response, next) {
         if (err) { return next(err); }
         response.send(results);
     });
-}
+};
 
 exports.createNewProject = function (request, response, next) {
      async.waterfall([
@@ -61,7 +61,7 @@ exports.createNewProject = function (request, response, next) {
         if (err) { return next(err); }
         response.send(results);
     });
-}
+};
 
 exports.deleteProject = function (request, response, next) {
       async.waterfall([
@@ -72,4 +72,4 @@ exports.deleteProject = function (request, response, next) {
         if (err) { return next(err); }
         response.send(results);
     });
-}
+};
