@@ -4,7 +4,36 @@ var async = require('async'),
     neo4j = require('neo4j'),
     db = new neo4j.GraphDatabase(config.db.url);
 
-function UserRepository() {};
+function UserRepository() {}
+
+
+UserRepository.prototype.createUserWithPerson = function (userData, retValCallback) {
+    var query = [
+        "MATCH (group:UserGroup{name:'User'})",
+        "CREATE (user:User{uid:{uid},passwordMD5:{passwordMD5}, registrationDate:{registrationDate}})",
+        "-[r:HAS_PROFILE]->",
+        "(person:Person{forename:{forename}, surname:{surname}, birthday:{birthday}, email:{email}, phone:{phone}}),",
+        "user-[:AUTHORIZED_AS]->(group)",
+        "RETURN user, group.name as Group"
+     ].join('\n');
+
+    async.waterfall([
+
+        function (callback) {
+            db.query(query, userData, callback)
+        },
+        function (results, callback) {
+            if (results.length == 0) {
+                retValCallback(null, false);
+            }
+            
+            var createdUser = new User(results[0].user);
+            createdUser.addGroup(results[0].Group)
+            return callback(null, createdUser);
+        }
+    ], retValCallback)
+};
+
 
 /**
  * Lists all projects the person involved in and may book to
@@ -29,28 +58,32 @@ UserRepository.prototype.findUser = function (userId, retValCallback) {
         },
         function (results, callback) {
             if (results.length == 0) {
-                retValCallback('User not found.');
+                return retValCallback(null, false);
             }
             if (results.length > 1) {
-                retValCallback('Illegal authentication state.');
+                return retValCallback('Illegal authentication state.');
             }
 
-            retValCallback(null, new User(results[0].user));
+            return retValCallback(null, new User(results[0].user));
         }
     ])
-}
+};
 
 
-
-UserRepository.prototype.getUserWithGroups =function(userId, retValCallback) {
+/**
+ * Resolves used with its groups from db
+ * @param {String}   userId         Userid for search
+ * @param {Function} retValCallback callback function that will be called with user object as a result
+ */
+UserRepository.prototype.getUser = function (uid, retValCallback) {
     var query = [
-        "MATCH (user:User{uid:'aschmidt'})-[:AUTHORIZED_AS]->(group:UserGroup)",
+        "MATCH (user:User{uid:{uid}})-[:AUTHORIZED_AS]->(group:UserGroup)",
         "OPTIONAL MATCH (relGroup)<-[:PART_OF*]-(group)",
-        "RETURN user, group.name as Group,collect( relGroup.name) as OtherGroups"
+        "RETURN user, group.name as MainGroup,collect( relGroup.name) as OtherGroups"
     ].join('\n');
 
     var parameters = {
-        userId: userId
+        uid: uid
     };
 
     async.waterfall([
@@ -60,28 +93,21 @@ UserRepository.prototype.getUserWithGroups =function(userId, retValCallback) {
         },
         function (results, callback) {
             if (results.length == 0) {
-                retValCallback('User not found.');
+                return retValCallback(null, false);
             }
+            var authenticatedUser = new User(results[0].user);
+            authenticatedUser.addGroup(results[0].MainGroup);
 
-            var groupsArray = [];
-            groupsArray.push(results[0].Group);
-            var i, otherGroups = results[0].OtherGroups.split(',');
-            
-            for (i = 0; i < otherGroups.length; i++) {
-                groupsArray.push(otherGroups[i]);
+            if (results[0].OtherGroups) {
+                var i, otherGroups = results[0].OtherGroups.toString().split(',');
+
+                for (i = 0; i < otherGroups.length; i++) {
+                    authenticatedUser.addGroup(otherGroups[i]);
+                }
             }
-            groupsArray.push(results[0].OtherGroups.split(','));
-
-
-
-
-
-            retValCallback(null, {
-                user: new User(results[0].user),
-                groups: groupsArray
-            });
+            return retValCallback(null, authenticatedUser);
         }
     ])
-}
+};
 
 module.exports = UserRepository;

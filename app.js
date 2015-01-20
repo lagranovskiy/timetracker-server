@@ -26,24 +26,21 @@ var config = require('./config/config');
 require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
-app.use(morgan((config.env === 'development') ? 'dev' : 'tiny')); // log every request to the console
+app.use(morgan((config.env === 'dev') ? 'dev' : 'tiny')); // log every request to the console
 
 app.use(bodyParser.json()); // get information from html forms
 app.use(methodOverride()); // simulate DELETE and PUT
 app.use(cookieParser()); // read cookies (needed for auth)
 
 // Configuring Passport
-
-
 app.use(expressSession({
     secret: 'mySecretKey'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash()); // use connect-flash for flash messages stored in session
 
 // load routes
-require('./config/routes')(app, passport);
+require('./config/routes')(app, config, passport);
 
 app.listen(config.port);
 console.log('Timetracker server started successfully on port:' + config.port);

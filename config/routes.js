@@ -1,7 +1,21 @@
 var project = require('../controller/Project');
+var security = require('../controller/Security');
 var passport = require('passport');
 
-module.exports = function (app, passport) {
+module.exports = function (app, config, passport) {
+    
+
+    var errorHandler = function (err, req, res, next) {
+        console.error(err.stack);
+        res.status(500).json({
+            text: 'Internal error',
+            error: err
+        });
+
+    }
+    app.use(errorHandler);
+    
+
 
     // default route
     app.route('/').get(function (req, res, next) {
@@ -10,16 +24,9 @@ module.exports = function (app, passport) {
 
 
     // process the signup form
-    app.post('/login', passport.authenticate('local-signup'), function(err, user, info){
-        console.error('Hahahaa, Hoooo, Huuuu');
-    });
-
-
-    app.post('/ldogin',
-        passport.authenticate('local'), function (req, res) {
-            req.send(200, 'Hello');
-        }
-    );
+    app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
+    app.post('/auth/logout', security.logout);
+    app.post('/auth/signup', passport.authenticate('local-signup'), security.sendAuthData);
 
     app.get('/projects/visible', isLoggedIn, project.listVisibleProjects);
     app.get('/projects/', isLoggedIn, project.listAllProjects);
@@ -40,5 +47,8 @@ module.exports = function (app, passport) {
         // if they aren't redirect them to the home page
         res.redirect('/');
     }
+
+
+
 
 };
