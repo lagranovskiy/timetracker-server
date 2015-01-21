@@ -7,31 +7,32 @@ var async = require('async'),
 function UserRepository() {}
 
 
-UserRepository.prototype.createUserWithPerson = function (userData, retValCallback) {
+UserRepository.prototype.createUserWithPerson = function(userData, retValCallback) {
     var query = [
-        "MATCH (group:UserGroup{name:'User'})",
-        "CREATE (user:User{uid:{uid},passwordMD5:{passwordMD5}, registrationDate:{registrationDate}})",
-        "-[r:HAS_PROFILE]->",
-        "(person:Person{forename:{forename}, surname:{surname}, birthday:{birthday}, email:{email}, phone:{phone}}),",
-        "user-[:AUTHORIZED_AS]->(group)",
-        "RETURN user, group.name as Group"
-     ].join('\n');
+            "MATCH (group:UserGroup{name:'User'})",
+            "CREATE (user:User{uid:{uid},passwordMD5:{passwordMD5}, registrationDate:{registrationDate}})",
+            "-[r:HAS_PROFILE]->",
+            "(person:Person{forename:{forename}, surname:{surname}, birthday:{birthday}, email:{email}, phone:{phone}}),",
+            "user-[:AUTHORIZED_AS]->(group)",
+            "RETURN user, group.name as Group"
+        ]
+        .join('\n');
 
     async.waterfall([
 
-        function (callback) {
-            db.query(query, userData, callback)
+        function(callback) {
+            db.query(query, userData, callback);
         },
-        function (results, callback) {
-            if (results.length == 0) {
+        function(results, callback) {
+            if (results.length === 0) {
                 retValCallback(null, false);
             }
-            
+
             var createdUser = new User(results[0].user);
-            createdUser.addGroup(results[0].Group)
+            createdUser.addGroup(results[0].Group);
             return callback(null, createdUser);
         }
-    ], retValCallback)
+    ], retValCallback);
 };
 
 
@@ -41,11 +42,12 @@ UserRepository.prototype.createUserWithPerson = function (userData, retValCallba
  * @param {String}   forename forename of the person
  * @param {Function} callback Callback function
  */
-UserRepository.prototype.findUser = function (userId, retValCallback) {
+UserRepository.prototype.findUser = function(userId, retValCallback) {
     var query = [
-        "MATCH (user:User{uid:{userId}})",
-        "RETURN user"
-     ].join('\n');
+            "MATCH (user:User{uid:{userId}})",
+            "RETURN user"
+        ]
+        .join('\n');
 
     var parameters = {
         userId: userId
@@ -53,11 +55,11 @@ UserRepository.prototype.findUser = function (userId, retValCallback) {
 
     async.waterfall([
 
-        function (callback) {
-            db.query(query, parameters, callback)
+        function(callback) {
+            db.query(query, parameters, callback);
         },
-        function (results, callback) {
-            if (results.length == 0) {
+        function(results, callback) {
+            if (results.length === 0) {
                 return retValCallback(null, false);
             }
             if (results.length > 1) {
@@ -66,7 +68,7 @@ UserRepository.prototype.findUser = function (userId, retValCallback) {
 
             return retValCallback(null, new User(results[0].user));
         }
-    ])
+    ]);
 };
 
 
@@ -75,12 +77,13 @@ UserRepository.prototype.findUser = function (userId, retValCallback) {
  * @param {String}   userId         Userid for search
  * @param {Function} retValCallback callback function that will be called with user object as a result
  */
-UserRepository.prototype.getUser = function (uid, retValCallback) {
+UserRepository.prototype.getUser = function(uid, retValCallback) {
     var query = [
-        "MATCH (user:User{uid:{uid}})-[:AUTHORIZED_AS]->(group:UserGroup)",
-        "OPTIONAL MATCH (relGroup)<-[:PART_OF*]-(group)",
-        "RETURN user, group.name as MainGroup,collect( relGroup.name) as OtherGroups"
-    ].join('\n');
+            "MATCH (user:User{uid:{uid}})-[:AUTHORIZED_AS]->(group:UserGroup)",
+            "OPTIONAL MATCH (relGroup)<-[:PART_OF*]-(group)",
+            "RETURN user, group.name as MainGroup,collect( relGroup.name) as OtherGroups"
+        ]
+        .join('\n');
 
     var parameters = {
         uid: uid
@@ -88,11 +91,11 @@ UserRepository.prototype.getUser = function (uid, retValCallback) {
 
     async.waterfall([
 
-        function (callback) {
-            db.query(query, parameters, callback)
+        function(callback) {
+            db.query(query, parameters, callback);
         },
-        function (results, callback) {
-            if (results.length == 0) {
+        function(results, callback) {
+            if (results.length === 0) {
                 return retValCallback(null, false);
             }
             var authenticatedUser = new User(results[0].user);
@@ -107,7 +110,7 @@ UserRepository.prototype.getUser = function (uid, retValCallback) {
             }
             return retValCallback(null, authenticatedUser);
         }
-    ])
+    ]);
 };
 
 module.exports = UserRepository;

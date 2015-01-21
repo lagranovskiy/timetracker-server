@@ -1,9 +1,10 @@
+/*jslint node: true */
 var config = {
     dev: {
         port: 8484,
         env: 'dev',
         db: {
-            url : 'http://localhost:7474'
+            url: 'http://localhost:7474'
         },
         init: function () {
             process.env.DEBUG = '*';
@@ -14,7 +15,7 @@ var config = {
         port: 8484,
         env: 'prod',
         db: {
-            url : 'http://localhost:7474'
+            url: 'http://localhost:7474'
         },
         init: function () {
             return this;
@@ -26,4 +27,4 @@ var config = {
 var env = process.env.NODE_ENV || 'dev';
 
 // Export initialized envirenment config according to the set environment
-module.exports = config['dev'].init();
+module.exports = config.dev.init();

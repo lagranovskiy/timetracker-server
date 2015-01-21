@@ -3,7 +3,7 @@ var security = require('../controller/Security');
 var passport = require('passport');
 
 module.exports = function (app, config, passport) {
-    
+
 
     var errorHandler = function (err, req, res, next) {
         console.error(err.stack);
@@ -12,14 +12,14 @@ module.exports = function (app, config, passport) {
             error: err
         });
 
-    }
+    };
     app.use(errorHandler);
-    
+
 
 
     // default route
     app.route('/').get(function (req, res, next) {
-        res.send(200, 'PAC timetracker3')
+        res.send(200, 'PAC timetracker3');
     });
 
 

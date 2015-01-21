@@ -24,8 +24,10 @@ module.exports = function (passport) {
     /**
      * Registration authentication strategy
      */
-    passport.use('local', new LocalStrategy({passReqToCallback : true}, security.authenticateUser));
-    passport.use('local-signup', new LocalStrategy({passReqToCallback : true}, security.registerUser));
-
-
+    passport.use('local', new LocalStrategy({
+        passReqToCallback: true
+    }, security.authenticateUser));
+    passport.use('local-signup', new LocalStrategy({
+        passReqToCallback: true
+    }, security.registerUser));
 };

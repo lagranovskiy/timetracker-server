@@ -1,43 +1,43 @@
 /**
-* User entity
-****/
+ * User entity
+ ****/
 
-var User = function(dbUser){
+var User = function (dbUser) {
     var groups = [];
-    
-    return {    
+
+    return {
         /**
          * Returns node id
          */
-        getDbId: function(){
+        getDbId: function () {
             return dbUser.id;
         },
         /**
          * returns UID
          * @returns {String} Userid of user
          */
-        getUid : function() {
+        getUid: function () {
             return dbUser.data.uid;
         },
-        
+
         /**
          * Returns password as a hash
-         * 
+         *
          * @returns {String} pwd hash
          */
-        getPwdHash : function(){
+        getPwdHash: function () {
             return dbUser.data.passwordMD5;
         },
-        
+
         /**
          * Returns the list of usergroups
-         * 
+         *
          * @returns {Array} Returns array of groups
          */
-        getGroups :function(){
+        getGroups: function () {
             return groups;
         },
-        
+
         /**
          * Adds a group to this user.
          * @param  String userGroup
@@ -45,15 +45,15 @@ var User = function(dbUser){
         addGroup: function (userGroup) {
             groups.push(userGroup);
         },
-        
+
         /**
          * Returns original userdata object
          * @returns {[[Type]]} [[Description]]
          */
-        getData : function(){
-            return dbUser.data;    
+        getData: function () {
+            return dbUser.data;
         }
-    
-    }
-}
+
+    };
+};
 module.exports = User;

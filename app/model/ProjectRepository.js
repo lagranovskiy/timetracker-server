@@ -12,12 +12,13 @@ function ProjectRepository() {}
  * @param {String}   forename forename of the person
  * @param {Function} callback Callback function
  */
-ProjectRepository.prototype.listVisibleProjects = function (uid, retValCallback) {
+ProjectRepository.prototype.listVisibleProjects = function(uid, retValCallback) {
     var query = [
-    "MATCH (user:User)-[]->(person:Person)-[r:IS_TEAM_MEMBER]->(project:Project)",
-    "WHERE user.uid = {uid}",
-    "RETURN project"
-            ].join('\n');
+            "MATCH (user:User)-[]->(person:Person)-[r:IS_TEAM_MEMBER]->(project:Project)",
+            "WHERE user.uid = {uid}",
+            "RETURN project"
+        ]
+        .join('\n');
 
     var parameters = {
         uid: uid
@@ -25,34 +26,35 @@ ProjectRepository.prototype.listVisibleProjects = function (uid, retValCallback)
 
     async.waterfall([
 
-        function (callback) {
-                db.query(query, parameters, callback)
+        function(callback) {
+            db.query(query, parameters, callback);
         },
-        function (results, callback) {
+        function(results, callback) {
             retValCallback(null, results);
         }
-    ])
-}
+    ]);
+};
 
 /**
  * Lists all projects in system
- * 
+ *
  * @param {Function} retValCallback return value callback
  */
-ProjectRepository.prototype.listAllProjects = function (retValCallback) {
+ProjectRepository.prototype.listAllProjects = function(retValCallback) {
     var query = [
-    "MATCH (project:Project)",
-    "RETURN project"
-            ].join('\n');
+        "MATCH (project:Project)",
+        "RETURN project"
+    ].join('\n');
 
     async.waterfall([
-       function (callback) {
-                db.query(query, {}, callback)
+
+        function(callback) {
+            db.query(query, {}, callback);
         },
-        function (results, callback) {
+        function(results, callback) {
             retValCallback(null, results);
         }
-    ])
-}
+    ]);
+};
 
 module.exports = ProjectRepository;
