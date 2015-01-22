@@ -86,15 +86,15 @@ module.exports = function(grunt) {
                 expand: true,
                 flatten: true,
                 src: ['app/*'],
-                dest: 'test/coverage/instrument/app/views'
+                dest: 'test/coverage/instrument/app/'
             }
         },
 
 
         instrument: {
-            files: 'app/*.js',
+            files: 'app/**/*.js',
             options: {
-                lazy: true,
+                lazy: false,
                 basePath: 'test/coverage/instrument/'
             }
         },
@@ -139,7 +139,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mochaTest:unit', 'mochaTest:api']);
 
     grunt.registerTask('coverage', ['jshint', 'clean', 'env:coverage',
-        'instrument', 'mochaTest:unit', 'mochaTest:route', 'storeCoverage', 'makeReport'
+        'instrument', 'mochaTest:unit', 'storeCoverage', 'makeReport'
     ]);
 
 };
