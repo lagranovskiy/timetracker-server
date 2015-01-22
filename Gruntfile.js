@@ -54,7 +54,13 @@ module.exports = function(grunt) {
                 options: {
                     reporter: 'spec'
                 },
-                src: ['test/controller/*.js']
+                src: ['test/unit/*.js']
+            },
+            integration: {
+                options: {
+                    reporter: 'spec'
+                },
+                src: ['test/integration/*.js']
             },
             api: {
                 options: {
@@ -139,7 +145,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mochaTest:unit', 'mochaTest:api']);
 
     grunt.registerTask('coverage', ['jshint', 'clean', 'env:coverage',
-        'instrument', 'mochaTest:unit', 'storeCoverage', 'makeReport'
+        'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport'
     ]);
 
 };

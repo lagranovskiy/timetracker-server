@@ -25,7 +25,10 @@ UserRepository.prototype.createUserWithPerson = function(userData, retValCallbac
         },
         function(results, callback) {
             if (results.length === 0) {
-                retValCallback(null, false);
+                return retValCallback(null, false);
+            }
+            if (results.length > 1) {
+                return retValCallback('Illegal registration state.');
             }
 
             var createdUser = new User(results[0].user);
@@ -37,9 +40,9 @@ UserRepository.prototype.createUserWithPerson = function(userData, retValCallbac
 
 
 /**
- * Lists all projects the person involved in and may book to
+ * Returns a single user according to the unique constraint.
  *
- * @param {String}   forename forename of the person
+ * @param {String}   the uid of user to be returned
  * @param {Function} callback Callback function
  */
 UserRepository.prototype.findUser = function(userId, retValCallback) {
@@ -74,6 +77,8 @@ UserRepository.prototype.findUser = function(userId, retValCallback) {
 
 /**
  * Resolves used with its groups from db
+ * That is a full resolving with groups etc.
+ 
  * @param {String}   userId         Userid for search
  * @param {Function} retValCallback callback function that will be called with user object as a result
  */
@@ -95,9 +100,15 @@ UserRepository.prototype.getUser = function(uid, retValCallback) {
             db.query(query, parameters, callback);
         },
         function(results, callback) {
+
             if (results.length === 0) {
                 return retValCallback(null, false);
             }
+
+            if (results.length > 1) {
+                return retValCallback('Unique Constrained corrupted. More then one user found');
+            }
+
             var authenticatedUser = new User(results[0].user);
             authenticatedUser.addGroup(results[0].MainGroup);
 
