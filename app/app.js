@@ -17,7 +17,7 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var expressSession = require('express-session');
 var passport = require('passport');
-var flash    = require('connect-flash');
+var flash = require('connect-flash');
 
 // configuration ================================================================
 
@@ -44,3 +44,5 @@ require('./config/routes')(app, config, passport);
 
 app.listen(config.port);
 console.log('Timetracker server started successfully on port:' + config.port);
+
+module.exports = app;

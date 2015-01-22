@@ -7,16 +7,16 @@ var LocalStrategy = require('passport-local').Strategy;
 var security = require('../controller/Security');
 
 // expose this function to our app using module.exports
-module.exports = function (passport) {
+module.exports = function(passport) {
 
 
-    passport.serializeUser(function (user, done) {
+    passport.serializeUser(function(user, done) {
         done(null, user.getUid());
     });
 
-    passport.deserializeUser(function (uid, done) {
+    passport.deserializeUser(function(uid, done) {
         console.info('Call from: ' + uid);
-        security.resolveUser(uid, function (err, user) {
+        security.resolveUser(uid, function(err, user) {
             done(err, user);
         });
     });
