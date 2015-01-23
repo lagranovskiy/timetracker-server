@@ -3,3 +3,6 @@ node_js:
   - '0.10'
 before_script:
   - 'npm install -g grunt-cli'
+addons:
+    code_climate:
+        repo_token: ccc6ced1fe03090b7daf8480c25463b0d27f6147e5273d334940d2e877c745fd
