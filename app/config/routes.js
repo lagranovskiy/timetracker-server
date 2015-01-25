@@ -1,11 +1,12 @@
 var project = require('../controller/Project');
+var person = require('../controller/Person');
 var security = require('../controller/Security');
 var passport = require('passport');
 
-module.exports = function (app, config, passport) {
+module.exports = function(app, config, passport) {
 
 
-    var errorHandler = function (err, req, res, next) {
+    var errorHandler = function(err, req, res, next) {
         console.error(err.stack);
         res.status(500).json({
             text: 'Internal error',
@@ -18,7 +19,7 @@ module.exports = function (app, config, passport) {
 
 
     // default route
-    app.route('/').get(function (req, res, next) {
+    app.route('/').get(function(req, res, next) {
         res.send(200, 'PAC timetracker3');
     });
 
@@ -33,14 +34,19 @@ module.exports = function (app, config, passport) {
     app.put('/project/:projectId', isLoggedIn, project.saveProject);
     app.post('/project/:projectId', isLoggedIn, project.createNewProject);
     app.delete('/project/:projectId', isLoggedIn, project.deleteProject);
+    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
 
+    app.get('/person/:personId', isLoggedIn, person.getPersonData);
+    app.put('/person/:personId', isLoggedIn, person.updatePersonData);
+    app.put('/person/:personId/member/:projectId', isLoggedIn, person.saveTeamMembership);
+    app.delete('/person/:personId/member/:projectId', isLoggedIn, person.removeTeamMembership);
 
     /**
      * Function that checks if user is logged in
      */
     function isLoggedIn(req, res, next) {
 
-        // if user is authenticated in the session, carry on 
+        // if user is authenticated in the session, carry on
         if (req.isAuthenticated())
             return next();
 
