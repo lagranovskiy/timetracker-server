@@ -34,7 +34,11 @@ app.use(cookieParser()); // read cookies (needed for auth)
 
 // Configuring Passport
 app.use(expressSession({
-    secret: 'mySecretKey'
+    secret: 'mySecretKey',
+    cookie: {
+        httpOnly: false,
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

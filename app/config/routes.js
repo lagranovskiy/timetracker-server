@@ -23,6 +23,14 @@ module.exports = function(app, config, passport) {
         res.send(200, 'PAC timetracker3');
     });
 
+    app.all('*', function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
+        res.header("Access-Control-Allow-Credentials", true);
+        next();
+    });
+
 
     // process the signup form
     app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
@@ -34,12 +42,12 @@ module.exports = function(app, config, passport) {
     app.put('/project/:projectId', isLoggedIn, project.saveProject);
     app.post('/project/:projectId', isLoggedIn, project.createNewProject);
     app.delete('/project/:projectId', isLoggedIn, project.deleteProject);
-    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
+    //    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
 
-    app.get('/person/:personId', isLoggedIn, person.getPersonData);
-    app.put('/person/:personId', isLoggedIn, person.updatePersonData);
-    app.put('/person/:personId/member/:projectId', isLoggedIn, person.saveTeamMembership);
-    app.delete('/person/:personId/member/:projectId', isLoggedIn, person.removeTeamMembership);
+    //    app.get('/person/:personId', isLoggedIn, person.getPersonData);
+    //    app.put('/person/:personId', isLoggedIn, person.updatePersonData);
+    //    app.put('/person/:personId/member/:projectId', isLoggedIn, person.saveTeamMembership);
+    //    app.delete('/person/:personId/member/:projectId', isLoggedIn, person.removeTeamMembership);
 
     /**
      * Function that checks if user is logged in
