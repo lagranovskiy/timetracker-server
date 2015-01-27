@@ -34,6 +34,7 @@ module.exports = function(app, config, passport) {
 
     // process the signup form
     app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
+    app.get('/auth', isLoggedIn, security.sendAuthData);
     app.post('/auth/logout', security.logout);
     app.post('/auth/signup', passport.authenticate('local-signup'), security.sendAuthData);
 
@@ -53,13 +54,11 @@ module.exports = function(app, config, passport) {
      * Function that checks if user is logged in
      */
     function isLoggedIn(req, res, next) {
-
-        // if user is authenticated in the session, carry on
-        if (req.isAuthenticated())
+        if (req.isAuthenticated()) {
             return next();
-
-        // if they aren't redirect them to the home page
-        res.redirect('/');
+        } else {
+            res.send(401);
+        }
     }
 
 

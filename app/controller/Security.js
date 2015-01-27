@@ -19,14 +19,14 @@ var salt = bcrypt.genSaltSync(10);
  * @param {Object} res Response
  */
 exports.sendAuthData = function(req, res) {
-    if (req.session.user === undefined) {
+    if (req.user === undefined) {
         return res.status(500).send('No active session found.');
     }
 
     res.status(200).json({
-        id: req.session.user.getDbId(),
-        userId: req.session.user.getUid(),
-        groups: req.session.user.getGroups(),
+        id: req.user.getDbId(),
+        userId: req.user.getUid(),
+        groups: req.user.getGroups(),
         session: req.sessionID
     });
 };
@@ -38,13 +38,14 @@ exports.sendAuthData = function(req, res) {
  * @param {Object}   res resonse
  */
 exports.logout = function(req, res, next) {
-    if (req.session.user === undefined) {
+    if (req.user === undefined) {
         return res.status(500).send('No active session found.');
     }
 
-    console.info('Session ' + req.sessionID + ' closed. User ' + req.session.user.getUid() + ' logger out.');
-    req.logout();
-    res.redirect('/');
+    console.info('Session ' + req.sessionID + ' closed. User ' + req.user.getUid() + ' logger out.');
+    req.logOut();
+    res.clearCookie('connect.sid');
+    res.status(200).send('Logged out');
 };
 
 
@@ -102,7 +103,6 @@ exports.authenticateUser = function(req, uid, password, done) {
         if (error) {
             console.info('Cannot login User ' + uid + ':' + error);
         }
-        req.session.user = user;
         return done(error, user);
     });
 };

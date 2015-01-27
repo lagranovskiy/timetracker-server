@@ -2,21 +2,21 @@
  * User entity
  ****/
 
-var User = function (dbUser) {
+var User = function(dbUser) {
     var groups = [];
 
     return {
         /**
          * Returns node id
          */
-        getDbId: function () {
+        getDbId: function() {
             return dbUser.id;
         },
         /**
          * returns UID
          * @returns {String} Userid of user
          */
-        getUid: function () {
+        getUid: function() {
             return dbUser.data.uid;
         },
 
@@ -25,7 +25,7 @@ var User = function (dbUser) {
          *
          * @returns {String} pwd hash
          */
-        getPwdHash: function () {
+        getPwdHash: function() {
             return dbUser.data.passwordMD5;
         },
 
@@ -34,7 +34,7 @@ var User = function (dbUser) {
          *
          * @returns {Array} Returns array of groups
          */
-        getGroups: function () {
+        getGroups: function() {
             return groups;
         },
 
@@ -42,15 +42,16 @@ var User = function (dbUser) {
          * Adds a group to this user.
          * @param  String userGroup
          */
-        addGroup: function (userGroup) {
-            groups.push(userGroup);
+        addGroup: function(userGroup) {
+            if (userGroup && userGroup !== "")
+                groups.push(userGroup);
         },
 
         /**
          * Returns original userdata object
          * @returns {[[Type]]} [[Description]]
          */
-        getData: function () {
+        getData: function() {
             return dbUser.data;
         }
 
