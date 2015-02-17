@@ -3,7 +3,7 @@
  * @param   {Object} node Node from db
  * @returns {Object} access api for entity
  */
-function Project(node) {
+var Project = function(node) {
 
     return {
 
@@ -11,18 +11,27 @@ function Project(node) {
          * Returns the id from the database for this node.
          * @returns {Number}
          */
-        get dbId() {
+        getDbId: function() {
             return node.id;
+        },
+
+
+        /**
+         * Returns the id from the database for this node.
+         * @returns {String} project name
+         */
+        getProjectName: function() {
+            return node.data.projectName;
         },
 
         /**
          * Returns the data object, a map of key-value pairs.
          * @returns {Object}
          */
-        get data() {
+        getData: function() {
             return node.data;
         }
     };
-}
+};
 
 module.exports = Project;

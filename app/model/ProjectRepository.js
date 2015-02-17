@@ -7,22 +7,23 @@ var async = require('async'),
 
 function ProjectRepository() {}
 
+
 /**
  * Lists all projects the person involved in and may book to
  *
- * @param {String}   forename forename of the person
+ * @param {String}   uid forename of the person
  * @param {Function} callback Callback function
  */
-ProjectRepository.prototype.listVisibleProjects = function(uid, retValCallback) {
+ProjectRepository.prototype.listProjectsOfPerson = function(personUid, retValCallback) {
     var query = [
-            "MATCH (user:User)-[]->(person:Person)-[r:IS_TEAM_MEMBER]->(project:Project)",
-            "WHERE user.uid = {uid}",
+            "MATCH (person:Person)-[r1:HAS_ROLE]->()-[r2:ON_PROJECT]->(project:Project)",
+            "WHERE person.uid = {personUid}",
             "RETURN project"
         ]
         .join('\n');
 
     var parameters = {
-        uid: uid
+        personUid: personUid
     };
 
     async.waterfall([
@@ -40,6 +41,9 @@ ProjectRepository.prototype.listVisibleProjects = function(uid, retValCallback) 
         }
     ]);
 };
+
+
+
 
 /**
  * Lists all projects in system

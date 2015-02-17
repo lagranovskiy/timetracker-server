@@ -195,20 +195,20 @@
     </style>
 </head>
 <body>
-<div class="header medium">
+<div class="header high">
     <h1>Code coverage report for <span class="entity">app/config/routes.js</span></h1>
     <h2>
         
-        Statements: <span class="metric">72.73% <small>(16 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">80% <small>(24 / 30)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
         Branches: <span class="metric">0% <small>(0 / 2)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Functions: <span class="metric">25% <small>(1 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">40% <small>(2 / 5)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         
-        Lines: <span class="metric">72.73% <small>(16 / 22)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">80% <small>(24 / 30)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
@@ -269,7 +269,21 @@
 51
 52
 53
-54</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</td><td class="line-coverage"><span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -293,12 +307,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
@@ -308,28 +317,46 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var project = require('../controller/Project');
+var person = require('../controller/Person');
 var security = require('../controller/Security');
 var passport = require('passport');
 &nbsp;
-module.exports = function (app, config, passport) {
+module.exports = function(app, config, passport) {
 &nbsp;
 &nbsp;
-    var errorHandler = <span class="fstat-no" title="function not covered" >function (err, req, res, next) {</span>
+    var errorHandler = <span class="fstat-no" title="function not covered" >function(err, req, res, next) {</span>
 <span class="cstat-no" title="statement not covered" >        console.error(err.stack);</span>
 <span class="cstat-no" title="statement not covered" >        res.status(500).json({</span>
             text: 'Internal error',
@@ -342,13 +369,22 @@ module.exports = function (app, config, passport) {
 &nbsp;
 &nbsp;
     // default route
-    app.route('/').get(<span class="fstat-no" title="function not covered" >function (req, res, next) {</span>
+    app.route('/').get(<span class="fstat-no" title="function not covered" >function(req, res, next) {</span>
 <span class="cstat-no" title="statement not covered" >        res.send(200, 'PAC timetracker3');</span>
+    });
+&nbsp;
+    app.all('*', function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', 'http://localhost:9000');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
+        res.header("Access-Control-Allow-Credentials", true);
+        next();
     });
 &nbsp;
 &nbsp;
     // process the signup form
     app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
+    app.get('/auth', isLoggedIn, security.sendAuthData);
     app.post('/auth/logout', security.logout);
     app.post('/auth/signup', passport.authenticate('local-signup'), security.sendAuthData);
 &nbsp;
@@ -357,19 +393,22 @@ module.exports = function (app, config, passport) {
     app.put('/project/:projectId', isLoggedIn, project.saveProject);
     app.post('/project/:projectId', isLoggedIn, project.createNewProject);
     app.delete('/project/:projectId', isLoggedIn, project.deleteProject);
+    //    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
 &nbsp;
+    //    app.get('/person/:personId', isLoggedIn, person.getPersonData);
+    //    app.put('/person/:personId', isLoggedIn, person.updatePersonData);
+    //    app.put('/person/:personId/member/:projectId', isLoggedIn, person.saveTeamMembership);
+    //    app.delete('/person/:personId/member/:projectId', isLoggedIn, person.removeTeamMembership);
 &nbsp;
     /**
      * Function that checks if user is logged in
      */
 <span class="fstat-no" title="function not covered" >    function isLoggedIn(req, res, next) {</span>
-&nbsp;
-        // if user is authenticated in the session, carry on 
-<span class="cstat-no" title="statement not covered" >        if (req.isAuthenticated())</span>
+<span class="cstat-no" title="statement not covered" >        if (req.isAuthenticated()) {</span>
 <span class="cstat-no" title="statement not covered" >            return next();</span>
-&nbsp;
-        // if they aren't redirect them to the home page
-<span class="cstat-no" title="statement not covered" >        res.redirect('/');</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >            res.send(401);</span>
+        }
     }
 &nbsp;
 &nbsp;
@@ -380,7 +419,7 @@ module.exports = function (app, config, passport) {
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 23 2015 01:02:30 GMT+0100 (CET)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Feb 17 2015 23:57:30 GMT+0100 (CET)</div>
 </div>
 
 <script src="../../prettify.js"></script>

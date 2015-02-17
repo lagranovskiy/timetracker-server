@@ -369,8 +369,7 @@
 151
 152
 153
-154
-155</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+154</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -417,26 +416,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -450,6 +429,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -474,7 +474,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -519,7 +518,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -545,14 +543,14 @@ var salt = bcrypt.genSaltSync(10);
  * @param {Object} res Response
  */
 exports.sendAuthData = <span class="fstat-no" title="function not covered" >function(req, res) {</span>
-<span class="cstat-no" title="statement not covered" >    if (req.session.user === undefined) {</span>
+<span class="cstat-no" title="statement not covered" >    if (req.user === undefined) {</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(500).send('No active session found.');</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    res.status(200).json({</span>
-        id: req.session.user.getDbId(),
-        userId: req.session.user.getUid(),
-        groups: req.session.user.getGroups(),
+        id: req.user.getDbId(),
+        userId: req.user.getUid(),
+        groups: req.user.getGroups(),
         session: req.sessionID
     });
 };
@@ -564,13 +562,14 @@ exports.sendAuthData = <span class="fstat-no" title="function not covered" >func
  * @param {Object}   res resonse
  */
 exports.logout = <span class="fstat-no" title="function not covered" >function(req, res, next) {</span>
-<span class="cstat-no" title="statement not covered" >    if (req.session.user === undefined) {</span>
+<span class="cstat-no" title="statement not covered" >    if (req.user === undefined) {</span>
 <span class="cstat-no" title="statement not covered" >        return res.status(500).send('No active session found.');</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    console.info('Session ' + req.sessionID + ' closed. User ' + req.session.user.getUid() + ' logger out.');</span>
-<span class="cstat-no" title="statement not covered" >    req.logout();</span>
-<span class="cstat-no" title="statement not covered" >    res.redirect('/');</span>
+<span class="cstat-no" title="statement not covered" >    console.info('Session ' + req.sessionID + ' closed. User ' + req.user.getUid() + ' logger out.');</span>
+<span class="cstat-no" title="statement not covered" >    req.logOut();</span>
+<span class="cstat-no" title="statement not covered" >    res.clearCookie('connect.sid');</span>
+<span class="cstat-no" title="statement not covered" >    res.status(200).send('Logged out');</span>
 };
 &nbsp;
 &nbsp;
@@ -628,7 +627,6 @@ exports.authenticateUser = <span class="fstat-no" title="function not covered" >
 <span class="cstat-no" title="statement not covered" >        if (error) {</span>
 <span class="cstat-no" title="statement not covered" >            console.info('Cannot login User ' + uid + ':' + error);</span>
         }
-<span class="cstat-no" title="statement not covered" >        req.session.user = user;</span>
 <span class="cstat-no" title="statement not covered" >        return done(error, user);</span>
     });
 };
@@ -677,13 +675,12 @@ exports.registerUser = <span class="fstat-no" title="function not covered" >func
     });
 &nbsp;
 &nbsp;
-};
-&nbsp;</pre></td></tr>
+};</pre></td></tr>
 </table></pre>
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 23 2015 01:02:30 GMT+0100 (CET)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Feb 17 2015 23:57:30 GMT+0100 (CET)</div>
 </div>
 
 <script src="../../prettify.js"></script>
