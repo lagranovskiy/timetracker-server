@@ -43,6 +43,83 @@ ProjectRepository.prototype.listProjectsOfPerson = function(personUid, retValCal
 };
 
 
+/**
+ * Adds given person to the given project in given role if not already happen
+ * TODO: Move it to the RoleRepository
+ */
+ProjectRepository.prototype.createPersonProjectRole = function(personUid, projectUid, projectRole, retValCallback) {
+    var query = [
+            "MATCH (person:Person),(project:Project)",
+            "WHERE id(person)={personUid} and id(project)={projectUid}",
+            "MERGE (person)-[:HAS_ROLE]->(r:Role{role:{projectRole}})-[:ON_PROJECT]->(project)",
+            "ON CREATE SET r.created=timestamp()",
+            "RETURN person,r, project"
+        ]
+        .join('\n');
+
+    var parameters = {
+        personUid: personUid,
+        projectUid: projectUid,
+        projectRole: projectRole
+    };
+
+    async.waterfall([
+
+        function(callback) {
+            db.query(query, parameters, callback);
+        },
+        function(results, callback) {
+            // TODO: Implement
+            var projectList = [];
+            _.each(results, function(project) {
+                projectList.push(new Project(project));
+            });
+
+            retValCallback(null, projectList);
+        }
+    ]);
+};
+
+
+/**
+ * ProjectRepository.prototype.removePersonProjectRole - description
+ *  TODO: Move it to the RoleRepository
+ * @param  {type} roleUid        description
+ * @param  {type} retValCallback description
+ * @return {type}                description
+ */
+ProjectRepository.prototype.removePersonProjectRole = function(roleUid, retValCallback) {
+    var query = [
+            "MATCH (role:Role)-[rel]-()",
+            "WHERE id(role)={roleUid}",
+            "DELETE role,rel"
+        ]
+        .join('\n');
+
+    var parameters = {
+        roleUid: roleUid
+    };
+
+    async.waterfall([
+
+        function(callback) {
+            db.query(query, parameters, callback);
+        },
+        function(results, callback) {
+            // TODO: Implement
+            var projectList = [];
+            _.each(results, function(project) {
+                projectList.push(new Project(project));
+            });
+
+            retValCallback(null, projectList);
+        }
+    ]);
+};
+
+
+
+
 
 
 /**
