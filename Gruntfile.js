@@ -71,6 +71,8 @@ module.exports = function(grunt) {
         },
 
 
+
+
         // start - code coverage settings
 
         env: {
@@ -120,10 +122,21 @@ module.exports = function(grunt) {
                 dir: 'test/coverage/reports',
                 print: 'detail'
             }
-        }
+        },
 
         // end - code coverage settings
 
+
+        // code climate
+        codeclimate: {
+            options: {
+                file: 'test/coverage/reports/lcov.info',
+                token: 'e6f6d6ce00e4a95c1726045ab8b305ed08195686b9832c06bcd09c130e20a712'
+            }
+        }
+        // ...
+
+        // end code climaet
     });
 
 
@@ -135,6 +148,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-codeclimate');
     grunt.loadNpmTasks('grunt-istanbul');
     grunt.loadNpmTasks('grunt-env');
 
@@ -145,7 +159,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mochaTest:unit', 'mochaTest:api']);
 
     grunt.registerTask('coverage', ['jshint', 'clean', 'env:coverage',
-        'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport'
+        'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport', 'codeclimate'
     ]);
 
 };
