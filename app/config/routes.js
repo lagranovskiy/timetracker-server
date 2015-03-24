@@ -39,7 +39,7 @@ module.exports = function(app, config, passport) {
     app.post('/auth/signup', passport.authenticate('local-signup'), security.sendAuthData);
 
     app.get('/projects/visible', isLoggedIn, project.listVisibleProjects);
-    app.get('/projects/', isLoggedIn, project.listAllProjects);
+    app.get('/project/', isLoggedIn, project.listAllProjects);
     app.put('/project/:projectId', isLoggedIn, project.saveProject);
     app.post('/project/:projectId', isLoggedIn, project.createNewProject);
     app.delete('/project/:projectId', isLoggedIn, project.deleteProject);

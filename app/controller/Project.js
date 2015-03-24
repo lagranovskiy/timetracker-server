@@ -7,6 +7,8 @@ var async = require('async');
 var _ = require('underscore');
 var ProjectRepository = require('../model/ProjectRepository');
 var projectRepository = new ProjectRepository();
+var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');
+var projectAssignmentRepository = new ProjectAssignmentRepository();
 
 /**
  * Lists all projects where the user is assigned to and may create bookings
@@ -17,15 +19,20 @@ var projectRepository = new ProjectRepository();
  * @returns {void}
  */
 exports.listVisibleProjects = function(request, response, next) {
-    var userId = request.session.user.getUid();
-    projectRepository.listVisibleProjects(userId, function(err, results) {
+    var userId = request.user.getDbId();
+    projectAssignmentRepository.listProjectsOfPerson(userId, function(err, results) {
         if (err) {
             return next(err);
         }
 
-        response.send(results);
+        response.json({
+            success: true,
+            total: results.length,
+            records: results
+        });
     });
 };
+
 
 /**
  * Returns a list of all existing projects
