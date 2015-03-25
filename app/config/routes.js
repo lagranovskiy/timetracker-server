@@ -1,5 +1,6 @@
 var project = require('../controller/Project');
 var person = require('../controller/Person');
+var bookings = require('../controller/Bookings');
 var security = require('../controller/Security');
 var passport = require('passport');
 
@@ -38,11 +39,19 @@ module.exports = function(app, config, passport) {
     app.post('/auth/logout', security.logout);
     app.post('/auth/signup', passport.authenticate('local-signup'), security.sendAuthData);
 
-    app.get('/projects/visible', isLoggedIn, project.listVisibleProjects);
-    app.get('/project/', isLoggedIn, project.listAllProjects);
+    app.get('/project/', isLoggedIn, project.listProjects);
     app.put('/project/:projectId', isLoggedIn, project.saveProject);
-    app.post('/project/:projectId', isLoggedIn, project.createNewProject);
+    app.post('/project/', isLoggedIn, project.createProject);
     app.delete('/project/:projectId', isLoggedIn, project.deleteProject);
+
+    app.get('/booking/', isLoggedIn, bookings.listBookings);
+    app.put('/booking/:bookingId', isLoggedIn, bookings.saveBooking);
+    app.post('/booking/', isLoggedIn, bookings.createBooking);
+    app.delete('/booking/:bookingId', isLoggedIn, bookings.deleteBooking);
+
+
+    app.get('/user/bookings', isLoggedIn, bookings.listUserBookings);
+    app.get('/user/projects', isLoggedIn, project.listVisibleProjects);
     //    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
 
     //    app.get('/person/:personId', isLoggedIn, person.getPersonData);

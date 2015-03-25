@@ -38,7 +38,7 @@ exports.listVisibleProjects = function(request, response, next) {
  * Returns a list of all existing projects
  * TODO: Make the response parametrized with start, skip
  */
-exports.listAllProjects = function(request, response, next) {
+exports.listProjects = function(request, response, next) {
     projectRepository.listAllProjects(function(err, results) {
         if (err) {
             return next(err);
@@ -49,7 +49,12 @@ exports.listAllProjects = function(request, response, next) {
 };
 
 
-exports.createNewProject = function(request, response, next) {
+exports.listProjectBookings = function(request, response, next) {
+    // TODO: Implement it
+};
+
+
+exports.createProject = function(request, response, next) {
     var projectData = request.body;
     if (!projectData) {
         return next('Cannot create project. No project data found in request.');
