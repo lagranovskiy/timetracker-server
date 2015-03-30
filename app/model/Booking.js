@@ -6,77 +6,71 @@ var util = require('util'),
  * @param   {Object} node Node from db
  * @returns {Object} access api for entity
  */
-var Booking = function(bookingNode, projectNode, userNode) {
+var Booking = function(bookingId, bookingData, projectId, userId) {
 
-    return extend(Booking.super_(bookingNode), {
+    return extend(Booking.super_(bookingId, bookingData), {
 
         /**
          *  Returns the day of work for booking
          * * */
         get workDay() {
-            return bookingNode.data.workDay;
+            return bookingData ? bookingData.workDay : null;
         },
 
         /**
          *  Returns the time work started
          * * */
         get workStarted() {
-            return bookingNode.data.workStarted;
+            return bookingData ? bookingData.workStarted : null;
         },
 
         /**
          *  Returns the time work finished
          * * */
         get workFinished() {
-            return bookingNode.data.workFinished;
+            return bookingData ? bookingData.workFinished : null;
         },
 
         /**
          *  Returns the pause in minutes
          * * */
         get pause() {
-            return bookingNode.data.pause;
+            return bookingData ? bookingData.pause : null;
         },
 
         /**
          *  Returns the time booking created
          * * */
         get createdTime() {
-            return bookingNode.data.createdTime;
+            return bookingData ? bookingData.createdTime : null;
         },
 
         /**
          *  Returns the time booking last updated
          * * */
         get lastUpdatedTime() {
-            return bookingNode.data.lastUpdatedTime;
+            return bookingData ? bookingData.lastUpdatedTime : null;
         },
 
         /**
          *  Returns the comment for the booking
          * */
         get comment() {
-            return bookingNode.data.comment;
+            return bookingData ? bookingData.comment : null;
         },
 
         /**
          *  Returns the project id the booking is assigned to
          * */
         get projectId() {
-            if (projectNode.data) {
-                return projectNode.data.id;
-            }
-            return null;
+            return projectId;
         },
 
         /**
          *  Returns the user id the booking is assigned to
          * */
         get userId() {
-            if (userNode.data) {
-                return userNode.data.id;
-            }
-            return null;
+            return userId;
         }
 
     });

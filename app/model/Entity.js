@@ -5,7 +5,7 @@
  * @returns {Tag}
  * @constructor
  */
-function Entity(node) {
+function Entity(entitityId, entityData) {
 
     return {
         /**
@@ -13,7 +13,7 @@ function Entity(node) {
          * @returns {Number}
          */
         get id() {
-            return node.id;
+            return entitityId;
         },
 
         /**
@@ -21,7 +21,7 @@ function Entity(node) {
          * @returns {Object}
          */
         get data() {
-            return node.data;
+            return entityData;
         }
     };
 }

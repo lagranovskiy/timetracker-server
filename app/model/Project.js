@@ -6,29 +6,25 @@ var util = require('util'),
  * @param   {Object} node Node from db
  * @returns {Object} access api for entity
  */
-var Project = function(node) {
+var Project = function(projectId, projectData) {
 
-    return extend(Project.super_(node), {
+    return extend(Project.super_(projectId, projectData), {
 
         /**
          * Returns the id from the database for this node.
          * @returns {String} project name
          */
         get projectName() {
-            return node.data.projectName;
+            return projectData ? projectData.projectName : null;
         },
 
         get customerName() {
-            return node.data.customerName;
+            return projectData ? projectData.customerName : null;
         },
 
         get description() {
-            return node.data.description;
+            return projectData ? projectData.description : null;
         },
-
-        get projectId() {
-            return node.data.projectId;
-        }
 
     });
 };

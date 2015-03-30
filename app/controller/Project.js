@@ -7,6 +7,7 @@ var async = require('async');
 var _ = require('underscore');
 var ProjectRepository = require('../model/ProjectRepository');
 var projectRepository = new ProjectRepository();
+var Project = require('../model/Project');
 var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');
 var projectAssignmentRepository = new ProjectAssignmentRepository();
 
@@ -59,10 +60,12 @@ exports.createProject = function(request, response, next) {
     if (!projectData) {
         return next('Cannot create project. No project data found in request.');
     }
-    // Security check. get only allowed Properties
-    projectData = _.pick(projectData, 'projectName', 'projectId', 'customerName', 'description');
 
-    projectRepository.createNewProject(projectData, function(err, results) {
+    var newProject = new Project(null, projectData);
+    // Security check. get only allowed Properties
+    // projectData = _.pick(projectData, 'projectName', 'projectId', 'customerName', 'description');
+
+    projectRepository.createNewProject(newProject, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -82,10 +85,11 @@ exports.saveProject = function(request, response, next) {
     if (!projectData) {
         return next('Cannot create project. No project data found in request.');
     }
+    var newProject = new Project(projectId, projectData);
     // Security check. get only allowed Properties
-    projectData = _.pick(projectData, 'projectName', 'projectId', 'customerName', 'description');
+    // projectData = _.pick(projectData, 'projectName', 'projectId', 'customerName', 'description');
 
-    projectRepository.saveProject(projectId, projectData, function(err, results) {
+    projectRepository.saveProject(projectId, newProject, function(err, results) {
         if (err) {
             return next(err);
         }

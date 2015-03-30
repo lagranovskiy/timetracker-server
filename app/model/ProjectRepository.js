@@ -28,7 +28,7 @@ ProjectRepository.prototype.listAllProjects = function(retValCallback) {
         function(results, callback) {
             var projectList = [];
             _.each(results, function(project) {
-                projectList.push(new Project(project.project));
+                projectList.push(new Project(project.project.id, project.project.data));
             });
 
             retValCallback(null, projectList);
@@ -40,14 +40,14 @@ ProjectRepository.prototype.listAllProjects = function(retValCallback) {
 /**
  * Produces a new project according to the given projectData
  */
-ProjectRepository.prototype.createNewProject = function(projectData, retValCallback) {
+ProjectRepository.prototype.createNewProject = function(project, retValCallback) {
     var query = [
         "CREATE (project:Project{projectData})",
         "RETURN project"
     ].join('\n');
 
     var params = {
-        projectData: projectData
+        projectData: project.data
     };
 
     async.waterfall([
@@ -59,7 +59,7 @@ ProjectRepository.prototype.createNewProject = function(projectData, retValCallb
                 return retValCallback('Cannot create project with given properties.');
             }
 
-            var createdProject = new Project(results[0].project);
+            var createdProject = new Project(results[0].project.id, results[0].project.data);
             return callback(null, createdProject);
         }
     ], retValCallback);
@@ -69,7 +69,7 @@ ProjectRepository.prototype.createNewProject = function(projectData, retValCallb
 /**
  * Saves given project by id with new data
  */
-ProjectRepository.prototype.saveProject = function(projectId, projectData, retValCallback) {
+ProjectRepository.prototype.saveProject = function(projectId, project, retValCallback) {
     var query = [
         "MATCH (project:Project)",
         "WHERE id(project)={projectId}",
@@ -79,7 +79,7 @@ ProjectRepository.prototype.saveProject = function(projectId, projectData, retVa
 
     var params = {
         projectId: projectId,
-        projectData: projectData
+        projectData: project.data
     };
 
     async.waterfall([
@@ -91,7 +91,7 @@ ProjectRepository.prototype.saveProject = function(projectId, projectData, retVa
                 return retValCallback('Cannot save project with given properties.');
             }
 
-            var createdProject = new Project(results[0].project);
+            var createdProject = new Project(results[0].project.id, results[0].project.data);
             return callback(null, createdProject);
         }
     ], retValCallback);

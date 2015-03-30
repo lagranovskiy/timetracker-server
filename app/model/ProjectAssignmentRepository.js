@@ -36,7 +36,7 @@ ProjectAssignmentRepository.prototype.listProjectsOfPerson = function(userDbId, 
         function(results, callback) {
             var projectList = [];
             _.each(results, function(project) {
-                projectList.push(new Project(project.project));
+                projectList.push(new Project(project.project.id, project.project.data));
             });
 
             retValCallback(null, projectList);
@@ -70,7 +70,7 @@ ProjectAssignmentRepository.prototype.createPersonProjectRole = function(personU
             // TODO: Implement
             var projectList = [];
             _.each(results, function(project) {
-                projectList.push(new Project(project));
+                projectList.push(new Project(project.project.id, project.data));
             });
 
             retValCallback(null, projectList);
@@ -106,7 +106,7 @@ ProjectAssignmentRepository.prototype.removePersonProjectRole = function(roleUid
             // TODO: Implement
             var projectList = [];
             _.each(results, function(project) {
-                projectList.push(new Project(project));
+                projectList.push(new Project(project.project.id, project.data));
             });
 
             retValCallback(null, projectList);
