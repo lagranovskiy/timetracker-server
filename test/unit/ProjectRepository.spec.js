@@ -3,6 +3,7 @@ var should = require('should');
 var neo4j = require('neo4j');
 var requireHelper = require('../require_helper');
 var ProjectRepository = requireHelper('model/ProjectRepository');
+var Project = requireHelper('model/Project');
 
 
 var config = {
@@ -99,7 +100,8 @@ describe('Project Repository test', function() {
             });
 
             repository = new ProjectRepository();
-            repository.saveProject(1234, testProjectData[0].project.data, function(err, savedProject) {
+            var project = new Project(1234, testProjectData[0].project.data);
+            repository.saveProject(1234, project, function(err, savedProject) {
                 should(savedProject).not.be.equal(undefined);
                 done();
             });
