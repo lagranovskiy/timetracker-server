@@ -43,6 +43,40 @@ BookingsRepository.prototype.listAllUserBookings = function(userId, retValCallba
     ]);
 };
 
+/**
+ * Lists all projects in system
+ *
+ * @param {Function} retValCallback return value callback
+ */
+BookingsRepository.prototype.listUserProjectBookings = function(userId, projectId, retValCallback) {
+    var query = [
+        "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
+        "WHERE id(user)={userId} and id(project) = {projectId}",
+        "RETURN booking, project",
+        "ORDER BY booking.workDay DESC, booking.workStarted"
+    ].join('\n');
+
+    var param = {
+        userId: userId,
+        projectId: projectId
+    };
+
+    async.waterfall([
+
+        function(callback) {
+            db.query(query, param, callback);
+        },
+        function(results, callback) {
+            var bookingList = [];
+            _.each(results, function(result) {
+                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId));
+            });
+
+            retValCallback(null, bookingList);
+        }
+    ]);
+};
+
 
 
 /**

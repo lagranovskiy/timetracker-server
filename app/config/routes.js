@@ -51,6 +51,7 @@ module.exports = function(app, config, passport) {
 
 
     app.get('/user/bookings', isLoggedIn, bookings.listUserBookings);
+    app.get('/user/project/:projectId/bookings', isLoggedIn, bookings.listUserProjectBookings);
     app.get('/user/projects', isLoggedIn, project.listVisibleProjects);
     //    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
 

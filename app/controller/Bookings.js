@@ -29,6 +29,28 @@ exports.listUserBookings = function(request, response, next) {
     });
 };
 
+/**
+ * Lists all bookings user made for given project
+ */
+exports.listUserProjectBookings = function(request, response, next) {
+    var userId = request.user.getDbId();
+    var projectId = request.params.projectId;
+    if (!projectId) {
+        next('Cannot resolve project bookings. No project ID transfered.');
+    }
+    projectId = projectId * 1;
+    console.info('Listing of all bookings by given project ' + projectId + ' of user with id ' + userId);
+
+
+    bookingsRepository.listUserProjectBookings(userId, projectId, function(err, results) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(results);
+    });
+};
+
 
 /**
  * List all bookings ever made
