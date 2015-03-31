@@ -56,7 +56,7 @@ var BookingModel = function() {
         var bookingUserId = bookingData.userId;
         var bookingId = bookingData.id;
 
-        bookingData = _.omit(bookingData, ['id', 'projectId', 'userId']);
+        bookingData = _.omit(bookingData, ['id', 'projectId', 'userId', 'data']);
         var newBooking = new Booking(bookingId, bookingData, bookingDataProjectId, bookingUserId);
 
         return newBooking;

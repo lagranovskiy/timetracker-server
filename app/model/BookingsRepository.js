@@ -149,23 +149,15 @@ BookingsRepository.prototype.updateExistingBooking = function(booking, retValCal
                         db.getRelationshipById(booking.id, callback);
                     },
                     function(relation, callback) {
-                        relation.del();
-                        BookingsRepository.createNewBooking(booking, callback);
+                        relation.del(function() {});
+                        BookingsRepository.prototype.createNewBooking(booking, callback);
                     }
                 ], callback);
             }
 
         },
-        function(results, callback) {
-            if (!results || results.length !== 1) {
-                return callback('Booking not found!');
-            }
-
-            var result = results[0];
-
-            var createdBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id);
-            return callback(null, createdBooking);
-
+        function(updatedBooking, callback) {
+            BookingsRepository.prototype.findBookingById(updatedBooking.id, callback);
         }
     ], retValCallback);
 
@@ -185,6 +177,47 @@ BookingsRepository.prototype.findBooking = function(booking, retValCallback) {
     var param = {
         bookingId: booking.id,
         userId: booking.userId
+    };
+
+    async.waterfall([
+
+        function(callback) {
+            db.query(query, param, callback);
+        },
+        function(results, callback) {
+            if (!results || results.length !== 1) {
+                return callback('Booking not found!');
+            }
+
+            var result = results[0];
+
+            var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id);
+            return callback(null, foundBooking);
+
+        }
+    ], retValCallback);
+
+};
+
+
+
+
+/**
+ * BookingsRepository.prototype.findBookingById - Process a search for a booking according to the given booking id
+ *
+ * @param  {Function} retValCallback callback
+ * @param  {Number} bookingId      ID for search
+ */
+BookingsRepository.prototype.findBookingById = function(bookingId, retValCallback) {
+
+    var query = [
+        "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
+        "WHERE id(booking)={bookingId}",
+        "RETURN booking,project,user"
+    ].join('\n');
+
+    var param = {
+        bookingId: bookingId
     };
 
     async.waterfall([
