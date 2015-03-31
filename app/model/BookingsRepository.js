@@ -2,6 +2,7 @@ var async = require('async'),
     config = require('../config/config'),
     neo4j = require('neo4j'),
     _ = require('underscore'),
+    moment = require('moment'),
     Booking = require('./Booking'),
     db = new neo4j.GraphDatabase(config.db.url);
 
@@ -234,6 +235,60 @@ BookingsRepository.prototype.findBookingById = function(bookingId, retValCallbac
 
             var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id);
             return callback(null, foundBooking);
+
+        }
+    ], retValCallback);
+
+};
+
+
+
+
+/**
+ * BookingsRepository.prototype.testBookingAllowed - Evaluates if user may do such booking according to concurrency of times
+ *
+ * @param  {type} booking        description
+ * @param  {type} retValCallback description
+ * @return {type}                description
+ */
+BookingsRepository.prototype.findBookingCollidations = function(booking, retValCallback) {
+
+    var query = [
+        "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
+        "WHERE id(user) = {userId} and booking.workDay>={minWorkDay} and booking.workDay<={maxWorkDay} and (",
+
+        "booking.workStarted<={workStarted} and booking.workFinished>{workStarted} ",
+        " or ",
+        "booking.workStarted<{workFinished} and booking.workFinished>={workFinished}",
+        " or ",
+        "booking.workStarted>{workStarted} and booking.workFinished<{workFinished}",
+
+        ") RETURN booking,project,user"
+    ].join('\n');
+
+    var beginning = moment(booking.workDay).hours(0).startOf('hour').valueOf();
+    var ending = moment(booking.workDay).hours(23).endOf('hour').valueOf();
+    var param = {
+        minWorkDay: beginning,
+        maxWorkDay: ending,
+        workStarted: booking.workStarted,
+        workFinished: booking.workFinished,
+        userId: booking.userId
+    };
+
+    async.waterfall([
+
+        function(callback) {
+            db.query(query, param, callback);
+        },
+        function(results, callback) {
+            var bookingList = [];
+            _.each(results, function(result) {
+                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id));
+            });
+
+
+            return callback(null, bookingList);
 
         }
     ], retValCallback);

@@ -44,6 +44,8 @@ var BookingModel = function() {
         if (!booking.userId) {
             return callback('User id of booking may not be empty');
         }
+
+
     }
 
     /**
@@ -79,13 +81,23 @@ var BookingModel = function() {
 
             validateBooking(newBooking, callback);
 
-            bookingsRepository.createNewBooking(newBooking, function(err, result) {
+            this.testBookingCollisions(newBooking, function(err) {
                 if (err) {
                     return callback(err);
                 }
 
-                return callback(null, result);
+                bookingsRepository.createNewBooking(newBooking, function(err, result) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    return callback(null, result);
+                });
+
+
             });
+
+
         },
 
         /**
@@ -105,12 +117,18 @@ var BookingModel = function() {
             var existingBooking = instanciateBooking(bookingData);
             validateBooking(existingBooking, callback);
 
-            bookingsRepository.updateExistingBooking(existingBooking, function(err, result) {
+            this.testBookingCollisions(existingBooking, function(err) {
                 if (err) {
                     return callback(err);
                 }
 
-                return callback(null, result);
+                bookingsRepository.updateExistingBooking(existingBooking, function(err, result) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    return callback(null, result);
+                });
             });
 
         },
@@ -136,6 +154,36 @@ var BookingModel = function() {
                 }
 
                 return callback(null, result);
+            });
+        },
+
+
+        /**
+         * testBookingCollisions function - Tests if booking doesnt collidate with other bookings
+         *
+         * @param  {type} booking  booking to be tested
+         * @param  {type} callback callback for result
+         * @return {type}
+         */
+        testBookingCollisions: function(booking, callback) {
+
+            if (!booking) {
+                return callback('Cannot test collidations of null booking.');
+            }
+
+            bookingsRepository.findBookingCollidations(booking, function(err, result) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (result.length && result.length > 0) {
+                    var bookingList = '';
+                    _.each(result, function(booking) {
+                        bookingList = bookingList + moment(booking.workDay).format("L") + ' from: ' + moment(booking.workStarted).format("HH:mm") + ' to: ' + moment(booking.workFinished).format("HH:mm") + '\n';
+                    });
+
+                    return callback('Booking collidates with following bookings:\n' + bookingList, result);
+                }
             });
         }
 
