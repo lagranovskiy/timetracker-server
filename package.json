@@ -1,63 +1,64 @@
 {
-    "name": "timetracker-server",
-    "version": "1.0.0",
-    "description": "PRODYNA PAC timetracker server",
-    "main": "app/app.js",
-    "dependencies": {
-        "async": "^0.9.0",
-        "bcrypt": "^0.8.1",
-        "body-parser": "^1.10.1",
-        "connect-flash": "^0.1.1",
-        "cookie-parser": "^1.3.3",
-        "debug": "^2.1.1",
-        "express": "^4.10.7",
-        "express-session": "^1.10.1",
-        "later": "^1.1.6",
-        "method-override": "2.3.1",
-        "morgan": "^1.5.1",
-        "object-extend": "~0.5.0",
-        "neo4j": "^1.1.1",
-        "passport": "^0.2.1",
-        "passport-local": "^1.0.0",
-        "serve-favicon": "^2.2.0",
-        "underscore": "^1.7.0"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.2",
-        "grunt-codeclimate": "0.0.1-1",
-        "grunt-concurrent": "~0.4.3",
-        "grunt-contrib-clean": "~0.5.0",
-        "grunt-contrib-copy": "~0.5.0",
-        "grunt-contrib-jshint": "~0.8.0",
-        "grunt-contrib-watch": "~0.5.3",
-        "grunt-env": "~0.4.1",
-        "grunt-istanbul": "~0.2.4",
-        "grunt-mocha-istanbul": "^2.3.1",
-        "grunt-mocha-test": "~0.9.0",
-        "grunt-nodemon": "~0.2.0",
-        "istanbul": "^0.3.8",
-        "nock": "~0.27.2",
-        "should": "~3.1.2",
-        "sinon": "^1.12.2",
-        "supertest": "~0.9.0"
-    },
-    "scripts": {
-        "test": "grunt coverage",
-        "build": " grunt build"
-    },
-    "config": {
-        "travis-cov": {
-            "threshold": 10
-        }
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/lagranovskiy/timetracker-server.git"
-    },
-    "author": "Leonid Agranovskiy",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/lagranovskiy/timetracker-server/issues"
-    },
-    "homepage": "https://github.com/lagranovskiy/timetracker-server"
+  "name": "timetracker-server",
+  "version": "1.0.0",
+  "description": "PRODYNA PAC timetracker server",
+  "main": "app/app.js",
+  "dependencies": {
+    "async": "^0.9.0",
+    "bcrypt": "^0.8.1",
+    "body-parser": "^1.10.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.3.3",
+    "debug": "^2.1.1",
+    "express": "^4.10.7",
+    "express-session": "^1.10.1",
+    "later": "^1.1.6",
+    "method-override": "2.3.1",
+    "moment": "^2.9.0",
+    "morgan": "^1.5.1",
+    "neo4j": "^1.1.1",
+    "object-extend": "~0.5.0",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "serve-favicon": "^2.2.0",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-codeclimate": "0.0.1-1",
+    "grunt-concurrent": "~0.4.3",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-env": "~0.4.1",
+    "grunt-istanbul": "~0.2.4",
+    "grunt-mocha-istanbul": "^2.3.1",
+    "grunt-mocha-test": "~0.9.0",
+    "grunt-nodemon": "~0.2.0",
+    "istanbul": "^0.3.8",
+    "nock": "~0.27.2",
+    "should": "~3.1.2",
+    "sinon": "^1.12.2",
+    "supertest": "~0.9.0"
+  },
+  "scripts": {
+    "test": "grunt coverage",
+    "build": " grunt build"
+  },
+  "config": {
+    "travis-cov": {
+      "threshold": 10
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lagranovskiy/timetracker-server.git"
+  },
+  "author": "Leonid Agranovskiy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lagranovskiy/timetracker-server/issues"
+  },
+  "homepage": "https://github.com/lagranovskiy/timetracker-server"
 }

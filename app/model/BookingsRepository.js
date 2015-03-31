@@ -121,25 +121,40 @@ BookingsRepository.prototype.createNewBooking = function(booking, retValCallback
  * @param retValCallback callback to be called after
  */
 BookingsRepository.prototype.updateExistingBooking = function(booking, retValCallback) {
-
-    var query = [
-        "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
-        "WHERE id(user) = {userId} and id(project) = {projectId} and id(booking)={bookingId}",
-        "SET booking={bookingData}",
-        "RETURN booking,project,user"
-    ].join('\n');
-
-    var param = {
-        bookingId: booking.id,
-        userId: booking.userId,
-        projectId: booking.projectId,
-        bookingData: booking.data
-    };
-
     async.waterfall([
-
         function(callback) {
-            db.query(query, param, callback);
+            BookingsRepository.prototype.findBooking(booking, callback);
+        },
+        function(foundBooking, callback) {
+            if (!foundBooking) {
+                callback('Cannot find booking by given id');
+            }
+
+            if (booking.projectId === foundBooking.projectId) {
+                // by existing booking, only data need to be changed
+                async.waterfall([
+                    function(callback) {
+                        db.getRelationshipById(booking.id, callback);
+                    },
+                    function(relation, callback) {
+                        _.extend(relation.data, booking.data);
+                        relation.save(callback);
+                    }
+                ], callback);
+
+            } else {
+                // Changing of booking mean that a new relation need to be created and old one removed
+                async.waterfall([
+                    function(callback) {
+                        db.getRelationshipById(booking.id, callback);
+                    },
+                    function(relation, callback) {
+                        relation.del();
+                        BookingsRepository.createNewBooking(booking, callback);
+                    }
+                ], callback);
+            }
+
         },
         function(results, callback) {
             if (!results || results.length !== 1) {
@@ -156,21 +171,15 @@ BookingsRepository.prototype.updateExistingBooking = function(booking, retValCal
 
 };
 
-
-
-
 /**
- *Removes a booking relation
- * @param booking booking to be persisted
- * @param retValCallback callback to be called after
+ * Process a search for a booking according to the given parameters
  */
-BookingsRepository.prototype.deleteExistingBooking = function(booking, retValCallback) {
+BookingsRepository.prototype.findBooking = function(booking, retValCallback) {
 
-    // First evaluate if relation may be removed (user is authorized to remove it)
     var query = [
-        "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->()",
+        "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(user) = {userId} and id(booking)={bookingId}",
-        "DELETE booking"
+        "RETURN booking,project,user"
     ].join('\n');
 
     var param = {
@@ -184,12 +193,46 @@ BookingsRepository.prototype.deleteExistingBooking = function(booking, retValCal
             db.query(query, param, callback);
         },
         function(results, callback) {
-            // Actually no possibility found to test if removal was successful
-            return callback(null, true);
+            if (!results || results.length !== 1) {
+                return callback('Booking not found!');
+            }
+
+            var result = results[0];
+
+            var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id);
+            return callback(null, foundBooking);
 
         }
     ], retValCallback);
 
+};
+
+
+/**
+ * Removes a booking relation
+ *
+ * @param booking booking to be persisted
+ * @param retValCallback callback to be called after
+ */
+BookingsRepository.prototype.deleteExistingBooking = function(booking, retValCallback) {
+    async.waterfall([
+        function(callback) {
+            BookingsRepository.prototype.findBooking(booking, callback);
+        },
+        function(booking, callback) {
+            if (!booking) {
+                return callback('Booking not found');
+            }
+
+            db.getRelationshipById(booking.id, callback);
+        },
+        function(relation, callback) {
+            relation.del(callback);
+        },
+        function(callback) {
+            callback(null, true);
+        }
+    ], retValCallback);
 };
 
 

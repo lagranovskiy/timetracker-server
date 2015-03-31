@@ -8,6 +8,8 @@ var _ = require('underscore');
 var BookingsRepository = require('../model/BookingsRepository');
 var bookingsRepository = new BookingsRepository();
 var Booking = require('../model/Booking');
+var BookingModel = require('../model/BookingModel');
+var bookingModel = new BookingModel();
 
 /**
  * Lists all bookings the current authenticated user ever made
@@ -53,27 +55,17 @@ exports.createBooking = function(request, response, next) {
     console.info('Creating of a new booking for user ' + userId);
 
     var bookingData = request.body;
-    if (bookingData.id) {
-        return next('Cannot create booking that already has ID. Please use update method instead.');
-    }
+    bookingData.userId = userId;
 
-    var bookingDataUserId = bookingData.userId;
-    var bookingDataProjectId = bookingData.projectId;
-
-    if (bookingDataUserId && bookingDataUserId !== userId) {
-        return next('Cannot save booking. Currently identified user is not same with user defined in the booking.');
-    }
-
-    bookingData = _.omit(bookingData, ['id', 'projectId', 'userId']);
-    var newBooking = new Booking(null, bookingData, bookingDataProjectId, userId);
-
-    bookingsRepository.createNewBooking(newBooking, function(err, result) {
+    bookingModel.createNewBooking(bookingData, function(err, createdBooking) {
         if (err) {
             return next(err);
         }
 
-        response.send(result);
+        response.send(createdBooking);
     });
+
+
 };
 
 /**
@@ -82,34 +74,28 @@ exports.createBooking = function(request, response, next) {
 exports.saveBooking = function(request, response, next) {
     var userId = request.user.getDbId();
     var bookingId = request.params.bookingId;
+    var bookingData = request.body;
 
     console.info('Updating of a existing booking with id ' + bookingId + 'for user ' + userId);
 
     if (!bookingId) {
         return next('Cannot save booking. No bookingId found in request.');
     }
-    var bookingData = request.body;
-    if (!bookingData.id) {
-        return next('Cannot update booking that has no ID yet. Please use create method instead.');
+
+    if (userId !== bookingData.userId) {
+        return next('Updating of booking is allowed only for the owner of the booking.');
     }
 
-    var bookingDataUserId = bookingData.userId;
-    var bookingDataProjectId = bookingData.projectId;
-
-    if (bookingDataUserId && bookingDataUserId !== userId) {
-        return next('Cannot save booking. Currently identified user is not same with user defined in the booking.');
-    }
-
-    bookingData = _.omit(bookingData, ['id', 'projectId', 'userId']);
-    var existingBooking = new Booking(bookingId, bookingData, bookingDataProjectId, userId);
-
-    bookingsRepository.updateExistingBooking(existingBooking, function(err, result) {
+    bookingModel.updateBooking(bookingData, function(err, createdBooking) {
         if (err) {
             return next(err);
         }
 
-        response.send(result);
+        response.send(createdBooking);
     });
+
+
+
 };
 
 exports.deleteBooking = function(request, response, next) {
