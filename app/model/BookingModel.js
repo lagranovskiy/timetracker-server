@@ -28,7 +28,7 @@ var BookingModel = function() {
             return callback('Work Finished time of booking may not be empty');
         }
 
-        if (moment(booking.workStarted).toDate() >= moment(booking.workFinished).toDate()) {
+        if (booking.workStarted >= booking.workFinished) {
             return callback('Cannot create booking. Work finished time is equal or less then work started time.');
         }
 
@@ -102,7 +102,7 @@ var BookingModel = function() {
                 return callback('Cannot update nonpersistent booking');
             }
 
-            var existingBooking = this.instanciateBooking(bookingData);
+            var existingBooking = instanciateBooking(bookingData);
             validateBooking(existingBooking, callback);
 
             bookingsRepository.updateExistingBooking(existingBooking, function(err, result) {
@@ -125,7 +125,7 @@ var BookingModel = function() {
                 return callback('Missing mandatory information for booking removal');
             }
 
-            var bookingInstance = this.instanciateBooking({
+            var bookingInstance = instanciateBooking({
                 id: bookingId,
                 userId: userId
             });
