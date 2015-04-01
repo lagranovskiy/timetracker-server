@@ -1,0 +1,6 @@
+{
+    "name": "Time Tracker Server -PAC",
+    "description": "PAC Project Timetracker",
+    "repository": "https://github.com/lagranovskiy/timetracker-client",
+    "keywords": ["node", "express", "static"]
+}

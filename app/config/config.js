@@ -34,6 +34,23 @@ var config = {
         init: function() {
             return this;
         }
+    },
+    heroku: {
+        host: '0.0.0.0',
+        httpPort: process.env.PORT || 8000,
+        sslPort: false,
+        sessionSecret: '!!§Idfesnp819819681INJUKNJ',
+        env: 'prod',
+        db: {
+            url: 'http://app35441703:PGRj16GknL4NIJCCOkkt@app35441703.sb04.stations.graphenedb.com:24789'
+        },
+        options: {
+            key: 'certs/timetracker.key.pem',
+            cert: 'certs/timetracker.crt'
+        },
+        init: function() {
+            return this;
+        }
     }
 };
 
@@ -41,4 +58,4 @@ var config = {
 var env = process.env.NODE_ENV || 'dev';
 
 // Export initialized envirenment config according to the set environment
-module.exports = config.dev.init();
+module.exports = config[env].init();
