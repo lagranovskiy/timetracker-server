@@ -45,7 +45,7 @@ var config = {
         clientHost: process.env.TT_CLIENT_URL || 'TT_CLIENT_URL not set',
         env: 'prod',
         db: {
-            url: 'http://app35441703:PGRj16GknL4NIJCCOkkt@app35441703.sb04.stations.graphenedb.com:24789'
+            url: process.env.GRAPHENEDB_URL
         },
         options: {
             key: 'certs/timetracker.key.pem',

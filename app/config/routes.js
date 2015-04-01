@@ -2,6 +2,7 @@ var project = require('../controller/Project');
 var person = require('../controller/Person');
 var bookings = require('../controller/Bookings');
 var security = require('../controller/Security');
+var data = require('../controller/Data');
 var passport = require('passport');
 
 module.exports = function(app, config, passport) {
@@ -32,6 +33,8 @@ module.exports = function(app, config, passport) {
         next();
     });
 
+    //Temp data pumping ONLY for DEV
+    app.get('/init', data.resetData);
 
     // process the signup form
     app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
