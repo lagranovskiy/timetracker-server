@@ -1,23 +1,37 @@
 /*jslint node: true */
 var config = {
     dev: {
-        port: 8484,
+        host: 'localhost',
+        httpPort: 8484,
+        sslPort: 4433,
+        sessionSecret: 'mykey',
         env: 'dev',
         db: {
             url: 'http://localhost:7474'
         },
-        init: function () {
+        options: {
+            key: 'certs/timetracker.key.pem',
+            cert: 'certs/timetracker.crt'
+        },
+        init: function() {
             process.env.DEBUG = '*';
             return this;
         }
     },
     prod: {
-        port: 8484,
+        host: 'localhost',
+        httpPort: false,
+        sslPort: 443,
+        sessionSecret: 'IdfesnpIPLZ/UEW2224fcJKINJUKNJ',
         env: 'prod',
         db: {
             url: 'http://localhost:7474'
         },
-        init: function () {
+        options: {
+            key: 'certs/timetracker.key.pem',
+            cert: 'certs/timetracker.crt'
+        },
+        init: function() {
             return this;
         }
     }

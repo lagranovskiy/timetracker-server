@@ -1,5 +1,6 @@
 /**
  * Timetracker Server
+ * PAC Project
  *
  * @ author Leonid Agranovskiy
  **/
@@ -18,6 +19,11 @@ var methodOverride = require('method-override');
 var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
+var fs = require('fs');
+
+
+var http = require('http');
+var https = require('https');
 
 // configuration ================================================================
 
@@ -34,7 +40,7 @@ app.use(cookieParser()); // read cookies (needed for auth)
 
 // Configuring Passport
 app.use(expressSession({
-    secret: 'mySecretKey',
+    secret: config.sessionSecret,
     cookie: {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000
@@ -46,7 +52,30 @@ app.use(passport.session());
 // load routes
 require('./config/routes')(app, config, passport);
 
-app.listen(config.port);
-console.log('Timetracker server started successfully on port:' + config.port);
+
+/**
+    Configure if http server need to be still created
+*/
+if (config.httpPort) {
+    var httpServer = http.createServer(app);
+    httpServer.listen(config.httpPort);
+    console.log('Timetracker server startet under http://' + config.host + ':' + config.httpPort);
+}
+
+if (config.sslPort) {
+    /**
+     * Read HTTPS Certificates
+     */
+    var httpsCertificates = {
+        key: fs.readFileSync(config.options.key, 'utf8'),
+        cert: fs.readFileSync(config.options.cert, 'utf8')
+    };
+
+    var httpsServer = https.createServer(httpsCertificates, app);
+    httpsServer.listen(config.sslPort);
+    console.log('Timetracker server startet under https://' + config.host + ':' + config.sslPort);
+}
+
+console.log('Timetracker server started successfully on port: HTTP ' + config.httpPort + ' and HTTPS ' + config.sslPort);
 
 module.exports = app;
