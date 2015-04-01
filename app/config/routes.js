@@ -40,7 +40,7 @@ module.exports = function(app, config, passport) {
     app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
     app.get('/auth', isLoggedIn, security.sendAuthData);
     app.post('/auth/logout', security.logout);
-    app.post('/auth/signup', passport.authenticate('local-signup'), security.sendAuthData);
+    app.post('/auth/sign', passport.authenticate('localsign'), security.sendAuthData);
 
     app.get('/project/', isLoggedIn, project.listProjects);
     app.put('/project/:projectId', isLoggedIn, project.saveProject);

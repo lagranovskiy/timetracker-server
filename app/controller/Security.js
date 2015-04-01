@@ -132,12 +132,25 @@ exports.registerUser = function(req, username, password, done) {
             }
 
             var userData = req.body;
+
+            /*
+            {
+            	"username":"leonid",
+            	"password":"prodyna",
+             	"forename": "Leonid",
+                "surname": "Agranovskiy",
+                "birthday": 1245566767,
+                "email": "test@agranovskiy.de",
+                "phone": "12346"
+            }
+
+            */
             // Security check. get only allowed Properties
-            var securedUserData = _.pick(userData, 'forename', 'surname', 'birthday', 'email', 'phone', 'login');
+            var securedUserData = _.pick(userData, 'password', 'forename', 'surname', 'birthday', 'email', 'phone', 'username');
 
             // Fill missing values like password hash
             securedUserData.uid = username;
-            securedUserData.passwordMD5 = bcrypt.genSaltSync(securedUserData.password, salt);
+            securedUserData.passwordMD5 = bcrypt.hashSync(securedUserData.password, 10);
             securedUserData.registrationDate = new Date().toDateString();
             userRepository.createUserWithPerson(securedUserData, callback);
         }

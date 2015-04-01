@@ -27,7 +27,9 @@ module.exports = function(passport) {
     passport.use('local', new LocalStrategy({
         passReqToCallback: true
     }, security.authenticateUser));
-    passport.use('local-signup', new LocalStrategy({
+
+
+    passport.use('localsign', new LocalStrategy({
         passReqToCallback: true
     }, security.registerUser));
 };
