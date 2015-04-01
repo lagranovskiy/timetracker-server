@@ -44,7 +44,7 @@
   },
   "scripts": {
     "test": "grunt coverage",
-    "build": " grunt build"
+    "build": " grunt build",
     "start" : "node app/app.js"
   },
   "config": {
