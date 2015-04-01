@@ -6,6 +6,7 @@ var config = {
         sslPort: 4433,
         sessionSecret: 'mykey',
         env: 'dev',
+        clientHost: process.env.TT_CLIENT_URL || 'http://localhost:9000',
         db: {
             url: 'http://localhost:7474'
         },
@@ -24,6 +25,7 @@ var config = {
         sslPort: 443,
         sessionSecret: 'IdfesnpIPLZ/UEW2224fcJKINJUKNJ',
         env: 'prod',
+        clientHost: process.env.TT_CLIENT_URL || 'https://localhost:9000',
         db: {
             url: 'http://localhost:7474'
         },
@@ -40,6 +42,7 @@ var config = {
         httpPort: process.env.PORT || 8000,
         sslPort: false,
         sessionSecret: '!!§Idfesnp819819681INJUKNJ',
+        clientHost: process.env.TT_CLIENT_URL || 'TT_CLIENT_URL not set',
         env: 'prod',
         db: {
             url: 'http://app35441703:PGRj16GknL4NIJCCOkkt@app35441703.sb04.stations.graphenedb.com:24789'
