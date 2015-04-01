@@ -183,6 +183,8 @@ var BookingModel = function() {
                     });
 
                     return callback('Booking collidates with following bookings:\n' + bookingList, result);
+                } else {
+                    callback(null, true);
                 }
             });
         }

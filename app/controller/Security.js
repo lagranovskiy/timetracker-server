@@ -5,11 +5,10 @@
  **/
 
 var async = require('async');
-var bcrypt = require('bcrypt');
 var _ = require('underscore');
 var UserRepository = require('../model/UserRepository');
 var userRepository = new UserRepository();
-var salt = bcrypt.genSaltSync(10);
+var md5 = require('MD5');
 
 
 /**
@@ -89,7 +88,7 @@ exports.authenticateUser = function(req, uid, password, done) {
             if (!user) {
                 return callback(null, false);
             }
-            var authenticationResult = bcrypt.compareSync(password, user.getPwdHash());
+            var authenticationResult = md5(password) === user.getPwdHash();
             if (authenticationResult) {
                 console.info('User ' + uid + ' logged in.');
                 callback(null, user);
@@ -150,7 +149,7 @@ exports.registerUser = function(req, username, password, done) {
 
             // Fill missing values like password hash
             securedUserData.uid = username;
-            securedUserData.passwordMD5 = bcrypt.hashSync(securedUserData.password, 10);
+            securedUserData.passwordMD5 = md5(password);
             securedUserData.registrationDate = new Date().toDateString();
             userRepository.createUserWithPerson(securedUserData, callback);
         }
