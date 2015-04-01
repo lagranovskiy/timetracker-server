@@ -45,6 +45,7 @@
   "scripts": {
     "test": "grunt coverage",
     "build": " grunt build"
+    "start" : "node app/app.js"
   },
   "config": {
     "travis-cov": {
