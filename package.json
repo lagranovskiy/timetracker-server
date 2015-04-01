@@ -52,6 +52,10 @@
             "threshold": 10
         }
     },
+    "engines": {
+        "node": "0.10.x",
+        "npm": "2.1.x"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/lagranovskiy/timetracker-server.git"
