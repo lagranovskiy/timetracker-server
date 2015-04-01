@@ -10,8 +10,16 @@ var dataRepository = new DataRepository();
  * Resets database with default data set
  *
  */
-exports.resetData = function(request, response, next) {
-    dataRepository.resetData(function(err, results) {
+exports.reinitDB = function(request, response, next) {
+
+    async.waterfall([
+        function(callback) {
+            dataRepository.removeAllData(callback);
+        },
+        function(callback) {
+            dataRepository.importData(callback);
+        }
+    ], function(err, results) {
         if (err) {
             return next({
                 success: false,
@@ -20,10 +28,11 @@ exports.resetData = function(request, response, next) {
             });
         }
 
-        response.json({
+        return response.json({
             success: true,
             total: 1,
             data: 'ok'
         });
     });
+
 };

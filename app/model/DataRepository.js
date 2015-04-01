@@ -17,9 +17,7 @@ function DataRepository() {
  */
 DataRepository.prototype.importData = function(retValCallback) {
 
-    var queryArray = [
-        'CREATE CONSTRAINT ON (u:User) ASSERT u.uid IS UNIQUE;',
-        'CREATE CONSTRAINT ON (p:Project) ASSERT p.projectId IS UNIQUE;',
+    var query = [
         'CREATE (project1:Project{projectId:\'ER100\', projectName:\'NABUCCO Test Automation\', customerName:\'PRODYNA AG\', description:\'Interesting project\'})',
         'CREATE (project2:Project{projectId:\'ER101\', projectName:\'NABUCCO HR\', customerName:\'PRODYNA AG\', description:\'Interesting project\'})',
         'CREATE (project3:Project{projectId:\'ER102\', projectName:\'NABUCCO Groupware\', customerName:\'PRODYNA AG\', description:\'Interesting project\'})',
@@ -43,24 +41,45 @@ DataRepository.prototype.importData = function(retValCallback) {
         'CREATE (user3)-[:AUTHORIZED_AS]->(group3)',
         'CREATE (user1)-[:HAS_PROFILE]->(person1)',
         'CREATE (user2)-[:HAS_PROFILE]->(person2)',
-        'CREATE (user3)-[:HAS_PROFILE]->(person3)'
-    ];
+        'CREATE (user3)-[:HAS_PROFILE]->(person3)',
 
-    for (var i = 0; i < queryArray.length; i++) {
-        var q = queryArray[i];
+        'CREATE (person1)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project1)',
+        'CREATE (person1)-[:HAS_ROLE]->(:Role {role:\'QA\'})-[:ON_PROJECT]->(project2)',
+        'CREATE (person1)-[:HAS_ROLE]->(:Role {role:\'Tester\'})-[:ON_PROJECT]->(project3)',
+        'CREATE (person1)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project4)',
+        'CREATE (person2)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project5)',
+        'CREATE (person2)-[:HAS_ROLE]->(:Role {role:\'Architect\'})-[:ON_PROJECT]->(project6)',
+        'CREATE (person2)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project7)',
+        'CREATE (person2)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project2)',
+        'CREATE (person2)-[:HAS_ROLE]->(:Role {role:\'Architect\'})-[:ON_PROJECT]->(project3)',
+        'CREATE (person2)-[:HAS_ROLE]->(:Role {role:\'Tester\'})-[:ON_PROJECT]->(project1)',
+        'CREATE (person3)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project1)',
+        'CREATE (person3)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project4)',
+        'CREATE (person3)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project5)',
+        'CREATE (person3)-[:HAS_ROLE]->(:Role {role:\'Java Consultant\'})-[:ON_PROJECT]->(project6)',
+        'CREATE (person3)-[:HAS_ROLE]->(:Role {role:\'Developer\'})-[:ON_PROJECT]->(project7)',
+        'CREATE (person1)-[:HAS_ROLE]->(:Role {role:\'Consultant\'})-[:ON_PROJECT]->(project7)',
+        'CREATE (person3)-[:IS_TEAM_MEMBER{role:\'3rd level support\'}]->(project1);'
+    ].join('\n');
 
-        db.query(q, {}, function(err, data) {
-            console.info('Execution of query: ' + q);
-            if (err) {
-                return console.error('Failed ' + err);
-            }
-            return console.error('Success');
-        });
-
-    }
 
 
-    retValCallback(null, true);
+    async.waterfall([
+
+        function(callback) {
+            db.query(query, {}, callback);
+        }
+
+    ], function(err, data) {
+        console.info('Execution of query: ' + query);
+        if (err) {
+            return console.error('Failed ' + err);
+        }
+        console.error('Success');
+
+        return retValCallback(err, true);
+    });
+
 };
 
 
@@ -75,24 +94,24 @@ DataRepository.prototype.importData = function(retValCallback) {
 DataRepository.prototype.removeAllData = function(retValCallback) {
 
     var queryArray = [
-        'MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r'
+        'MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r;'
     ];
 
-    for (var i = 0; i < queryArray.length; i++) {
-        var q = queryArray[i];
 
-        db.query(q, {}, function(err, data) {
-            console.info('Execution of query: ' + q);
+    async.each(queryArray, function(query, callback) {
+        db.query(query, {}, function(err, data) {
+            console.info('Execution of query: ' + query);
             if (err) {
                 return console.error('Failed ' + err);
             }
-            return console.error('Success');
+            console.error('Success');
+
+            return callback(err, data);
         });
+    }, retValCallback);
 
-    }
 
 
-    retValCallback(null, true);
 };
 
 

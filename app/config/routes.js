@@ -34,7 +34,7 @@ module.exports = function(app, config, passport) {
     });
 
     //Temp data pumping ONLY for DEV
-    app.get('/init', data.resetData);
+    app.get('/init', data.reinitDB);
 
     // process the signup form
     app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
