@@ -127,7 +127,7 @@ exports.registerUser = function(req, username, password, done) {
         function(user, callback) {
             // If user found, break and send error code to client
             if (user) {
-                return callback('409');
+                return callback('Username already exist!');
             }
 
             var userData = req.body;

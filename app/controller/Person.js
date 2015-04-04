@@ -26,3 +26,30 @@ exports.getPersonData = function(request, response, next) {
             response.send(results);
         });**/
 };
+
+
+/**
+ * Check if username exist
+ */
+exports.checkUsernameExists = function(request, response, next) {
+    var userId = request.params.userId;
+    console.info('Testing if user with id ' + userId + ' already exist.');
+
+    var userExist;
+
+    if (userId) {
+        if (userId === 'mmustermann') {
+            userExist = true;
+        } else {
+            userExist = false;
+        }
+        return response.status(200).send({
+            userExist: userExist
+        });
+    } else {
+        return response.status(500).send('error');
+    }
+
+
+
+};

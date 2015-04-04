@@ -52,7 +52,7 @@ module.exports = function(app, config, passport) {
     app.post('/booking/', isLoggedIn, bookings.createBooking);
     app.delete('/booking/:bookingId', isLoggedIn, bookings.deleteBooking);
 
-
+    app.get('/user/check/:userId', person.checkUsernameExists);
     app.get('/user/bookings', isLoggedIn, bookings.listUserBookings);
     app.get('/user/project/:projectId/bookings', isLoggedIn, bookings.listUserProjectBookings);
     app.get('/user/projects', isLoggedIn, project.listVisibleProjects);

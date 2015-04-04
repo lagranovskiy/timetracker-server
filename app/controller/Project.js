@@ -77,7 +77,7 @@ exports.createProject = function(request, response, next) {
 
 exports.saveProject = function(request, response, next) {
     var projectData = request.body;
-    var projectId = request.param.projectId;
+    var projectId = request.params.projectId;
 
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
@@ -99,7 +99,7 @@ exports.saveProject = function(request, response, next) {
 };
 
 exports.deleteProject = function(request, response, next) {
-    var projectId = request.param.projectId;
+    var projectId = request.params.projectId;
 
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
