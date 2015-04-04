@@ -5,8 +5,6 @@
  **/
 var async = require('async');
 var _ = require('underscore');
-var BookingsRepository = require('../model/BookingsRepository');
-var bookingsRepository = new BookingsRepository();
 var Booking = require('../model/Booking');
 var BookingModel = require('../model/BookingModel');
 var bookingModel = new BookingModel();
@@ -20,7 +18,7 @@ exports.listUserBookings = function(request, response, next) {
     console.info('Listing of all bookings of user with id' + userId);
 
 
-    bookingsRepository.listAllUserBookings(userId, function(err, results) {
+    bookingModel.listAllUserBookings(userId, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -42,7 +40,7 @@ exports.listUserProjectBookings = function(request, response, next) {
     console.info('Listing of all bookings by given project ' + projectId + ' of user with id ' + userId);
 
 
-    bookingsRepository.listUserProjectBookings(userId, projectId, function(err, results) {
+    bookingModel.listUserProjectBookings(userId, projectId, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -59,7 +57,7 @@ exports.listUserProjectBookings = function(request, response, next) {
 exports.listBookings = function(request, response, next) {
     console.info('Listing of all bookings');
 
-    bookingsRepository.listAllBookings(function(err, results) {
+    bookingModel.listAllBookings(function(err, results) {
         if (err) {
             return next(err);
         }
@@ -120,6 +118,9 @@ exports.saveBooking = function(request, response, next) {
 
 };
 
+/**
+ * Deletes booking from db
+ */
 exports.deleteBooking = function(request, response, next) {
     var userId = request.user.getDbId();
     var bookingId = request.params.bookingId;
@@ -133,7 +134,7 @@ exports.deleteBooking = function(request, response, next) {
 
     var existingBooking = new Booking(bookingId, null, null, userId);
 
-    bookingsRepository.deleteExistingBooking(existingBooking, function(err, result) {
+    bookingModel.deleteExistingBooking(existingBooking, function(err, result) {
         if (err) {
             return next(err);
         }

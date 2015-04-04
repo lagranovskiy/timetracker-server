@@ -67,6 +67,61 @@ var BookingModel = function() {
     return {
 
         /**
+         * listUserBookings - List all bookings of given user
+         *
+         * @param  {type} userId   description
+         * @param  {type} callback description
+         * @return {type}          description         
+         */
+        listUserBookings: function(userId, callback) {
+            if (!userId) {
+                callback('User userid is null');
+            }
+            bookingsRepository.listAllUserBookings(userId, function(err, results) {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(null, results);
+            });
+        },
+
+        /**
+         * listUserProjectBookings - List all user booking of given project
+         *
+         * @param  {type} userId    description
+         * @param  {type} projectId description
+         * @param  {type} callback  description
+         * @return {type}           description
+         */
+        listUserProjectBookings: function(userId, projectId, callback) {
+            if (!userId) {
+                callback('User userid is null');
+            }
+            if (!projectId) {
+                callback('User project id is null');
+            }
+            bookingsRepository.listUserProjectBookings(userId, projectId, function(err, results) {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(null, results);
+            });
+        },
+
+        listBookings: function(callback) {
+
+            bookingsRepository.listAllBookings(function(err, results) {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(null, results);
+            });
+        },
+
+        /**
          * Creates a new booking
          * */
         createNewBooking: function(bookingData, callback) {
