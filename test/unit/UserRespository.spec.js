@@ -52,7 +52,6 @@ describe('User Repository test', function() {
 
             repository = new UserRepository();
             repository.createUserWithPerson({}, function(err, createdUser) {
-                debugger;
                 should(createdUser.id).be.equal(1234);
                 should(createdUser.uid).be.equal('test');
                 should(createdUser.pwdHash).be.equal('qwert');

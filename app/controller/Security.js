@@ -132,18 +132,6 @@ exports.registerUser = function(req, username, password, done) {
 
             var userData = req.body;
 
-            /*
-            {
-            	"username":"leonid",
-            	"password":"prodyna",
-             	"forename": "Leonid",
-                "surname": "Agranovskiy",
-                "birthday": 1245566767,
-                "email": "test@agranovskiy.de",
-                "phone": "12346"
-            }
-
-            */
             // Security check. get only allowed Properties
             var securedUserData = _.pick(userData, 'forename', 'surname', 'birthday', 'email', 'phone', 'username');
 

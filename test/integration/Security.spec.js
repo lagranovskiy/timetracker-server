@@ -32,7 +32,7 @@ describe('Authentication test', function() {
 
             var userSecurityStub = sandbox.stub(security, 'authenticateUser', function(req, username, password, done) {
                 done(null, {
-                    getUid: function() {
+                    get uid() {
                         return 'tester';
                     }
                 });
