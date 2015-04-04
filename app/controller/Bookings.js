@@ -14,7 +14,7 @@ var bookingModel = new BookingModel();
  * TODO: Implement limit functionality
  */
 exports.listUserBookings = function(request, response, next) {
-    var userId = request.user.getDbId();
+    var userId = request.user.id;
     console.info('Listing of all bookings of user with id' + userId);
 
 
@@ -31,7 +31,7 @@ exports.listUserBookings = function(request, response, next) {
  * Lists all bookings user made for given project
  */
 exports.listUserProjectBookings = function(request, response, next) {
-    var userId = request.user.getDbId();
+    var userId = request.user.id;
     var projectId = request.params.projectId;
     if (!projectId) {
         next('Cannot resolve project bookings. No project ID transfered.');
@@ -70,7 +70,7 @@ exports.listBookings = function(request, response, next) {
  * Create a new booking
  */
 exports.createBooking = function(request, response, next) {
-    var userId = request.user.getDbId();
+    var userId = request.user.id;
 
     console.info('Creating of a new booking for user ' + userId);
 
@@ -92,7 +92,7 @@ exports.createBooking = function(request, response, next) {
  * Updates existing booking
  */
 exports.saveBooking = function(request, response, next) {
-    var userId = request.user.getDbId();
+    var userId = request.user.id;
     var bookingId = request.params.bookingId;
     var bookingData = request.body;
 
@@ -122,7 +122,7 @@ exports.saveBooking = function(request, response, next) {
  * Deletes booking from db
  */
 exports.deleteBooking = function(request, response, next) {
-    var userId = request.user.getDbId();
+    var userId = request.user.id;
     var bookingId = request.params.bookingId;
 
     console.info('Deliting of a existing booking with id ' + bookingId + ' for user ' + userId);

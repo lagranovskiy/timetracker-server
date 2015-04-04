@@ -152,6 +152,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-istanbul');
     grunt.loadNpmTasks('grunt-env');
 
+    grunt.loadNpmTasks('grunt-debug-task');
+
 
     // tasks
     grunt.registerTask('server', ['concurrent:target']);

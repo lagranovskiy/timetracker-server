@@ -20,7 +20,7 @@ var projectAssignmentRepository = new ProjectAssignmentRepository();
  * @returns {void}
  */
 exports.listVisibleProjects = function(request, response, next) {
-    var userId = request.user.getDbId();
+    var userId = request.user.id;
     projectAssignmentRepository.listProjectsOfPerson(userId, function(err, results) {
         if (err) {
             return next(err);

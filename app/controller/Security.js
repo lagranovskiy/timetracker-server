@@ -23,9 +23,9 @@ exports.sendAuthData = function(req, res) {
     }
 
     res.status(200).json({
-        id: req.user.getDbId(),
-        userId: req.user.getUid(),
-        groups: req.user.getGroups(),
+        id: req.user.id,
+        userId: req.user.uid,
+        groups: req.user.groups,
         session: req.sessionID
     });
 };
@@ -41,7 +41,7 @@ exports.logout = function(req, res, next) {
         return res.status(500).send('No active session found.');
     }
 
-    console.info('Session ' + req.sessionID + ' closed. User ' + req.user.getUid() + ' logger out.');
+    console.info('Session ' + req.sessionID + ' closed. User ' + req.user.uid + ' logger out.');
     req.logOut();
     res.clearCookie('connect.sid');
     res.status(200).send('Logged out');
@@ -88,7 +88,7 @@ exports.authenticateUser = function(req, uid, password, done) {
             if (!user) {
                 return callback(null, false);
             }
-            var authenticationResult = md5(password) === user.getPwdHash();
+            var authenticationResult = md5(password) === user.pwdHash;
             if (authenticationResult) {
                 console.info('User ' + uid + ' logged in.');
                 callback(null, user);
@@ -145,7 +145,7 @@ exports.registerUser = function(req, username, password, done) {
 
             */
             // Security check. get only allowed Properties
-            var securedUserData = _.pick(userData, 'password', 'forename', 'surname', 'birthday', 'email', 'phone', 'username');
+            var securedUserData = _.pick(userData, 'forename', 'surname', 'birthday', 'email', 'phone', 'username');
 
             // Fill missing values like password hash
             securedUserData.uid = username;

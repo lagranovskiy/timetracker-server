@@ -30,9 +30,12 @@ UserRepository.prototype.createUserWithPerson = function(userData, retValCallbac
             if (results.length > 1) {
                 return retValCallback('Illegal registration state.');
             }
+            var groupArray = [];
+            var result = results[0];
+            groupArray.push(result.Group);
 
-            var createdUser = new User(results[0].user);
-            createdUser.addGroup(results[0].Group);
+            var createdUser = new User(result.user.id, result.user.data, groupArray);
+
             return callback(null, createdUser);
         }
     ], retValCallback);
@@ -69,7 +72,9 @@ UserRepository.prototype.findUser = function(userId, retValCallback) {
                 return retValCallback('Illegal authentication state.');
             }
 
-            return retValCallback(null, new User(results[0].user));
+            var result = results[0];
+
+            return retValCallback(null, new User(result.user.id, result.user.data, []));
         }
     ]);
 };
@@ -78,7 +83,7 @@ UserRepository.prototype.findUser = function(userId, retValCallback) {
 /**
  * Resolves used with its groups from db
  * That is a full resolving with groups etc.
- 
+
  * @param {String}   userId         Userid for search
  * @param {Function} retValCallback callback function that will be called with user object as a result
  */
@@ -109,17 +114,20 @@ UserRepository.prototype.getUser = function(uid, retValCallback) {
                 return retValCallback('Unique Constrained corrupted. More then one user found');
             }
 
-            var authenticatedUser = new User(results[0].user);
-            authenticatedUser.addGroup(results[0].MainGroup);
+            var result = results[0];
+            var groupArray = [];
+            groupArray.push(result.MainGroup);
 
-            if (results[0].OtherGroups) {
-                var i, otherGroups = results[0].OtherGroups.toString().split(',');
+            if (result.OtherGroups) {
+                var i, otherGroups = result.OtherGroups.toString().split(',');
 
                 for (i = 0; i < otherGroups.length; i++) {
-                    authenticatedUser.addGroup(otherGroups[i]);
+                    groupArray.push(otherGroups[i]);
                 }
             }
-            return retValCallback(null, authenticatedUser);
+
+            var resolvedUser = new User(result.user.id, result.user.data, groupArray);
+            return retValCallback(null, resolvedUser);
         }
     ]);
 };

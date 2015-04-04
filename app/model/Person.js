@@ -1,25 +1,60 @@
+var util = require('util'),
+    Entity = require('./Entity'),
+    extend = require('object-extend');
+
 /**
  * Person data entity
- ****/
+ **/
+var Person = function(personId, personData) {
+    var data = {};
+    if (personData) {
+        extend(data, personData);
+    }
 
-var Person = function (dbPerson) {
 
-    return {
+    return extend(Person.super_(personId, personData), {
+
         /**
-         * Returns node id
+         * Forename of the person1
          */
-        getDbId: function () {
-            return dbPerson.id;
+        get forename() {
+            return data.forename;
         },
 
         /**
-         * Returns original userdata object
-         * @returns {[[Type]]} [[Description]]
+         * Surname of person
          */
-        getData: function () {
-            return dbPerson.data;
+        get surname() {
+            return data.surname;
+        },
+
+
+        /**
+         * Birthday of person
+         */
+        get birthday() {
+            return data.birthday;
+        },
+
+
+        /**
+         * Email of person
+         */
+        get email() {
+            return data.email;
+        },
+
+
+        /**
+         * Contact phone
+         */
+        get phone() {
+            return data.phone;
         }
 
-    };
+    });
 };
+
+util.inherits(Person, Entity);
+
 module.exports = Person;

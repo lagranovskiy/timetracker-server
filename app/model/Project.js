@@ -8,6 +8,11 @@ var util = require('util'),
  */
 var Project = function(projectId, projectData) {
 
+    var data = {};
+    if (projectData) {
+        extend(data, projectData);
+    }
+
     return extend(Project.super_(projectId, projectData), {
 
         /**
@@ -15,15 +20,23 @@ var Project = function(projectId, projectData) {
          * @returns {String} project name
          */
         get projectName() {
-            return projectData ? projectData.projectName : null;
+            return data.projectName;
         },
 
+
+        /**
+         * Customer name of the project
+         */
         get customerName() {
-            return projectData ? projectData.customerName : null;
+            return data.customerName;
         },
 
+
+        /**
+         * Description of the project        
+         */
         get description() {
-            return projectData ? projectData.description : null;
+            return data.description;
         },
 
     });

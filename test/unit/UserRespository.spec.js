@@ -52,9 +52,10 @@ describe('User Repository test', function() {
 
             repository = new UserRepository();
             repository.createUserWithPerson({}, function(err, createdUser) {
-                should(createdUser.getDbId()).be.equal(1234);
-                should(createdUser.getUid()).be.equal('test');
-                should(createdUser.getPwdHash()).be.equal('qwert');
+                debugger;
+                should(createdUser.id).be.equal(1234);
+                should(createdUser.uid).be.equal('test');
+                should(createdUser.pwdHash).be.equal('qwert');
                 done();
             });
 
@@ -138,9 +139,9 @@ describe('User Repository test', function() {
 
 
             repository.findUser('Tester', function(err, foundUser) {
-                should(foundUser.getDbId()).be.equal(1234);
-                should(foundUser.getUid()).be.equal('test');
-                should(foundUser.getPwdHash()).be.equal('qwert');
+                should(foundUser.id).be.equal(1234);
+                should(foundUser.uid).be.equal('test');
+                should(foundUser.pwdHash).be.equal('qwert');
                 done();
             });
         });
@@ -194,14 +195,14 @@ describe('User Repository test', function() {
             });
 
             repository.getUser('Tester', function(err, foundUser) {
-                should(foundUser.getDbId()).be.equal(1234);
-                should(foundUser.getUid()).be.equal('test');
-                should(foundUser.getPwdHash()).be.equal('qwert');
+                should(foundUser.id).be.equal(1234);
+                should(foundUser.uid).be.equal('test');
+                should(foundUser.pwdHash).be.equal('qwert');
 
-                should(foundUser.getGroups().length).be.equal(3);
-                should(foundUser.getGroups()[0]).be.equal('User');
-                should(foundUser.getGroups()[1]).be.equal('Manager');
-                should(foundUser.getGroups()[2]).be.equal('Admin');
+                should(foundUser.groups.length).be.equal(3);
+                should(foundUser.groups[0]).be.equal('User');
+                should(foundUser.groups[1]).be.equal('Manager');
+                should(foundUser.groups[2]).be.equal('Admin');
 
                 done();
             });

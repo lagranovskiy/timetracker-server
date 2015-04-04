@@ -1,23 +1,31 @@
+var util = require('util'),
+    Entity = require('./Entity'),
+    extend = require('object-extend');
+
 /**
  * User entity
  ****/
 
-var User = function(dbUser) {
-    var groups = [];
+var User = function(userId, userData, userGroups) {
 
-    return {
-        /**
-         * Returns node id
-         */
-        getDbId: function() {
-            return dbUser.id;
-        },
+    var data = {};
+    if (userData) {
+        extend(data, userData);
+    }
+
+    var groups = [];
+    if (userGroups) {
+        groups = userGroups;
+    }
+
+    return extend(User.super_(userId, userData), {
+
         /**
          * returns UID
          * @returns {String} Userid of user
          */
-        getUid: function() {
-            return dbUser.data.uid;
+        get uid() {
+            return data.uid;
         },
 
         /**
@@ -25,8 +33,16 @@ var User = function(dbUser) {
          *
          * @returns {String} pwd hash
          */
-        getPwdHash: function() {
-            return dbUser.data.passwordMD5;
+        get pwdHash() {
+            return data.passwordMD5;
+        },
+
+
+        /**
+         * Returns the registration date of the user
+         */
+        get registrationDate() {
+            return data.registrationDate;
         },
 
         /**
@@ -34,27 +50,13 @@ var User = function(dbUser) {
          *
          * @returns {Array} Returns array of groups
          */
-        getGroups: function() {
+        get groups() {
             return groups;
-        },
-
-        /**
-         * Adds a group to this user.
-         * @param  String userGroup
-         */
-        addGroup: function(userGroup) {
-            if (userGroup && userGroup !== "")
-                groups.push(userGroup);
-        },
-
-        /**
-         * Returns original userdata object
-         * @returns {[[Type]]} [[Description]]
-         */
-        getData: function() {
-            return dbUser.data;
         }
 
-    };
+    });
 };
+
+util.inherits(User, Entity);
+
 module.exports = User;

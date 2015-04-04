@@ -71,9 +71,9 @@ var BookingModel = function() {
          *
          * @param  {type} userId   description
          * @param  {type} callback description
-         * @return {type}          description         
+         * @return {type}          description
          */
-        listUserBookings: function(userId, callback) {
+        listAllUserBookings: function(userId, callback) {
             if (!userId) {
                 callback('User userid is null');
             }
@@ -110,7 +110,7 @@ var BookingModel = function() {
             });
         },
 
-        listBookings: function(callback) {
+        listAllBookings: function(callback) {
 
             bookingsRepository.listAllBookings(function(err, results) {
                 if (err) {

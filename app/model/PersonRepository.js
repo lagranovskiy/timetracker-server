@@ -25,7 +25,7 @@ PersonRepository.prototype.listAllPersons = function(retValCallback) {
         function(results, callback) {
             var personList = [];
             _.each(results, function(person) {
-                personList.push(new Person(person));
+                personList.push(new Person(person.id, person.data));
             });
 
             retValCallback(null, personList);
