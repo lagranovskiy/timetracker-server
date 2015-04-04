@@ -266,6 +266,55 @@ describe('Project Repository test', function() {
 
 
 
+        it('Test booking collidation method', function(done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+                callback(null, testBookingRs);
+            });
+
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+                var collisionBooking = new Booking(123, testBookingInput, 150, 105);
+                var collistionArray = [];
+                collistionArray.push(collisionBooking);
+                callback(null, collistionArray);
+            });
+
+            var collisionBooking = new Booking(123, testBookingInput, 150, 105);
+
+            bookingModel.testBookingCollisions(collisionBooking, function(err, booking) {
+                should(err).be.String;
+                done();
+            });
+
+        });
+
+
+        it('Testdeletion of bookings', function(done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+                callback(null, testBookingRs);
+            });
+
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'getRelationshipById', function(relationId, callback) {
+                var relation = {
+                    id: relationId,
+                    data: testBookingRs[0].booking.data,
+                    del: function(callback) {
+                        return callback(null);
+                    }
+                };
+                callback(null, relation);
+            });
+
+
+            bookingModel.deleteBooking(123, 1234, function(err, success) {
+                should(err).not.be.String;
+                should(success).be.true;
+                done();
+            });
+
+        });
+
+
+
     });
 
 });
