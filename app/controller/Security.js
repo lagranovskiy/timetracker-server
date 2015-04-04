@@ -11,7 +11,7 @@ var userRepository = new UserRepository();
 var md5 = require('MD5');
 
 
-/**
+/** 
  * Sends auth data to the user
  *
  * @param {Object} req Request

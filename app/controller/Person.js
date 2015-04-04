@@ -8,6 +8,22 @@ var _ = require('underscore');
 var PersonRepository = require('../model/PersonRepository');
 var personRepository = new PersonRepository();
 
+
+/**
+ * Resolves a list of all persons
+ */
+exports.listPersons = function(request, response, next) {
+    console.info('Resolving a list of all persons.');
+
+    personRepository.listPersons(function(err, data) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(data);
+    });
+};
+
 /**
  * Returns person information for given person
  *

@@ -21,6 +21,8 @@ var projectAssignmentRepository = new ProjectAssignmentRepository();
  */
 exports.listVisibleProjects = function(request, response, next) {
     var userId = request.user.id;
+    console.info('Listing of visible projects of user ' + userId);
+
     projectAssignmentRepository.listProjectsOfPerson(userId, function(err, results) {
         if (err) {
             return next(err);
@@ -40,6 +42,7 @@ exports.listVisibleProjects = function(request, response, next) {
  * TODO: Make the response parametrized with start, skip
  */
 exports.listProjects = function(request, response, next) {
+    console.info('Listing of all projects');
     projectRepository.listAllProjects(function(err, results) {
         if (err) {
             return next(err);
@@ -50,8 +53,67 @@ exports.listProjects = function(request, response, next) {
 };
 
 
-exports.listProjectBookings = function(request, response, next) {
-    // TODO: Implement it
+/**
+ * Retrvieve project statistics
+ */
+exports.projectStatistic = function(request, response, next) {
+    var projectId = request.params.projectId * 1;
+    console.info('Resolving project statistics for project ' + projectId);
+
+    if (!projectId) {
+        return next('Cannot resolve project statistics. No projectId found in request.');
+    }
+
+    projectRepository.resolveProjectStatistics(projectId, function(err, statistic) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(statistic);
+    });
+};
+
+
+/**
+ * Retrieve project resources
+ */
+exports.projectResources = function(request, response, next) {
+    var projectId = request.params.projectId * 1;
+    console.info('Resolving project resources for project ' + projectId);
+
+    if (!projectId) {
+        return next('Cannot resolve project resources. No projectId found in request.');
+    }
+
+    projectRepository.resolveProjectResources(projectId, function(err, resources) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(resources);
+    });
+};
+
+
+/**
+ * Retrieve project bookings
+ */
+exports.projectBookings = function(request, response, next) {
+    var projectId = request.params.projectId * 1;
+    console.info('Resolving project bookings for project ' + projectId);
+
+    if (!projectId) {
+        return next('Cannot resolve project bookings. No projectId found in request.');
+    }
+
+    projectRepository.resolveProjectBookings(projectId, function(err, bookings) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(bookings);
+    });
+
 };
 
 

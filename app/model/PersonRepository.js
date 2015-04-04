@@ -8,10 +8,14 @@ var async = require('async'),
 
 function PersonRepository() {}
 
-/*
- * Returns a list of all person objects saved in system
+
+/**
+ * PersonRepository.prototype.listPersons -  Returns a list of all person objects saved in system
+ *
+ * @param  {type} retValCallback description
+ * @return {type}                description
  */
-PersonRepository.prototype.listAllPersons = function(retValCallback) {
+PersonRepository.prototype.listPersons = function(retValCallback) {
     var query = [
             "MATCH (person:Person)",
             "RETURN person"
@@ -24,8 +28,8 @@ PersonRepository.prototype.listAllPersons = function(retValCallback) {
         },
         function(results, callback) {
             var personList = [];
-            _.each(results, function(person) {
-                personList.push(new Person(person.id, person.data));
+            _.each(results, function(result) {
+                personList.push(new Person(result.person.id, result.person.data));
             });
 
             retValCallback(null, personList);
