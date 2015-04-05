@@ -62,7 +62,7 @@ var BookingModel = function() {
         var bookingUserId = bookingData.userId;
         var bookingId = bookingData.id;
 
-        bookingData = _.omit(bookingData, ['id', 'projectId', 'userId', 'data']);
+        bookingData = _.pick(bookingData, ['workDay', 'workStarted', 'workFinished', 'pause', 'createdTime', 'lastUpdatedTime', 'comment']);
         var newBooking = new Booking(bookingId, bookingData, bookingDataProjectId, bookingUserId);
 
         return newBooking;

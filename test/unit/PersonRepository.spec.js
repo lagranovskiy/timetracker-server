@@ -53,7 +53,7 @@ describe('Project Repository test', function() {
             });
 
             repository = new PersonRepository();
-            repository.listAllPersons(function(err, persons) {
+            repository.listPersons(function(err, persons) {
                 should(persons.length).be.equal(1);
                 done();
             });

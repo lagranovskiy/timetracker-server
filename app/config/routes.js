@@ -1,8 +1,8 @@
-var project = require('../controller/Project');
-var person = require('../controller/Person');
-var bookings = require('../controller/Bookings');
-var security = require('../controller/Security');
-var data = require('../controller/Data');
+var projectController = require('../controller/ProjectController');
+var personController = require('../controller/PersonController');
+var bookingController = require('../controller/BookingController');
+var securityController = require('../controller/SecurityController');
+var dataController = require('../controller/DataController');
 var passport = require('passport');
 
 module.exports = function(app, config, passport) {
@@ -34,22 +34,22 @@ module.exports = function(app, config, passport) {
     });
 
     //DANEGER: Temp data pumping ONLY for DEV
-    app.get('/init', data.reinitDB);
+    app.get('/init', dataController.reinitDB);
 
 
     /**
      * Security Auth Methods
      */
-    app.post('/auth/login', passport.authenticate('local'), security.sendAuthData);
-    app.get('/auth', isLoggedIn, security.sendAuthData);
-    app.post('/auth/logout', security.logout);
-    app.post('/auth/sign', passport.authenticate('localsign'), security.sendAuthData);
+    app.post('/auth/login', passport.authenticate('local'), securityController.sendAuthData);
+    app.get('/auth', isLoggedIn, securityController.sendAuthData);
+    app.post('/auth/logout', securityController.logout);
+    app.post('/auth/sign', passport.authenticate('localsign'), securityController.sendAuthData);
 
 
     /**
      * CRUD Methods for project entity
      */
-    app.get('/person/', isLoggedIn, person.listPersons);
+    app.get('/person/', isLoggedIn, personController.listPersons);
     //app.put('/person/:projectId', isLoggedIn, person.savePerson);
     //app.post('/person/', isLoggedIn, person.createPerson);
     //app.delete('/person/:projectId', isLoggedIn, person.deletePerson);
@@ -58,35 +58,35 @@ module.exports = function(app, config, passport) {
     /**
      * CRUD Methods for project entity
      */
-    app.get('/project/', isLoggedIn, project.listProjects);
-    app.put('/project/:projectId', isLoggedIn, project.saveProject);
-    app.post('/project/', isLoggedIn, project.createProject);
-    app.delete('/project/:projectId', isLoggedIn, project.deleteProject);
+    app.get('/project/', isLoggedIn, projectController.listProjects);
+    app.put('/project/:projectId', isLoggedIn, projectController.saveProject);
+    app.post('/project/', isLoggedIn, projectController.createProject);
+    app.delete('/project/:projectId', isLoggedIn, projectController.deleteProject);
 
     /**
      * Business methods for project entity
      */
-    app.get('/project/:projectId/statistics', isLoggedIn, project.projectStatistic);
-    app.get('/project/:projectId/bookings', isLoggedIn, project.projectBookings);
-    app.get('/project/:projectId/resources', isLoggedIn, project.projectResources);
+    app.get('/project/:projectId/statistics', isLoggedIn, projectController.projectStatistic);
+    app.get('/project/:projectId/bookings', isLoggedIn, projectController.projectBookings);
+    app.get('/project/:projectId/resources', isLoggedIn, projectController.projectResources);
 
 
     /**
      * CRUD Methods for booking entity
      */
-    app.get('/booking/', isLoggedIn, bookings.listBookings);
-    app.put('/booking/:bookingId', isLoggedIn, bookings.saveBooking);
-    app.post('/booking/', isLoggedIn, bookings.createBooking);
-    app.delete('/booking/:bookingId', isLoggedIn, bookings.deleteBooking);
+    app.get('/booking/', isLoggedIn, bookingController.listBookings);
+    app.put('/booking/:bookingId', isLoggedIn, bookingController.saveBooking);
+    app.post('/booking/', isLoggedIn, bookingController.createBooking);
+    app.delete('/booking/:bookingId', isLoggedIn, bookingController.deleteBooking);
 
 
     /**
      * Business methods misc
      */
-    app.get('/user/check/:userId', person.checkUsernameExists);
-    app.get('/user/bookings', isLoggedIn, bookings.listUserBookings);
-    app.get('/user/project/:projectId/bookings', isLoggedIn, bookings.listUserProjectBookings);
-    app.get('/user/projects', isLoggedIn, project.listVisibleProjects);
+    app.get('/user/check/:userId', personController.checkUsernameExists);
+    app.get('/user/bookings', isLoggedIn, bookingController.listUserBookings);
+    app.get('/user/project/:projectId/bookings', isLoggedIn, bookingController.listUserProjectBookings);
+    app.get('/user/projects', isLoggedIn, projectController.listVisibleProjects);
     //    app.get('/project/:projectId/member', isLoggedIn, project.getMembers);
 
     //    app.get('/person/:personId', isLoggedIn, person.getPersonData);

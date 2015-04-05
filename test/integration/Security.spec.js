@@ -3,7 +3,7 @@ var request = require('supertest'),
     sinon = require('sinon');
 var should = require('should');
 var requireHelper = require('../require_helper');
-var security = requireHelper('controller/Security');
+var securityController = requireHelper('controller/SecurityController');
 
 describe('Authentication test', function() {
 
@@ -20,7 +20,7 @@ describe('Authentication test', function() {
 
         it('After correct auth user core data sent to the user', function(done) {
 
-            var securityStub = sandbox.stub(security, 'sendAuthData', function(req, res) {
+            var securityStub = sandbox.stub(securityController, 'sendAuthData', function(req, res) {
                 res.status(200).json({
                     id: 123,
                     userId: 'tester',
@@ -30,7 +30,7 @@ describe('Authentication test', function() {
             });
 
 
-            var userSecurityStub = sandbox.stub(security, 'authenticateUser', function(req, username, password, done) {
+            var userSecurityStub = sandbox.stub(securityController, 'authenticateUser', function(req, username, password, done) {
                 done(null, {
                     get uid() {
                         return 'tester';

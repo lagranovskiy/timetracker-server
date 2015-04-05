@@ -4,7 +4,7 @@
 var LocalStrategy = require('passport-local').Strategy;
 
 // load up the user model
-var security = require('../controller/Security');
+var securityController = require('../controller/SecurityController');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -16,7 +16,7 @@ module.exports = function(passport) {
 
     passport.deserializeUser(function(uid, done) {
         console.info('Call from: ' + uid);
-        security.resolveUser(uid, function(err, user) {
+        securityController.resolveUser(uid, function(err, user) {
             done(err, user);
         });
     });
@@ -26,10 +26,10 @@ module.exports = function(passport) {
      */
     passport.use('local', new LocalStrategy({
         passReqToCallback: true
-    }, security.authenticateUser));
+    }, securityController.authenticateUser));
 
 
     passport.use('localsign', new LocalStrategy({
         passReqToCallback: true
-    }, security.registerUser));
+    }, securityController.registerUser));
 };

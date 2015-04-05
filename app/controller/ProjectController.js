@@ -5,11 +5,8 @@
  **/
 var async = require('async');
 var _ = require('underscore');
-var ProjectRepository = require('../model/ProjectRepository');
-var projectRepository = new ProjectRepository();
-var Project = require('../model/Project');
-var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');
-var projectAssignmentRepository = new ProjectAssignmentRepository();
+var ProjectModel = require('../model/ProjectModel');
+var projectModel = new ProjectModel();
 
 /**
  * Lists all projects where the user is assigned to and may create bookings
@@ -23,7 +20,7 @@ exports.listVisibleProjects = function(request, response, next) {
     var userId = request.user.id;
     console.info('Listing of visible projects of user ' + userId);
 
-    projectAssignmentRepository.listProjectsOfPerson(userId, function(err, results) {
+    projectModel.listVisibleProjects(userId, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -43,7 +40,7 @@ exports.listVisibleProjects = function(request, response, next) {
  */
 exports.listProjects = function(request, response, next) {
     console.info('Listing of all projects');
-    projectRepository.listAllProjects(function(err, results) {
+    projectModel.listProjects(function(err, results) {
         if (err) {
             return next(err);
         }
@@ -64,7 +61,7 @@ exports.projectStatistic = function(request, response, next) {
         return next('Cannot resolve project statistics. No projectId found in request.');
     }
 
-    projectRepository.resolveProjectStatistics(projectId, function(err, statistic) {
+    projectModel.projectStatistic(projectId, function(err, statistic) {
         if (err) {
             return next(err);
         }
@@ -85,7 +82,7 @@ exports.projectResources = function(request, response, next) {
         return next('Cannot resolve project resources. No projectId found in request.');
     }
 
-    projectRepository.resolveProjectResources(projectId, function(err, resources) {
+    projectModel.projectResources(projectId, function(err, resources) {
         if (err) {
             return next(err);
         }
@@ -106,7 +103,7 @@ exports.projectBookings = function(request, response, next) {
         return next('Cannot resolve project bookings. No projectId found in request.');
     }
 
-    projectRepository.resolveProjectBookings(projectId, function(err, bookings) {
+    projectModel.projectBookings(projectId, function(err, bookings) {
         if (err) {
             return next(err);
         }
@@ -117,17 +114,16 @@ exports.projectBookings = function(request, response, next) {
 };
 
 
+/**
+ * Creates a new project
+ */
 exports.createProject = function(request, response, next) {
     var projectData = request.body;
     if (!projectData) {
         return next('Cannot create project. No project data found in request.');
     }
 
-    var newProject = new Project(null, projectData);
-    // Security check. get only allowed Properties
-    // projectData = _.pick(projectData, 'projectName', 'projectId', 'customerName', 'description');
-
-    projectRepository.createNewProject(newProject, function(err, results) {
+    projectModel.createNewProject(projectData, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -137,9 +133,12 @@ exports.createProject = function(request, response, next) {
 };
 
 
+/**
+ * Saves existing project
+ */
 exports.saveProject = function(request, response, next) {
     var projectData = request.body;
-    var projectId = request.params.projectId;
+    var projectId = request.params.projectId * 1;
 
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
@@ -147,11 +146,8 @@ exports.saveProject = function(request, response, next) {
     if (!projectData) {
         return next('Cannot create project. No project data found in request.');
     }
-    var newProject = new Project(projectId, projectData);
-    // Security check. get only allowed Properties
-    // projectData = _.pick(projectData, 'projectName', 'projectId', 'customerName', 'description');
 
-    projectRepository.saveProject(projectId, newProject, function(err, results) {
+    projectModel.saveProject(projectId, projectData, function(err, results) {
         if (err) {
             return next(err);
         }
@@ -160,6 +156,10 @@ exports.saveProject = function(request, response, next) {
     });
 };
 
+
+/**
+ * Deletes a project
+ */
 exports.deleteProject = function(request, response, next) {
     var projectId = request.params.projectId;
 
@@ -167,7 +167,7 @@ exports.deleteProject = function(request, response, next) {
         return next('Cannot create project. No projectId found in request.');
     }
 
-    projectRepository.deleteProject(projectId, function(err, results) {
+    projectModel.deleteProject(projectId, function(err, results) {
         if (err) {
             return next(err);
         }
