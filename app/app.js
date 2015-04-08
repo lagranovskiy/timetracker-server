@@ -20,6 +20,7 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var fs = require('fs');
+var relic = require('newrelic');
 
 
 var http = require('http');
