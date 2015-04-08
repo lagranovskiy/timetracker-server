@@ -2,6 +2,7 @@ var projectController = require('../controller/ProjectController');
 var personController = require('../controller/PersonController');
 var bookingController = require('../controller/BookingController');
 var securityController = require('../controller/SecurityController');
+var assignmentController = require('../controller/AssignmentController');
 var dataController = require('../controller/DataController');
 var passport = require('passport');
 
@@ -47,7 +48,7 @@ module.exports = function(app, config, passport) {
 
 
     /**
-     * CRUD Methods for project entity
+     * CRUD Methods for person entity
      */
     app.get('/person/', isLoggedIn, personController.listPersons);
     //app.put('/person/:projectId', isLoggedIn, person.savePerson);
@@ -79,6 +80,17 @@ module.exports = function(app, config, passport) {
     app.post('/booking/', isLoggedIn, bookingController.createBooking);
     app.delete('/booking/:bookingId', isLoggedIn, bookingController.deleteBooking);
 
+
+    /**
+     * CRUD Methods for roles
+     */
+    app.get('/role/', isLoggedIn, personController.listRoles);
+
+    /**
+     * CRUD Methods for assignments
+     */
+    app.put('/assignment/', isLoggedIn, assignmentController.updateAssignments);
+    app.delete('/assignment/:assignmentId', isLoggedIn, assignmentController.deleteAssignment);
 
     /**
      * Business methods misc

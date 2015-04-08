@@ -131,10 +131,11 @@ exports.deleteBooking = function(request, response, next) {
         return next('Cannot delete booking. No bookingId found in request.');
     }
     bookingId = bookingId * 1; // Convert bookingId to number
+    userId = userId * 1; // Convert bookingId to number
 
     var existingBooking = new Booking(bookingId, null, null, userId);
 
-    bookingModel.deleteExistingBooking(existingBooking, function(err, result) {
+    bookingModel.deleteBooking(bookingId,userId, function(err, result) {
         if (err) {
             return next(err);
         }

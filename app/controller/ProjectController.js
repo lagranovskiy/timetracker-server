@@ -118,6 +118,8 @@ exports.projectBookings = function(request, response, next) {
  * Creates a new project
  */
 exports.createProject = function(request, response, next) {
+    console.info('Creating project ');
+
     var projectData = request.body;
     if (!projectData) {
         return next('Cannot create project. No project data found in request.');
@@ -137,9 +139,10 @@ exports.createProject = function(request, response, next) {
  * Saves existing project
  */
 exports.saveProject = function(request, response, next) {
+
     var projectData = request.body;
     var projectId = request.params.projectId * 1;
-
+    console.info('Saving project ' + projectId);
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
     }
@@ -162,7 +165,7 @@ exports.saveProject = function(request, response, next) {
  */
 exports.deleteProject = function(request, response, next) {
     var projectId = request.params.projectId;
-
+    console.info('Deleting project ' + projectId);
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
     }

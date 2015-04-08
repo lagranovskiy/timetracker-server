@@ -238,14 +238,18 @@ var ProjectModel = function() {
         },
 
         /**
-         * Removes project by id
-         * */
-        deleteBooking: function(projectId, callback) {
+         * Sets project as deleted
+         *
+         * @param projectId id of the project to mark as deleted
+         * @param callback
+         * @returns {*}
+         */
+        deleteProject: function(projectId, callback) {
             if (!projectId) {
                 return callback('Missing mandatory information for project removal');
             }
 
-            var bookingInstance = instanciateProject({
+            var projectInstance = instanciateProject({
                 id: projectId
             });
 

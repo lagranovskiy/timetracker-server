@@ -32,11 +32,37 @@ PersonRepository.prototype.listPersons = function(retValCallback) {
                 personList.push(new Person(result.person.id, result.person.data));
             });
 
-            retValCallback(null, personList);
+            callback(null, personList);
         }
-    ]);
+    ],retValCallback);
 };
 
+
+/**
+ * Returns a array of all roles existing in system
+ *
+ * @param retValCallback
+ */
+PersonRepository.prototype.listRoles = function(retValCallback){
+    var query = [
+        "MATCH (role:Role)",
+        "RETURN DISTINCT role.role as role"
+    ]
+        .join('\n');
+
+    async.waterfall([
+        function(callback) {
+            db.query(query, {}, callback);
+        }, function(results,callback){
+            var roleList = [];
+            _.each(results, function(result) {
+                roleList.push(result.role);
+            });
+
+            callback(null, roleList);
+        }
+    ], retValCallback);
+};
 
 
 module.exports = PersonRepository;

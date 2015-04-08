@@ -23,8 +23,8 @@ ProjectRepository.prototype.resolveProjectStatistics = function(projectId, retVa
         "MATCH path= (p)<-[b:TIME_BOOKED]-()",
         "WHERE id(p)={projectId}",
         "RETURN ",
-        "LENGTH(()-[:ON_PROJECT]-p) as ResourceCount,",
-        "LENGTH(()-[:TIME_BOOKED]-p) as BookingsCount,",
+        "LENGTH(()-[:HAS_ROLE]->(:Role)-[:ON_PROJECT]->p) as ResourceCount,",
+        "LENGTH(()-[:TIME_BOOKED]->p) as BookingsCount,",
         "SUM(reduce(totalTime = 0, n IN relationships(path)| totalTime + n.workFinished-n.workStarted)) as BookedTime, ",
         "SUM(reduce(totalPause = 0, n IN relationships(path)| totalPause + n.pause)) as BookedPause"
     ].join('\n');
@@ -107,9 +107,9 @@ ProjectRepository.prototype.resolveProjectBookings = function(projectId, retValC
  */
 ProjectRepository.prototype.resolveProjectResources = function(projectId, retValCallback) {
     var query = [
-        "MATCH (pers:Person)--(r:Role)--(p:Project)",
+        "MATCH (pers:Person)-[hr:HAS_ROLE]->(r:Role)--(p:Project)",
         "WHERE id(p)={projectId}",
-        "RETURN id(pers) as personId, r as role, id(p) as projectId"
+        "RETURN id(pers) as personId,hr as assignment, r as role, id(p) as projectId"
     ].join('\n');
 
     var params = {
@@ -126,10 +126,10 @@ ProjectRepository.prototype.resolveProjectResources = function(projectId, retVal
             _.each(results, function(result) {
 
                 var projectAssignment = {
+                    assignmentId: result.assignment.id,
                     personId: result.personId,
                     role: result.role.data.role,
-                    roleSince: result.role.data.roleSince,
-                    roleTill: result.role.data.roleTill,
+                    roleSince: result.assignment.data.created,
                     projectId: result.projectId
                 };
 
@@ -150,6 +150,7 @@ ProjectRepository.prototype.resolveProjectResources = function(projectId, retVal
 ProjectRepository.prototype.listAllProjects = function(retValCallback) {
     var query = [
         "MATCH (project:Project)",
+        "WHERE not has (project.deleted)",
         "RETURN project"
     ].join('\n');
 
@@ -235,26 +236,16 @@ ProjectRepository.prototype.saveProject = function(projectId, project, retValCal
  * Saves given project by id with new data
  */
 ProjectRepository.prototype.deleteProject = function(projectId, retValCallback) {
-    var query = [
-        "MATCH (project:Project)-[relations]-(other)",
-        "WHERE id(project)={projectId}",
-        "DELETE project, relations"
-    ].join('\n');
-
-    var params = {
-        projectId: projectId
-    };
 
     async.waterfall([
         function(callback) {
-            db.query(query, params, callback);
+            db.getNodeById(projectId,callback);
         },
-        function(results, callback) {
-            if (results.length !== 1) {
-                return retValCallback('Cannot create project with given properties.');
-            }
-
-            return callback(null, true);
+        function(result, callback) {
+            result.data.deleted = "true";
+            result.save(function(err, data){
+                callback(null,'ok');
+            });
         }
     ], retValCallback);
 };

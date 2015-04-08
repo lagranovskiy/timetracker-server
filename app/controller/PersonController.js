@@ -25,6 +25,26 @@ exports.listPersons = function(request, response, next) {
 };
 
 /**
+ * Returns a list of all roles already existing in system
+ *
+ * @param request request
+ * @param response response
+ * @param next
+ */
+exports.listRoles = function(request, response, next){
+    console.info('Getting of a role list');
+
+
+    personRepository.listRoles(function(err, data) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(data);
+    });
+};
+
+/**
  * Returns person information for given person
  *
  * @param   {Object}   request  request object

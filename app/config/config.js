@@ -19,6 +19,25 @@ var config = {
             return this;
         }
     },
+    test: {
+        host: 'localhost',
+        httpPort: 8484,
+        sslPort: 4433,
+        sessionSecret: 'mykey',
+        env: 'dev',
+        clientHost: process.env.TT_CLIENT_URL || 'http://localhost:9000',
+        db: {
+            url: 'http://localhost:7474'
+        },
+        options: {
+            key: 'certs/timetracker.key.pem',
+            cert: 'certs/timetracker.crt'
+        },
+        init: function() {
+            process.env.DEBUG = '*';
+            return this;
+        }
+    },
     prod: {
         host: 'localhost',
         httpPort: false,
