@@ -4,6 +4,7 @@
  * Controlls project entities
  **/
 var async = require('async');
+var newrelic=require('newrelic');
 var _ = require('underscore');
 var Booking = require('../model/Booking');
 var BookingModel = require('../model/BookingModel');
@@ -16,7 +17,6 @@ var bookingModel = new BookingModel();
 exports.listUserBookings = function(request, response, next) {
     var userId = request.user.id;
     console.info('Listing of all bookings of user with id' + userId);
-
 
     bookingModel.listAllUserBookings(userId, function(err, results) {
         if (err) {
@@ -57,11 +57,13 @@ exports.listUserProjectBookings = function(request, response, next) {
 exports.listBookings = function(request, response, next) {
     console.info('Listing of all bookings');
 
+
+
     bookingModel.listAllBookings(function(err, results) {
         if (err) {
             return next(err);
         }
-
+        newrelic.recordMetric('Custom/Booking/BookingsCount',results.length);
         response.send(results);
     });
 };
@@ -81,7 +83,7 @@ exports.createBooking = function(request, response, next) {
         if (err) {
             return next(err);
         }
-
+        newrelic.incrementMetric('Custom/Booking/BookingCreated',1);
         response.send(createdBooking);
     });
 
@@ -135,11 +137,12 @@ exports.deleteBooking = function(request, response, next) {
 
     var existingBooking = new Booking(bookingId, null, null, userId);
 
+
     bookingModel.deleteBooking(bookingId,userId, function(err, result) {
         if (err) {
             return next(err);
         }
-
+        newrelic.incrementMetric('Custom/Booking/BookingRemoved',1);
         response.send(result);
     });
 };

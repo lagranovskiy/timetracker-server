@@ -2,6 +2,7 @@
  * Created by lagranovskiy on 08.04.15.
  */
 var async = require('async');
+var newrelic = require('newrelic')
 var _ = require('underscore');
 var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');
 var personAssignmentRepository = new ProjectAssignmentRepository();
@@ -29,6 +30,8 @@ exports.updateAssignments = function (request, response, next) {
     if (!assignmentData) {
         return next('Cannot process assignments null');
     }
+
+    newrelic.recordMetric('Custom/Assignments/DispoActivity',assignmentData.length);
 
     // Prepare assignment call with only needed data
     async.eachSeries(assignmentData, function (assignment, callback) {
@@ -74,6 +77,7 @@ exports.updateAssignments = function (request, response, next) {
  */
 exports.deleteAssignment = function (request, response, next) {
     console.info('Deleting of assignment.');
+    newrelic.incrementMetric('Custom/Assignments/DeletedDisposition',1);
 
     var assignmentId = request.params.assignmentId;
     if(!assignmentId){

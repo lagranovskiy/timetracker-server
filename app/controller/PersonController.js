@@ -4,6 +4,7 @@
  * Controlls project entities
  **/
 var async = require('async');
+var newrelic=require('newrelic');
 var _ = require('underscore');
 var PersonRepository = require('../model/PersonRepository');
 var personRepository = new PersonRepository();
@@ -19,7 +20,7 @@ exports.listPersons = function(request, response, next) {
         if (err) {
             return next(err);
         }
-
+        newrelic.recordMetric('Custom/Person/PersonCount',data.length);
         response.send(data);
     });
 };

@@ -5,6 +5,8 @@
  **/
 var async = require('async');
 var _ = require('underscore');
+var newrelic=require('newrelic');
+
 var ProjectModel = require('../model/ProjectModel');
 var projectModel = new ProjectModel();
 
@@ -40,11 +42,12 @@ exports.listVisibleProjects = function(request, response, next) {
  */
 exports.listProjects = function(request, response, next) {
     console.info('Listing of all projects');
+
     projectModel.listProjects(function(err, results) {
         if (err) {
             return next(err);
         }
-
+        newrelic.recordMetric('Custom/Project/ProjectCount',results.length);
         response.send(results);
     });
 };
@@ -169,7 +172,7 @@ exports.deleteProject = function(request, response, next) {
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
     }
-
+    newrelic.incrementMetric('Custom/Project/DeletedProjects',1);
     projectModel.deleteProject(projectId, function(err, results) {
         if (err) {
             return next(err);
