@@ -38,13 +38,13 @@ app.use(morgan((config.env === 'dev') ? 'dev' : 'tiny')); // log every request t
 
 app.use(bodyParser.json()); // get information from html forms
 app.use(methodOverride()); // simulate DELETE and PUT
-app.use(cookieParser()); // read cookies (needed for auth)
+app.use(cookieParser(config.sessionSecret)); // read cookies (needed for auth)
 
 // Configuring Passport
 app.use(expressSession({
     secret: config.sessionSecret,
+    proxy : true,
     cookie: {
-        domain: '.pac-timetracker.herokuapp.com',
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000
     }
