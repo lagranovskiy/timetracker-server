@@ -44,7 +44,7 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(expressSession({
     secret: config.sessionSecret,
     cookie: {
-        httpOnly: false,
+        httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
