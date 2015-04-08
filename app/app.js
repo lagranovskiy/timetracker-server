@@ -45,6 +45,7 @@ app.set('trust proxy', 1) // trust first proxy
 app.use(expressSession({
     secret: config.sessionSecret,
     cookie: {
+        httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
