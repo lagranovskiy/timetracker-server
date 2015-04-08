@@ -60,15 +60,11 @@ var config = {
         host: '0.0.0.0',
         httpPort: process.env.PORT || 8000,
         sslPort: false,
-        sessionSecret: '!!§Idfesnp819819681INJUKNJ',
+        sessionSecret: 'snp819819681INJUKNJ',
         clientHost: process.env.TT_CLIENT_URL || 'TT_CLIENT_URL not set',
         env: 'prod',
         db: {
             url: process.env.GRAPHENEDB_URL
-        },
-        options: {
-            key: 'certs/timetracker.key.pem',
-            cert: 'certs/timetracker.crt'
         },
         init: function() {
             return this;
