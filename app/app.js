@@ -43,20 +43,13 @@ app.use(cookieParser(config.sessionSecret)); // read cookies (needed for auth)
 app.set('trust proxy', 1) // trust first proxy
 
 // Configuring Passport
-/**app.use(expressSession({
+app.use(expressSession({
     secret: config.sessionSecret,
     proxy: true,
     cookie: {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000
     }
-}));
-*/
-app.use(session({
-    secret: config.sessionSecret,
-    cookie: {
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000}
 }));
 
 app.use(passport.initialize());
