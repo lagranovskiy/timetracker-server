@@ -17,11 +17,11 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var session = require('cookie-session');
 var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var fs = require('fs');
-
 
 
 var http = require('http');
@@ -40,16 +40,24 @@ app.use(bodyParser.json()); // get information from html forms
 app.use(methodOverride()); // simulate DELETE and PUT
 app.use(cookieParser(config.sessionSecret)); // read cookies (needed for auth)
 
+app.set('trust proxy', 1) // trust first proxy
+
 // Configuring Passport
-app.use(expressSession({
+/**app.use(expressSession({
     secret: config.sessionSecret,
-    proxy : true,
+    proxy: true,
     cookie: {
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000
     }
 }));
-
+*/
+app.use(session({
+    secret: config.sessionSecret,
+    cookie: {
+        httpOnly: false,
+        maxAge: 24 * 60 * 60 * 1000}
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -59,8 +67,8 @@ require('./config/routes')(app, config, passport);
 
 
 /**
-    Configure if http server need to be still created
-*/
+ Configure if http server need to be still created
+ */
 if (config.httpPort) {
     var httpServer = http.createServer(app);
     httpServer.listen(config.httpPort);
