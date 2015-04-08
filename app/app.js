@@ -47,6 +47,8 @@ app.use(expressSession({
     secret: config.sessionSecret,
     proxy: true,
     cookie: {
+        secure: true,
+        domain: '.pac-timetracker.herokuapp.com',
         httpOnly: false,
         maxAge: 24 * 60 * 60 * 1000
     }
