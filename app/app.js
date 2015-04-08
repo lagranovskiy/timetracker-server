@@ -8,6 +8,7 @@
 
 // set up ======================================================================
 // get all the tools we need
+require('newrelic');
 var express = require('express');
 var app = express();
 
@@ -20,7 +21,7 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var fs = require('fs');
-var relic = require('newrelic');
+
 
 
 var http = require('http');
