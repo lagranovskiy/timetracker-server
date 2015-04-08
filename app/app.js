@@ -17,7 +17,6 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-var session = require('cookie-session');
 var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
