@@ -3,25 +3,17 @@ var request = require('supertest'),
     sinon = require('sinon');
 var should = require('should');
 var requireHelper = require('../require_helper');
+var securityController = requireHelper('controller/SecurityController');
 var request = require('supertest');
 
 
 describe('Authentication test', function() {
 
     describe('Sign up functionality works correctly', function() {
-        var sandbox, app, server, securityController;
+        var sandbox, app, server;
 
         beforeEach(function() {
             sandbox = sinon.sandbox.create();
-        });
-
-        afterEach(function(done) {
-            sandbox.restore();
-            done();
-        });
-
-        it('After correct auth user core data sent to the user', function(done) {
-            securityController = requireHelper('controller/SecurityController');
 
             var securityStub = sandbox.stub(securityController, 'sendAuthData', function(req, res) {
                 res.status(200).json({
@@ -45,6 +37,15 @@ describe('Authentication test', function() {
                 }
 
             });
+        });
+
+        afterEach(function(done) {
+            sandbox.restore();
+            done();
+        });
+
+        it('After correct auth user core data sent to the user', function(done) {
+
 
             server = require('../../app/app');
             app = server.setup(express());
