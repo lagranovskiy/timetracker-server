@@ -6,7 +6,7 @@ var request = require('supertest'),
 var requireHelper = require('../require_helper');
 var projectController = requireHelper('controller/ProjectController');
 var config = requireHelper('./config/config');
-/**
+
 describe('request.agent(app)', function() {
     var app = express();
     var agent = request.agent(app);
@@ -30,4 +30,4 @@ describe('request.agent(app)', function() {
             .expect(200, done); // note that we're passing the done as parameter to the expect
     });
 
-});**/
+});

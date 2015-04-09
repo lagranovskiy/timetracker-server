@@ -6,7 +6,6 @@ var config = {
         sslPort: 4433,
         sessionSecret: 'mykey',
         env: 'dev',
-        clientHost: process.env.TT_CLIENT_URL || 'http://localhost:9000',
         db: {
             url: 'http://localhost:7474'
         },
@@ -25,7 +24,6 @@ var config = {
         sslPort: 4433,
         sessionSecret: 'mykey',
         env: 'dev',
-        clientHost: process.env.TT_CLIENT_URL || 'http://localhost:9000',
         db: {
             url: 'http://localhost:7474'
         },
@@ -44,7 +42,6 @@ var config = {
         sslPort: 443,
         sessionSecret: 'IdfesnpIPLZ/UEW2224fcJKINJUKNJ',
         env: 'prod',
-        clientHost: process.env.TT_CLIENT_URL || 'https://localhost:9000',
         db: {
             url: 'http://localhost:7474'
         },

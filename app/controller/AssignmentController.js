@@ -2,7 +2,7 @@
  * Created by lagranovskiy on 08.04.15.
  */
 var async = require('async');
-var newrelic = require('newrelic')
+var newrelic = require('newrelic');
 var _ = require('underscore');
 var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');
 var personAssignmentRepository = new ProjectAssignmentRepository();
@@ -23,7 +23,7 @@ var personAssignmentRepository = new ProjectAssignmentRepository();
  * @param response
  * @param next
  */
-exports.updateAssignments = function (request, response, next) {
+exports.updateAssignments = function(request, response, next) {
     console.info('Updating of assignments');
 
     var assignmentData = request.body;
@@ -31,20 +31,20 @@ exports.updateAssignments = function (request, response, next) {
         return next('Cannot process assignments null');
     }
 
-    newrelic.recordMetric('Custom/Assignments/DispoActivity',assignmentData.length);
+    newrelic.recordMetric('Custom/Assignments/DispoActivity', assignmentData.length);
 
     // Prepare assignment call with only needed data
-    async.eachSeries(assignmentData, function (assignment, callback) {
+    async.eachSeries(assignmentData, function(assignment, callback) {
 
-        if(!assignment.person.id){
+        if (!assignment.person.id) {
             callback('Cannot associate person null with a project');
         }
 
-        if(!assignment.project.id){
+        if (!assignment.project.id) {
             callback('Cannot associate person  with a project null');
         }
 
-        if(!assignment.role){
+        if (!assignment.role) {
             callback('Cannot associate person with a project by role null');
         }
         personAssignmentRepository.updateAssignment(
@@ -53,7 +53,7 @@ exports.updateAssignments = function (request, response, next) {
             assignment.role,
             callback);
 
-    }, function (err) {
+    }, function(err) {
         // if any of the file processing produced an error, err would equal that error
         if (err) {
             // One of the iterations produced an error.
@@ -75,16 +75,16 @@ exports.updateAssignments = function (request, response, next) {
  * @param response
  * @param next
  */
-exports.deleteAssignment = function (request, response, next) {
+exports.deleteAssignment = function(request, response, next) {
     console.info('Deleting of assignment.');
-    newrelic.incrementMetric('Custom/Assignments/DeletedDisposition',1);
+    newrelic.incrementMetric('Custom/Assignments/DeletedDisposition', 1);
 
     var assignmentId = request.params.assignmentId;
-    if(!assignmentId){
+    if (!assignmentId) {
         return next('Assignment id not set');
     }
 
-    personAssignmentRepository.deleteAssignment(assignmentId, function (err, data) {
+    personAssignmentRepository.deleteAssignment(assignmentId, function(err, data) {
         if (err) {
             return next(err);
         }

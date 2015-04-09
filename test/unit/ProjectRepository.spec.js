@@ -127,31 +127,49 @@ describe('Project Repository test', function() {
 
 
         it('Test if project is deleted successful', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
-                should(data.projectId).be.equal(1234);
-                callback(null, testProjectData);
+            var relation = {
+                id: null,
+                data: {},
+                save: function(cb) {
+                    cb(null, this);
+                }
+            };
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'getNodeById', function(id, callback) {
+                should(id).be.equal(1234);
+                relation.id = id;
+                callback(null, relation);
             });
 
             repository = new ProjectRepository();
             repository.deleteProject(1234, function(err, projectRemoved) {
-                should(projectRemoved).be.equal(true);
+                should(projectRemoved).be.equal('ok');
+
                 done();
             });
 
         });
 
         it('Test if illegal response by project deleting handled correctly', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
-                var illegalData = [];
-                illegalData.push(testProjectData[0]);
-                illegalData.push(testProjectData[0]);
-                callback(null, illegalData);
+            var relation = {
+                id: null,
+                data: {},
+                save: function(cb) {
+                    cb(null, this);
+                }
+            };
+
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'getNodeById', function(id, callback) {
+                should(id).be.equal(1234);
+                relation.id = id;
+                callback(null, relation);
             });
+
+
 
             repository = new ProjectRepository();
             repository.deleteProject(1234, function(err, projectRemoved) {
                 should(err).not.be.equal(undefined);
-                should(projectRemoved).be.equal(undefined);
+                should(projectRemoved).be.equal("ok");
                 done();
             });
 

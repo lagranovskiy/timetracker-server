@@ -39,7 +39,7 @@ app.use(bodyParser.json()); // get information from html forms
 app.use(methodOverride()); // simulate DELETE and PUT
 app.use(cookieParser(config.sessionSecret)); // read cookies (needed for auth)
 
-app.set('trust proxy', 1) // trust first proxy
+app.set('trust proxy', 1); // trust first proxy
 
 // Configuring Passport
 app.use(expressSession({
