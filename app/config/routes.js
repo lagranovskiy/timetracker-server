@@ -6,7 +6,7 @@ var assignmentController = require('../controller/AssignmentController');
 var dataController = require('../controller/DataController');
 var passport = require('passport');
 
-module.exports = function(app, config, passport) {
+module.exports = function(app, passport) {
 
 
     var errorHandler = function(err, req, res, next) {
