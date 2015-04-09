@@ -158,10 +158,10 @@ module.exports = function(grunt) {
     // tasks
     grunt.registerTask('server', ['concurrent:target']);
     grunt.registerTask('default', ['jshint', 'server']);
-    grunt.registerTask('test', ['mochaTest:unit', 'mochaTest:api', 'mochaTest:integration']);
+    grunt.registerTask('test', ['mochaTest:unit', 'mochaTest:integration', 'mochaTest:api']);
 
     grunt.registerTask('coverage', ['jshint', 'clean', 'env:coverage',
-        'instrument', 'mochaTest:unit', 'mochaTest:integration', 'storeCoverage', 'makeReport', 'codeclimate'
+        'instrument', 'mochaTest:unit', 'mochaTest:integration', 'mochaTest:api', 'storeCoverage', 'makeReport', 'codeclimate'
     ]);
 
 };
