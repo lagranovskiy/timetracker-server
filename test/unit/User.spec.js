@@ -23,7 +23,7 @@ describe('User Model test', function() {
         it('Test if user returns its data correctly as given from DB', function() {
             should(user.id).be.equal(1234);
             should(user.uid).be.equal('test');
-            should(user.pwdHash).be.equal('qwert');
+            should(user.passwordMD5).be.equal('qwert');
         });
 
         it('Test if groups can be added and resolved corectly', function() {

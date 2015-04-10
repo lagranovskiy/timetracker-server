@@ -33,7 +33,7 @@ var User = function(userId, userData, userGroups) {
          *
          * @returns {String} pwd hash
          */
-        get pwdHash() {
+        get passwordMD5() {
             return data.passwordMD5;
         },
 
@@ -43,6 +43,15 @@ var User = function(userId, userData, userGroups) {
          */
         get registrationDate() {
             return data.registrationDate;
+        },
+
+        /**
+         * Returns if user is active and may login to the system
+         *
+         * @returns {*}
+         */
+        get active(){
+            return data.active;
         },
 
         /**

@@ -4,23 +4,23 @@
  * Controlls project entities
  **/
 var async = require('async');
-var newrelic=require('newrelic');
+var newrelic = require('newrelic');
 var _ = require('underscore');
-var PersonRepository = require('../model/PersonRepository');
-var personRepository = new PersonRepository();
+var UserModel = require('../model/UserModel');
+var userModel = new UserModel();
 
 
 /**
  * Resolves a list of all persons
  */
-exports.listPersons = function(request, response, next) {
+exports.listPersons = function (request, response, next) {
     console.info('Resolving a list of all persons.');
 
-    personRepository.listPersons(function(err, data) {
+    userModel.listPersons(function (err, data) {
         if (err) {
             return next(err);
         }
-        newrelic.recordMetric('Custom/Person/PersonCount',data.length);
+        newrelic.recordMetric('Custom/Person/PersonCount', data.length);
         response.send(data);
     });
 };
@@ -32,11 +32,11 @@ exports.listPersons = function(request, response, next) {
  * @param response response
  * @param next
  */
-exports.listRoles = function(request, response, next){
+exports.listRoles = function (request, response, next) {
     console.info('Getting of a role list');
 
 
-    personRepository.listRoles(function(err, data) {
+    userModel.listRoles(function (err, data) {
         if (err) {
             return next(err);
         }
@@ -53,40 +53,41 @@ exports.listRoles = function(request, response, next){
  * @param   {Function} next     callback for continious process
  * @returns {void}
  */
-exports.getPersonData = function(request, response, next) {
+exports.getPersonData = function (request, response, next) {
     /*    var userId = request.session.user.getUid();
-        projectRepository.listVisibleProjects(userId, function(err, results) {
-            if (err) {
-                return next(err);
-            }
+     projectRepository.listVisibleProjects(userId, function(err, results) {
+     if (err) {
+     return next(err);
+     }
 
-            response.send(results);
-        });**/
+     response.send(results);
+     });**/
 };
 
 
 /**
  * Check if username exist
+ *
+ * @param request
+ * @param response
+ * @param next
  */
-exports.checkUsernameExists = function(request, response, next) {
+exports.checkUsernameExists = function (request, response, next) {
     var userId = request.params.userId;
     console.info('Testing if user with id ' + userId + ' already exist.');
 
-    var userExist;
-
-    if (userId) {
-        if (userId === 'mmustermann') {
-            userExist = true;
-        } else {
-            userExist = false;
-        }
-        return response.status(200).send({
-            userExist: userExist
-        });
-    } else {
-        return response.status(500).send('error');
+    if (!userId) {
+        next('Cannot find user with id null');
     }
 
+    userModel.findUser(userId, function (err, data) {
+        if (err) {
+            return response.status(500).send('error');
+        }
 
+        return response.status(200).send({
+            userExist: (data)
+        });
+    });
 
 };

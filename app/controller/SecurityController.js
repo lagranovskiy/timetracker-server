@@ -6,8 +6,8 @@
 
 var async = require('async');
 var _ = require('underscore');
-var UserRepository = require('../model/UserRepository');
-var userRepository = new UserRepository();
+var UserModel = require('../model/UserModel');
+var userModel = new UserModel();
 var md5 = require('MD5');
 
 
@@ -59,7 +59,7 @@ exports.resolveUser = function(uid, done) {
     async.waterfall([
 
         function(callback) {
-            return userRepository.getUser(uid, callback);
+            return userModel.resolveUser(uid, callback);
         }
     ], function(error, user) {
         if (error) {
@@ -81,14 +81,14 @@ exports.authenticateUser = function(req, uid, password, done) {
     async.waterfall([
 
         function(callback) {
-            return userRepository.getUser(uid, callback);
+            return userModel.resolveUser(uid, callback);
         },
 
         function(user, callback) {
             if (!user) {
                 return callback(null, false);
             }
-            var authenticationResult = md5(password) === user.pwdHash;
+            var authenticationResult = md5(password) === user.passwordMD5;
             if (authenticationResult) {
                 console.info('User ' + uid + ' logged in.');
                 callback(null, user);
@@ -122,7 +122,7 @@ exports.registerUser = function(req, username, password, done) {
     async.waterfall([
 
         function(callback) {
-            userRepository.findUser(username, callback);
+            userModel.findUser(username, callback);
         },
         function(user, callback) {
             // If user found, break and send error code to client
@@ -131,15 +131,7 @@ exports.registerUser = function(req, username, password, done) {
             }
 
             var userData = req.body;
-
-            // Security check. get only allowed Properties
-            var securedUserData = _.pick(userData, 'forename', 'surname', 'birthday', 'email', 'phone', 'username');
-
-            // Fill missing values like password hash
-            securedUserData.uid = username;
-            securedUserData.passwordMD5 = md5(password);
-            securedUserData.registrationDate = new Date().toDateString();
-            userRepository.createUserWithPerson(securedUserData, callback);
+            userModel.createUserWithPerson(userData, callback);
         }
     ], function(error, user) {
         if (error) {

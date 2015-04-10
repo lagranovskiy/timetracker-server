@@ -9,6 +9,54 @@ var async = require('async'),
 function PersonRepository() {}
 
 
+
+/**
+ * Resolves person item
+ *
+ * @param {String}   the uid of user to be returned
+ * @param {Function} callback Callback function
+ */
+PersonRepository.prototype.findPerson = function (id, callback) {
+    if (!id) {
+        return callback('Cannot find user. Invalid args.');
+    }
+
+    async.waterfall([
+
+        function (callback) {
+            db.getNodeById(id, callback);
+        },
+        function (personNode, callback) {
+            if (!personNode) {
+                return callback('Cannot find person with given id');
+            }
+
+            return callback(null, new Person(personNode.id, personNode.data));
+        }
+    ], callback);
+};
+
+
+
+/**
+ * Updates person to the given state
+ * @param user
+ * @param callback
+ */
+PersonRepository.prototype.updatePerson = function (person, callback) {
+    if (!person) {
+        return callback('Cannot update person. Invalid args.');
+    }
+
+    async.waterfall([function (callback) {
+        db.getNodeById(person.id, callback);
+    }, function (personNode, callback) {
+        _.extend(personNode.data, person.data);
+        personNode.save(callback);
+    }], callback);
+};
+
+
 /**
  * PersonRepository.prototype.listPersons -  Returns a list of all person objects saved in system
  *
