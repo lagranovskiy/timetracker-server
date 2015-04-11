@@ -11,7 +11,7 @@ var userModel = new UserModel();
 var md5 = require('MD5');
 
 
-/** 
+/**
  * Sends auth data to the user
  *
  * @param {Object} req Request
@@ -72,7 +72,7 @@ exports.resolveUser = function(uid, done) {
 /**
  * Process user authorization
  *
- * @param {String}   username Username
+ * @param {String}   uid Username
  * @param {String}   password Password
  * @param {Function} done Callback funtion
  */

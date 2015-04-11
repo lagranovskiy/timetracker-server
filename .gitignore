@@ -1,3 +1,4 @@
+.idea
 newrelic_agent.log
 *.log
 node_modules/*

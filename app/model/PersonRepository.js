@@ -11,6 +11,37 @@ function PersonRepository() {}
 
 
 /**
+ * Resolves person item from user id
+ *
+ * @param {String}   the uid of user to be returned
+ * @param {Function} callback Callback function
+ */
+PersonRepository.prototype.findPersonByUserId = function (userId, callback) {
+    if (!userId) {
+        return callback('Cannot find user. Invalid args.');
+    }
+
+    async.waterfall([
+
+        function (callback) {
+            db.getNodeById(userId, callback);
+        },
+        function (userNode, callback) {
+            if (!userNode) {
+                return callback('Cannot find user with given id');
+            }
+            userNode.getRelationshipNodes('HAS_PROFILE', callback);
+        },
+        function(personList, callback){
+            if(!personList || personList.length !== 1){
+                return callback('Illegal state by person profile resolving.');
+            }
+            var personNode = personList[0];
+            callback(null, new Person(personNode.id, personNode.data));
+        }
+    ], callback);
+};
+/**
  * Resolves person item
  *
  * @param {String}   the uid of user to be returned

@@ -85,6 +85,7 @@ UserRepository.prototype.assignUserGroup = function (userId, groupId, callback) 
         user = userNode;
         userNode.getRelationships('UserGroup', callback);
     }, function (relationshipList, callback) {
+        //TODO: Evaluate if change to async each is needed here
         _.each(relationshipList, function (relationship) {
             relationship.del();
         });

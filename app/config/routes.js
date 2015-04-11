@@ -2,14 +2,15 @@ var projectController = require('../controller/ProjectController');
 var personController = require('../controller/PersonController');
 var bookingController = require('../controller/BookingController');
 var securityController = require('../controller/SecurityController');
+var userController = require('../controller/UserController');
 var assignmentController = require('../controller/AssignmentController');
 var dataController = require('../controller/DataController');
 var passport = require('passport');
 
-module.exports = function(app, passport) {
+module.exports = function (app, passport) {
 
 
-    var errorHandler = function(err, req, res, next) {
+    var errorHandler = function (err, req, res, next) {
         console.error(err.stack);
         res.status(500).json({
             text: 'Internal error',
@@ -20,13 +21,12 @@ module.exports = function(app, passport) {
     app.use(errorHandler);
 
 
-
     // default route
-    app.route('/').get(function(req, res, next) {
+    app.route('/').get(function (req, res, next) {
         res.send(200, 'PAC timetracker3');
     });
 
-    app.all('*', function(req, res, next) {
+    app.all('*', function (req, res, next) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
@@ -48,13 +48,21 @@ module.exports = function(app, passport) {
 
 
     /**
-     * CRUD Methods for person entity
+     * RU Methods for person entity
      */
     app.get('/person/', isLoggedIn, personController.listPersons);
-    //app.put('/person/:projectId', isLoggedIn, person.savePerson);
-    //app.post('/person/', isLoggedIn, person.createPerson);
-    //app.delete('/person/:projectId', isLoggedIn, person.deletePerson);
+    app.put('/person/:personId', isLoggedIn, personController.updatePerson);
 
+    /**
+     * RU Methods for a user entity
+     */
+
+    app.get('/user/', isLoggedIn, userController.listUsers);
+    app.put('/user/:uid', isLoggedIn, userController.updateUser);
+
+    app.post('/user/:uid/pwdchange', isLoggedIn, userController.changeUserPassword);
+    app.post('/user/:uid/pwdreset', isLoggedIn, userController.resetUserPassword);
+    app.post('/user/:uid/group/:groupId', isLoggedIn, userController.changeUserGroup);
 
     /**
      * CRUD Methods for project entity
@@ -95,7 +103,9 @@ module.exports = function(app, passport) {
     /**
      * Business methods misc
      */
-    app.get('/user/check/:userId', personController.checkUsernameExists);
+    app.get('/role/', isLoggedIn, personController.listRoles);
+    app.get('/group/', isLoggedIn, userController.listGroups);
+    app.get('/user/check/:userId', userController.checkUsernameExists);
     app.get('/user/bookings', isLoggedIn, bookingController.listUserBookings);
     app.get('/user/project/:projectId/bookings', isLoggedIn, bookingController.listUserProjectBookings);
     app.get('/user/projects', isLoggedIn, projectController.listVisibleProjects);
@@ -113,11 +123,9 @@ module.exports = function(app, passport) {
         if (req.isAuthenticated()) {
             return next();
         } else {
-            res.send(401);
+            res.sendStatus(401);
         }
     }
-
-
 
 
 };

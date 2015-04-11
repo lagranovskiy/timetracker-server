@@ -32,11 +32,10 @@ var config = require('./config/config');
 require('./config/passport')(passport); // pass passport for configuration
 
 
-
 /**
  * Initialializes the application
  */
-exports.setup = function(app) {
+exports.setup = function (app) {
 
 
     // set up our express application
@@ -51,6 +50,8 @@ exports.setup = function(app) {
     // Configuring Passport
     app.use(expressSession({
         secret: config.sessionSecret,
+        resave: false,
+        saveUninitialized: false,
         cookie: {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000

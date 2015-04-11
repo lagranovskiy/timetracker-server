@@ -1,5 +1,5 @@
 /**
- * Project Controller
+ * Person Controller
  *
  * Controlls project entities
  **/
@@ -46,48 +46,37 @@ exports.listRoles = function (request, response, next) {
 };
 
 /**
- * Returns person information for given person
+ * Updates a person with given information
  *
  * @param   {Object}   request  request object
  * @param   {Object}   response response object
  * @param   {Function} next     callback for continious process
  * @returns {void}
  */
-exports.getPersonData = function (request, response, next) {
-    /*    var userId = request.session.user.getUid();
-     projectRepository.listVisibleProjects(userId, function(err, results) {
-     if (err) {
-     return next(err);
-     }
+exports.updatePerson = function (request, response, next) {
+    console.info('Updating person Data');
+    var personData = request.body;
+    var personId = request.params.personId * 1;
 
-     response.send(results);
-     });**/
-};
-
-
-/**
- * Check if username exist
- *
- * @param request
- * @param response
- * @param next
- */
-exports.checkUsernameExists = function (request, response, next) {
-    var userId = request.params.userId;
-    console.info('Testing if user with id ' + userId + ' already exist.');
-
-    if (!userId) {
-        next('Cannot find user with id null');
+    if (!personId) {
+        next('Cannot update person. No userId found in request.');
+        return;
+    }
+    if (!personData) {
+        next('Cannot update person. No userData found in request.');
+        return;
     }
 
-    userModel.findUser(userId, function (err, data) {
+    if (personData.id !== personId) {
+        next('Cannot update person. No personData not match with given id.');
+        return;
+    }
+
+    userModel.updatePerson(personData, function (err, data) {
         if (err) {
-            return response.status(500).send('error');
+            return next(err);
         }
-
-        return response.status(200).send({
-            userExist: (data)
-        });
+        response.send(data);
     });
-
 };
+

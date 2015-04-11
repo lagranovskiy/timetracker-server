@@ -123,7 +123,7 @@ var UserModel = function () {
     var userModel = {
 
         /**
-         * Finds user by given user id.
+         * Finds user by given user uid like 'mmustermann'.
          * Password is not secured and may not be given to the client
          * Never use it for REST!
          * @param uid uid
@@ -136,6 +136,19 @@ var UserModel = function () {
 
             userRepository.resolveUser(uid, callback);
 
+        },
+
+        /**
+         * Returns a person data to the given user
+         *
+         * @param user user to resolve his person data
+         * @param callback
+         */
+        resolveUserPerson: function (user, callback) {
+            if (!user) {
+                return callback('Cannot get person data of user null');
+            }
+            personRepository.findPersonByUserId(user.id, callback);
         },
 
         /**
@@ -200,13 +213,13 @@ var UserModel = function () {
          * @param userData
          * @param callback
          */
-        updateUser: function (userData, callback) {
+        updateUser: function (uid, userData, callback) {
             if (!userData) {
                 return callback('Cannot update user with data null');
             }
 
             async.waterfall([function (callback) {
-                userModel.resolveUser(userData.id, callback);
+                userModel.resolveUser(uid, callback);
             }, function (user, callback) {
                 userData = _.omit(userData, 'passwordMD5', 'registrationDate', 'groups');
                 userData = _.extend(user.data, userData);
@@ -225,16 +238,16 @@ var UserModel = function () {
          * @param passwordChangeData
          * @param callback
          */
-        changeUserPassword: function (passwordChangeData, callback) {
-            if (!passwordChangeData.username) {
-                callback('Cannot change password,username is null');
+        changeUserPassword: function (uid, passwordChangeData, callback) {
+            if (!passwordChangeData) {
+                callback('Cannot change password data is null');
             }
             if (!passwordChangeData.oldPassword || passwordChangeData.newPassword) {
                 callback('Cannot change password, new or old password is null');
             }
 
             async.waterfall([function (callback) {
-                userModel.resolveUser(passwordChangeData.username, callback);
+                userModel.resolveUser(uid, callback);
             }, function (user, callback) {
                 if (!user) {
                     return callback('User not found, cannot change password');
@@ -245,7 +258,7 @@ var UserModel = function () {
                 }
 
                 var passwordMd5 = md5(passwordChangeData.newPassword);
-                userRepository.changeUserPassword(passwordChangeData.username, passwordMd5, callback);
+                userRepository.changeUserPassword(uid, passwordMd5, callback);
             }, function (result, callback) {
                 if (result) {
                     return callback(null, true);
@@ -259,20 +272,20 @@ var UserModel = function () {
          * @param userId userId
          * @param callback
          */
-        resetUserPassword: function (userId, callback) {
-            if (!userId) {
+        resetUserPassword: function (uid, callback) {
+            if (!uid) {
                 callback('Cannot change password,username is null');
             }
-            var resettedPassword = userId + '-' + Math.random();
+            var resettedPassword = uid + '-' + Math.random();
             async.waterfall([function (callback) {
-                userModel.resolveUser(userId, callback);
+                userModel.resolveUser(uid, callback);
             }, function (user, callback) {
                 if (!user) {
                     return callback('User not found, cannot change password');
                 }
 
                 var passwordMd5 = md5(resettedPassword);
-                userRepository.changeUserPassword(userId, passwordMd5, callback);
+                userRepository.changeUserPassword(uid, passwordMd5, callback);
             }, function (result, callback) {
                 if (result) {
                     return callback(null, resettedPassword);
@@ -282,8 +295,8 @@ var UserModel = function () {
 
         /**
          * Removes user from all groups and adds him to the given group
-         * @param userId
-         * @param groupId
+         * @param userId mmustermann
+         * @param groupId 14444
          * @param callback
          */
         changeUserGroup: function (userId, groupId, callback) {
@@ -295,7 +308,16 @@ var UserModel = function () {
                 return callback('Cannot change group null of user');
             }
 
-            userRepository.assignUserGroup(userId, groupId, callback);
+            async.waterfall([
+                function (cb) {
+                    userModel.findUser(userId, cb);
+                },
+                function (resolvedUser, cb) {
+                    userRepository.assignUserGroup(resolvedUser.id, groupId, cb);
+                },
+            ], callback);
+
+
         },
 
         /**
