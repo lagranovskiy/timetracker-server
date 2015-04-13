@@ -19,7 +19,30 @@ var projectModel = new ProjectModel();
  * @returns {void}
  */
 exports.listVisibleProjects = function(request, response, next) {
-    var userId = request.user.id;
+    var userId = request.user.id*1;
+    console.info('Listing of visible projects of user ' + userId);
+
+    projectModel.listVisibleProjects(userId, function(err, results) {
+        if (err) {
+            return next(err);
+        }
+
+        response.json({
+            success: true,
+            total: results.length,
+            records: results
+        });
+    });
+};
+
+/**
+ * Returns visible projects of GIVEN user
+ * @param request
+ * @param response
+ * @param next
+ */
+exports.listVisibleProjectsById = function(request, response, next) {
+    var userId = request.params.userId*1;
     console.info('Listing of visible projects of user ' + userId);
 
     projectModel.listVisibleProjects(userId, function(err, results) {
@@ -167,7 +190,7 @@ exports.saveProject = function(request, response, next) {
  * Deletes a project
  */
 exports.deleteProject = function(request, response, next) {
-    var projectId = request.params.projectId;
+    var projectId = request.params.projectId*1;
     console.info('Deleting project ' + projectId);
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');

@@ -155,9 +155,9 @@ UserRepository.prototype.listGroups = function (callback) {
             var groupList = [];
             _.each(groups, function (group) {
                 groupList.push({
-                    id: group.id,
-                    name: group.data.name,
-                    description: group.data.description
+                    id: group.group.id,
+                    name: group.group.data.name,
+                    description: group.group.data.description
                 });
             });
             callback(null, groupList);

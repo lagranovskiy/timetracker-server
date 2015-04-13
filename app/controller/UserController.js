@@ -73,23 +73,25 @@ exports.listUsers = function (request, response, next) {
             },
             function (userList, callback) {
                 if (!userList) {
-                    callback('Cannot get user list');
+                    return callback('Cannot get user list');
                 }
                 var aggregatedUserList = [];
-                async.each(userList, function (user, callback) {
-                    userModel.resolveUserPerson(user, function (err, person) {
-                        if (err) {
-                            callback('Cannot resolve person profile of user ' + user.id);
-                        }
-                        aggregatedUserList.push({
-                            user: user,
-                            person: person
-                        });
+                async.eachSeries(userList, function (user, cb) {
+                        userModel.resolveUserPerson(user, function (err, person) {
+                            if (err) {
+                                callback('Cannot resolve person profile of user ' + user.id);
+                            }
+                            aggregatedUserList.push({
+                                user: user,
+                                person: person
+                            });
 
-                        callback();
+                            cb();
+                        });
+                    },
+                    function (err) {
+                        callback(err, aggregatedUserList);
                     });
-                });
-                callback(null, aggregatedUserList);
             }
         ],
         function (err, aggregatedUserList) {

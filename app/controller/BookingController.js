@@ -4,7 +4,7 @@
  * Controlls project entities
  **/
 var async = require('async');
-var newrelic=require('newrelic');
+var newrelic = require('newrelic');
 var _ = require('underscore');
 var Booking = require('../model/Booking');
 var BookingModel = require('../model/BookingModel');
@@ -14,11 +14,30 @@ var bookingModel = new BookingModel();
  * Lists all bookings the current authenticated user ever made
  * TODO: Implement limit functionality
  */
-exports.listUserBookings = function(request, response, next) {
-    var userId = request.user.id;
+exports.listUserBookings = function (request, response, next) {
+    var userId = request.user.id * 1;
     console.info('Listing of all bookings of user with id' + userId);
 
-    bookingModel.listAllUserBookings(userId, function(err, results) {
+    bookingModel.listAllUserBookings(userId, function (err, results) {
+        if (err) {
+            return next(err);
+        }
+
+        response.send(results);
+    });
+};
+
+/**
+ * Returns bookings of user with given userId
+ * @param request
+ * @param response
+ * @param next
+ */
+exports.listUserBookingsById = function (request, response, next) {
+    var userId = request.params.userId * 1;
+    console.info('Listing of all bookings of user with id' + userId);
+
+    bookingModel.listAllUserBookings(userId, function (err, results) {
         if (err) {
             return next(err);
         }
@@ -30,9 +49,9 @@ exports.listUserBookings = function(request, response, next) {
 /**
  * Lists all bookings user made for given project
  */
-exports.listUserProjectBookings = function(request, response, next) {
-    var userId = request.user.id;
-    var projectId = request.params.projectId;
+exports.listUserProjectBookings = function (request, response, next) {
+    var userId = request.user.id * 1;
+    var projectId = request.params.projectId * 1;
     if (!projectId) {
         next('Cannot resolve project bookings. No project ID transfered.');
     }
@@ -40,7 +59,7 @@ exports.listUserProjectBookings = function(request, response, next) {
     console.info('Listing of all bookings by given project ' + projectId + ' of user with id ' + userId);
 
 
-    bookingModel.listUserProjectBookings(userId, projectId, function(err, results) {
+    bookingModel.listUserProjectBookings(userId, projectId, function (err, results) {
         if (err) {
             return next(err);
         }
@@ -54,16 +73,15 @@ exports.listUserProjectBookings = function(request, response, next) {
  * List all bookings ever made
  * TODO: IMplement limit functionality
  */
-exports.listBookings = function(request, response, next) {
+exports.listBookings = function (request, response, next) {
     console.info('Listing of all bookings');
 
 
-
-    bookingModel.listAllBookings(function(err, results) {
+    bookingModel.listAllBookings(function (err, results) {
         if (err) {
             return next(err);
         }
-        newrelic.recordMetric('Custom/Booking/BookingsCount',results.length);
+        newrelic.recordMetric('Custom/Booking/BookingsCount', results.length);
         response.send(results);
     });
 };
@@ -71,19 +89,19 @@ exports.listBookings = function(request, response, next) {
 /**
  * Create a new booking
  */
-exports.createBooking = function(request, response, next) {
-    var userId = request.user.id;
+exports.createBooking = function (request, response, next) {
+    var userId = request.user.id * 1;
 
     console.info('Creating of a new booking for user ' + userId);
 
     var bookingData = request.body;
     bookingData.userId = userId;
 
-    bookingModel.createNewBooking(bookingData, function(err, createdBooking) {
+    bookingModel.createNewBooking(bookingData, function (err, createdBooking) {
         if (err) {
             return next(err);
         }
-        newrelic.incrementMetric('Custom/Booking/BookingCreated',1);
+        newrelic.incrementMetric('Custom/Booking/BookingCreated', 1);
         response.send(createdBooking);
     });
 
@@ -93,9 +111,9 @@ exports.createBooking = function(request, response, next) {
 /**
  * Updates existing booking
  */
-exports.saveBooking = function(request, response, next) {
-    var userId = request.user.id;
-    var bookingId = request.params.bookingId;
+exports.saveBooking = function (request, response, next) {
+    var userId = request.user.id * 1;
+    var bookingId = request.params.bookingId * 1;
     var bookingData = request.body;
 
     console.info('Updating of a existing booking with id ' + bookingId + 'for user ' + userId);
@@ -108,7 +126,7 @@ exports.saveBooking = function(request, response, next) {
         return next('Updating of booking is allowed only for the owner of the booking.');
     }
 
-    bookingModel.updateBooking(bookingData, function(err, createdBooking) {
+    bookingModel.updateBooking(bookingData, function (err, createdBooking) {
         if (err) {
             return next(err);
         }
@@ -117,15 +135,14 @@ exports.saveBooking = function(request, response, next) {
     });
 
 
-
 };
 
 /**
  * Deletes booking from db
  */
-exports.deleteBooking = function(request, response, next) {
-    var userId = request.user.id;
-    var bookingId = request.params.bookingId;
+exports.deleteBooking = function (request, response, next) {
+    var userId = request.user.id * 1;
+    var bookingId = request.params.bookingId * 1;
 
     console.info('Deliting of a existing booking with id ' + bookingId + ' for user ' + userId);
 
@@ -138,11 +155,11 @@ exports.deleteBooking = function(request, response, next) {
     var existingBooking = new Booking(bookingId, null, null, userId);
 
 
-    bookingModel.deleteBooking(bookingId,userId, function(err, result) {
+    bookingModel.deleteBooking(bookingId, userId, function (err, result) {
         if (err) {
             return next(err);
         }
-        newrelic.incrementMetric('Custom/Booking/BookingRemoved',1);
+        newrelic.incrementMetric('Custom/Booking/BookingRemoved', 1);
         response.send(result);
     });
 };

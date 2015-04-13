@@ -46,6 +46,10 @@ module.exports = function (app, passport) {
     app.post('/auth/logout', securityController.logout);
     app.post('/auth/sign', passport.authenticate('localsign'), securityController.sendAuthData);
 
+    /**
+     * RU Methods for a user entity
+     */
+    app.post('/user/:uid/pwdchange', isLoggedIn, userController.changeUserPassword);
 
     /**
      * RU Methods for person entity
@@ -53,16 +57,6 @@ module.exports = function (app, passport) {
     app.get('/person/', isLoggedIn, personController.listPersons);
     app.put('/person/:personId', isLoggedIn, personController.updatePerson);
 
-    /**
-     * RU Methods for a user entity
-     */
-
-    app.get('/user/', isLoggedIn, userController.listUsers);
-    app.put('/user/:uid', isLoggedIn, userController.updateUser);
-
-    app.post('/user/:uid/pwdchange', isLoggedIn, userController.changeUserPassword);
-    app.post('/user/:uid/pwdreset', isLoggedIn, userController.resetUserPassword);
-    app.post('/user/:uid/group/:groupId', isLoggedIn, userController.changeUserGroup);
 
     /**
      * CRUD Methods for project entity
@@ -101,9 +95,18 @@ module.exports = function (app, passport) {
     app.delete('/assignment/:assignmentId', isLoggedIn, assignmentController.deleteAssignment);
 
     /**
+     * Adminisration of user services
+     */
+    app.get('/admin/user/', isLoggedIn, userController.listUsers);
+    app.put('/admin/user/:uid', isLoggedIn, userController.updateUser);
+    app.get('/admin/user/:userId/bookings', isLoggedIn, bookingController.listUserBookingsById);
+    app.get('/admin/user/:userId/projects', isLoggedIn, projectController.listVisibleProjectsById);
+    app.post('/admin/user/:uid/pwdreset', isLoggedIn, userController.resetUserPassword);
+    app.post('/admin/user/:uid/group/:groupId', isLoggedIn, userController.changeUserGroup);
+
+    /**
      * Business methods misc
      */
-    app.get('/role/', isLoggedIn, personController.listRoles);
     app.get('/group/', isLoggedIn, userController.listGroups);
     app.get('/user/check/:userId', userController.checkUsernameExists);
     app.get('/user/bookings', isLoggedIn, bookingController.listUserBookings);
