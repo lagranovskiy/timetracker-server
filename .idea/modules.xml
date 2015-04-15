@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../timetracker-client/timetracker-client.iml" filepath="$PROJECT_DIR$/../timetracker-client/timetracker-client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/timetracker-server.iml" filepath="$PROJECT_DIR$/.idea/timetracker-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/timetracker-server.iml" filepath="$PROJECT_DIR$/timetracker-server.iml" />
     </modules>
   </component>
 </project>

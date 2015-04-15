@@ -113,7 +113,7 @@ exports.listUsers = function (request, response, next) {
 exports.updateUser = function (request, response, next) {
     console.info('Updating user');
     var userData = request.body;
-    var uid = request.params.uid;
+    var uid = request.params.uid*1;
 
     if (!uid) {
         return next('Cannot update user. No userId found in request.');
@@ -122,11 +122,11 @@ exports.updateUser = function (request, response, next) {
         return next('Cannot update user. No userData found in request.');
     }
 
-    if (userData.uid !== uid) {
+    if (userData.id !== uid) {
         return next('Cannot update user. No userData not match with given id.');
     }
 
-    userModel.updateUser(uid, userData, function (err, data) {
+    userModel.updateUser(userData.uid, userData, function (err, data) {
         if (err) {
             return next(err);
         }
@@ -199,7 +199,7 @@ exports.changeUserGroup = function (request, response, next) {
     console.info('Changing the group of user');
 
     var uid = request.params.uid; // like mmustermann
-    var groupId = request.params.groupId; // like mmustermann
+    var groupId = request.params.groupId*1;
 
     if (!uid) {
         return next('Cannot find user with uid null');
@@ -208,10 +208,10 @@ exports.changeUserGroup = function (request, response, next) {
         return next('Cannot find group with groupId null');
     }
 
-    userModel.changeUserGroup(uid, groupId, function (err, resettedPassword) {
+    userModel.changeUserGroup(uid, groupId, function (err, result) {
         if (err) {
             return next(err);
         }
-        response.send({resettedPassword: resettedPassword});
+        response.send(result);
     });
 };

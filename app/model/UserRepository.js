@@ -1,4 +1,3 @@
-
 var _ = require('underscore');
 var async = require('async'),
     User = require('./User'),
@@ -31,7 +30,7 @@ UserRepository.prototype.listUsers = function (callback) {
         },
         function (results, callback) {
             var userList = [];
-            _.each(results, function(result){
+            _.each(results, function (result) {
                 var groupArray = [];
                 groupArray.push(result.MainGroup);
 
@@ -83,13 +82,14 @@ UserRepository.prototype.assignUserGroup = function (userId, groupId, callback) 
         db.getNodeById(userId, callback);
     }, function (userNode, callback) {
         user = userNode;
-        userNode.getRelationships('UserGroup', callback);
+        userNode.getRelationships('AUTHORIZED_AS', callback);
     }, function (relationshipList, callback) {
-        //TODO: Evaluate if change to async each is needed here
-        _.each(relationshipList, function (relationship) {
-            relationship.del();
-        });
-        callback(null, true);
+        async.each(relationshipList, function (relationship, cb) {
+                relationship.del(cb);
+            },
+            function (err) {
+                callback(err, true);
+            });
     }, function (removed, callback) {
         if (!removed) {
             return callback('Removing of user groups was not seceded');
@@ -182,7 +182,7 @@ UserRepository.prototype.createUserWithPerson = function (person, user, callback
         "RETURN user, group.name as Group"
     ].join('\n');
 
-    var params =_.extend(person.data,user.data);
+    var params = _.extend(person.data, user.data);
     async.waterfall([
 
         function (callback) {

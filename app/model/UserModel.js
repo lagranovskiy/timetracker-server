@@ -182,7 +182,7 @@ var UserModel = function () {
             }, function (person, callback) {
                 personData = _.extend(person.data, personData);
                 var personObject = instanciatePerson(personData.id, personData);
-                callback(validateUser(personObject), personObject);
+                callback(validatePerson(personObject), personObject);
             }, function (personObject, callback) {
                 personRepository.updatePerson(personObject, callback);
             }], callback);
