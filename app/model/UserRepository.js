@@ -121,7 +121,7 @@ UserRepository.prototype.changeUserPassword = function (uid, newPassword, callba
         return callback('Cannot process password change. Invalid args.');
     }
     async.waterfall([function (callback) {
-        UserRepository.findUser(uid, callback);
+        UserRepository.prototype.findUser(uid, callback);
     }, function (foundUser, callback) {
         if (!foundUser) {
             return callback('Cannot find user');

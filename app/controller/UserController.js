@@ -18,14 +18,14 @@ var userModel = new UserModel();
  * @param next
  */
 exports.checkUsernameExists = function (request, response, next) {
-    var userId = request.params.userId;
+    var username = request.params.userId;
     console.info('Testing if user with id ' + userId + ' already exist.');
 
-    if (!userId) {
+    if (!username) {
         next('Cannot find user with id null');
     }
 
-    userModel.findUser(userId, function (err, data) {
+    userModel.findUser(username, function (err, data) {
         if (err) {
             return response.status(500).send('error');
         }
@@ -170,7 +170,7 @@ exports.changeUserPassword = function (request, response, next) {
  * @param next
  */
 exports.resetUserPassword = function (request, response, next) {
-    var uid = request.params.uid; // like mmustermann
+    var uid = request.params.uid;
     console.info('Resetting a password of user ' + uid);
 
     if (!uid) {

@@ -5,7 +5,7 @@ var moment = require('moment');
 var BookingsRepository = require('../model/BookingsRepository');
 var bookingsRepository = new BookingsRepository();
 
-var BookingModel = function() {
+var BookingModel = function () {
 
     /**
      * Validates booking according to the logical constraints.
@@ -77,11 +77,11 @@ var BookingModel = function() {
          * @param  {type} callback description
          * @return {type}          description
          */
-        listAllUserBookings: function(userId, callback) {
+        listAllUserBookings: function (userId, callback) {
             if (!userId) {
                 return callback('User userid is null');
             }
-            bookingsRepository.listAllUserBookings(userId, function(err, results) {
+            bookingsRepository.listAllUserBookings(userId, function (err, results) {
                 if (err) {
                     return callback(err);
                 }
@@ -98,14 +98,14 @@ var BookingModel = function() {
          * @param  {type} callback  description
          * @return {type}           description
          */
-        listUserProjectBookings: function(userId, projectId, callback) {
+        listUserProjectBookings: function (userId, projectId, callback) {
             if (!userId) {
                 return callback('User userid is null');
             }
             if (!projectId) {
                 return callback('User project id is null');
             }
-            bookingsRepository.listUserProjectBookings(userId, projectId, function(err, results) {
+            bookingsRepository.listUserProjectBookings(userId, projectId, function (err, results) {
                 if (err) {
                     return callback(err);
                 }
@@ -121,9 +121,9 @@ var BookingModel = function() {
          * @param  {type} callback description
          * @return {type}          description
          */
-        listAllBookings: function(callback) {
+        listAllBookings: function (callback) {
 
-            bookingsRepository.listBookings(function(err, results) {
+            bookingsRepository.listBookings(function (err, results) {
                 if (err) {
                     return callback(err);
                 }
@@ -135,7 +135,7 @@ var BookingModel = function() {
         /**
          * Creates a new booking
          * */
-        createNewBooking: function(bookingData, callback) {
+        createNewBooking: function (bookingData, callback) {
             if (!bookingData) {
                 return callback('No Booking data given');
             }
@@ -146,11 +146,11 @@ var BookingModel = function() {
             var newBooking = instanciateBooking(bookingData);
 
             async.waterfall([
-                function(cb) {
+                function (cb) {
                     cb(validateBooking(newBooking), newBooking);
                 },
-                function(validatedBooking, cb) {
-                    bookingModel.testBookingCollisions(validatedBooking, function(err) {
+                function (validatedBooking, cb) {
+                    bookingModel.testBookingCollisions(validatedBooking, function (err) {
                         if (err) {
                             return cb(err);
                         }
@@ -158,8 +158,8 @@ var BookingModel = function() {
                         return cb(null, validatedBooking);
                     });
                 },
-                function(nonCollidatingBooking, cb) {
-                    bookingsRepository.createNewBooking(nonCollidatingBooking, function(err, result) {
+                function (nonCollidatingBooking, cb) {
+                    bookingsRepository.createNewBooking(nonCollidatingBooking, function (err, result) {
                         if (err) {
                             return cb(err);
                         }
@@ -175,7 +175,7 @@ var BookingModel = function() {
         /**
          * Updates existing booking
          * */
-        updateBooking: function(bookingData, callback) {
+        updateBooking: function (bookingData, callback) {
             if (!bookingData) {
                 return callback('No Booking data given');
             }
@@ -189,11 +189,11 @@ var BookingModel = function() {
             var existingBooking = instanciateBooking(bookingData);
 
             async.waterfall([
-                function(cb) {
+                function (cb) {
                     cb(validateBooking(existingBooking), existingBooking);
                 },
-                function(validatedBooking, cb) {
-                    bookingModel.testBookingCollisions(validatedBooking, function(err) {
+                function (validatedBooking, cb) {
+                    bookingModel.testBookingCollisions(validatedBooking, function (err) {
                         if (err) {
                             return cb(err);
                         }
@@ -201,8 +201,8 @@ var BookingModel = function() {
                         return cb(null, validatedBooking);
                     });
                 },
-                function(nonCollidatingBooking, cb) {
-                    bookingsRepository.updateExistingBooking(nonCollidatingBooking, function(err, result) {
+                function (nonCollidatingBooking, cb) {
+                    bookingsRepository.updateExistingBooking(nonCollidatingBooking, function (err, result) {
                         if (err) {
                             return cb(err);
                         }
@@ -220,7 +220,7 @@ var BookingModel = function() {
          * @param bookingId Id of the booking to be removed
          * @param userId id of the authenticated user
          * */
-        deleteBooking: function(bookingId, userId, callback) {
+        deleteBooking: function (bookingId, userId, callback) {
             if (!bookingId || !userId) {
                 return callback('Missing mandatory information for booking removal');
             }
@@ -230,7 +230,7 @@ var BookingModel = function() {
                 userId: userId
             });
 
-            bookingsRepository.deleteExistingBooking(bookingInstance, function(err, result) {
+            bookingsRepository.deleteExistingBooking(bookingInstance, function (err, result) {
                 if (err) {
                     return callback(err);
                 }
@@ -247,22 +247,29 @@ var BookingModel = function() {
          * @param  {type} callback callback for result
          * @return {type}
          */
-        testBookingCollisions: function(booking, callback) {
+        testBookingCollisions: function (booking, callback) {
 
             if (!booking) {
                 return callback('Cannot test collidations of null booking.');
             }
 
-            bookingsRepository.findBookingCollidations(booking, function(err, result) {
+            bookingsRepository.findBookingCollidations(booking, function (err, result) {
                 if (err) {
                     return callback(err);
                 }
 
                 if (result.length && result.length > 0) {
+
                     var bookingList = '';
-                    _.each(result, function(booking) {
-                        bookingList = bookingList + moment(booking.workDay).format("L") + ' from: ' + moment(booking.workStarted).format("HH:mm") + ' to: ' + moment(booking.workFinished).format("HH:mm") + '\n';
+                    _.each(result, function (collidatingBooking) {
+                        if (collidatingBooking.id != booking.id) {
+                            bookingList = bookingList + moment(collidatingBooking.workDay).format("L") + ' from: ' + moment(collidatingBooking.workStarted).format("HH:mm") + ' to: ' + moment(collidatingBooking.workFinished).format("HH:mm") + '\n';
+                        }
                     });
+                    if(bookingList.length === 0){
+                        // Case where booking collidates with itself
+                        return callback(null, true);
+                    }
 
                     return callback('Booking collidates with following bookings:\n' + bookingList, result);
                 } else {

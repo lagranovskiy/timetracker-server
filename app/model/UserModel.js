@@ -276,7 +276,7 @@ var UserModel = function () {
             if (!uid) {
                 callback('Cannot change password,username is null');
             }
-            var resettedPassword = uid + '-' + Math.random();
+            var resettedPassword = uid + '-' + Math.floor(Math.random() * (5000 + 1) + 20);
             async.waterfall([function (callback) {
                 userModel.resolveUser(uid, callback);
             }, function (user, callback) {

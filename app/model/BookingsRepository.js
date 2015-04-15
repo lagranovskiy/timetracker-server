@@ -301,7 +301,7 @@ BookingsRepository.prototype.findBookingCollidations = function(booking, retValC
     ].join('\n');
 
     var beginning = moment(booking.workDay).hours(0).startOf('hour').valueOf();
-    var ending = moment(booking.workDay).hours(23).endOf('hour').valueOf();
+    var ending = moment(booking.workDay).add(1,'days').hours(0).endOf('hour').valueOf();
     var param = {
         minWorkDay: beginning,
         maxWorkDay: ending,
