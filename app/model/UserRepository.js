@@ -34,7 +34,7 @@ UserRepository.prototype.listUsers = function (callback) {
                 var groupArray = [];
                 groupArray.push(result.MainGroup);
 
-                if (result.OtherGroups) {
+                if (result.OtherGroups.length>0) {
                     var i, otherGroups = result.OtherGroups.toString().split(',');
 
                     for (i = 0; i < otherGroups.length; i++) {
@@ -287,13 +287,17 @@ UserRepository.prototype.resolveUser = function (uid, callback) {
 
             var result = results[0];
             var groupArray = [];
-            groupArray.push(result.MainGroup);
-
+            if (result.MainGroup && result.MainGroup.length > 0) {
+                groupArray.push(result.MainGroup);
+            }
             if (result.OtherGroups) {
                 var i, otherGroups = result.OtherGroups.toString().split(',');
 
                 for (i = 0; i < otherGroups.length; i++) {
-                    groupArray.push(otherGroups[i]);
+                    if (otherGroups[i].length > 0) {
+                        groupArray.push(otherGroups[i]);
+                    }
+
                 }
             }
 
