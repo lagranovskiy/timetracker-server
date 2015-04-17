@@ -10,7 +10,7 @@ var requireHelper = require('../require_helper');
 
 describe('request.agent(app)', function() {
 
-    var server = require('../../app/app');
+    var server = requireHelper('app');
     var app = server.setup(express());
     var cookie;
 
