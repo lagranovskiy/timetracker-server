@@ -16,7 +16,7 @@ var config = {
 };
 
 
-describe('Project Repository test', function() {
+describe('Booking model test', function() {
     var sandbox, bookingModel;
 
     var testBookingInput = {
@@ -153,7 +153,7 @@ describe('Project Repository test', function() {
 
 
             bookingModel.updateBooking(testExistingBookingInput, function(err, booking) {
-                should(err).be.equal(null);
+                should.not.exist(err);
                 (booking !== undefined).should.be.ok;
                 should(booking.id).be.equal(100);
                 should(booking.projectId).be.equal(101);
@@ -175,7 +175,7 @@ describe('Project Repository test', function() {
 
 
             bookingModel.createNewBooking(testBookingInput, function(err, booking) {
-                should(err).be.equal(null);
+                should.not.exist(err);
                 (booking !== undefined).should.be.ok;
                 should(booking.id).be.equal(100);
                 should(booking.projectId).be.equal(101);
@@ -272,7 +272,7 @@ describe('Project Repository test', function() {
             });
 
             sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
-                var collisionBooking = new Booking(123, testBookingInput, 150, 105);
+                var collisionBooking = new Booking(133, testBookingInput, 150, 105);
                 var collistionArray = [];
                 collistionArray.push(collisionBooking);
                 callback(null, collistionArray);
@@ -281,14 +281,14 @@ describe('Project Repository test', function() {
             var collisionBooking = new Booking(123, testBookingInput, 150, 105);
 
             bookingModel.testBookingCollisions(collisionBooking, function(err, booking) {
-                should(err).be.String;
+                should.exist(err);
                 done();
             });
 
         });
 
 
-        it('Testdeletion of bookings', function(done) {
+        it('Test deletion of bookings', function(done) {
             sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
                 callback(null, testBookingRs);
             });
@@ -306,7 +306,7 @@ describe('Project Repository test', function() {
 
 
             bookingModel.deleteBooking(123, 1234, function(err, success) {
-                should(err).not.be.String;
+                should.not.exist(err);
                 should(success).be.true;
                 done();
             });

@@ -3,7 +3,7 @@
  *
  * Controlls project entities
  **/
-var async = require('async');
+var async = require('neo-async');
 var _ = require('underscore');
 var newrelic=require('newrelic');
 

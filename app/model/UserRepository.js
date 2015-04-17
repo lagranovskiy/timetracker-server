@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var async = require('async'),
+var async = require('neo-async'),
     User = require('./User'),
     config = require('../config/config'),
     neo4j = require('neo4j'),

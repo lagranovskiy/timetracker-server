@@ -3,7 +3,7 @@
  *
  * Controlls project entities
  **/
-var async = require('async');
+var async = require('neo-async');
 var _ = require('underscore');
 var UserModel = require('../model/UserModel');
 var userModel = new UserModel();
@@ -19,7 +19,7 @@ var userModel = new UserModel();
  */
 exports.checkUsernameExists = function (request, response, next) {
     var username = request.params.userId;
-    console.info('Testing if user with id ' + userId + ' already exist.');
+    console.info('Testing if user with id ' + username + ' already exist.');
 
     if (!username) {
         next('Cannot find user with id null');
@@ -113,7 +113,7 @@ exports.listUsers = function (request, response, next) {
 exports.updateUser = function (request, response, next) {
     console.info('Updating user');
     var userData = request.body;
-    var uid = request.params.uid*1;
+    var uid = request.params.uid * 1;
 
     if (!uid) {
         return next('Cannot update user. No userId found in request.');
@@ -199,7 +199,7 @@ exports.changeUserGroup = function (request, response, next) {
     console.info('Changing the group of user');
 
     var uid = request.params.uid; // like mmustermann
-    var groupId = request.params.groupId*1;
+    var groupId = request.params.groupId * 1;
 
     if (!uid) {
         return next('Cannot find user with uid null');

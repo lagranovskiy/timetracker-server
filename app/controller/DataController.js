@@ -2,7 +2,7 @@
  * Data Controller
  *
  **/
-var async = require('async');
+var async = require('neo-async');
 var DataRepository = require('../model/DataRepository');
 var dataRepository = new DataRepository();
 

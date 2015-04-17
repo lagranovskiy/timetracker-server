@@ -2,7 +2,7 @@
 process.env.NODE_ENV = 'test';
 
 var request = require('supertest'),
-    async = require('async'),
+    async = require('neo-async'),
     should = require('should'),
     express = require('express');
 var requireHelper = require('../require_helper');
@@ -18,7 +18,7 @@ describe('request.agent(app)', function() {
     beforeEach(function(done) {
         request(app)
             .post('/auth/login').send({
-                username: 'mmustermann',
+                username: 'aschmidt',
                 password: 'prodyna'
             })
             .set('Accept', 'application/json')

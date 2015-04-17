@@ -60,7 +60,7 @@ describe('User Repository test', function () {
 
             repository = new UserModel();
             repository.createUserWithPerson('test', 'prodyna', testData, function (err, createdUser) {
-                should(err).be.equal(null);
+                should.not.exist(err);
                 should(createdUser.id).be.equal(1234);
                 should(createdUser.uid).be.equal('test');
                 should(createdUser.passwordMD5).be.equal('secure');
@@ -90,7 +90,7 @@ describe('User Repository test', function () {
             repository = new UserModel();
             repository.createUserWithPerson('test', 'prodyna',testData, function (err, createdUser) {
                 should(createdUser).be.equal(undefined);
-                should(err).not.be.equal(null);
+                should.exist(err);
                 done();
             });
 
@@ -114,7 +114,7 @@ describe('User Repository test', function () {
 
             repository = new UserModel();
             repository.createUserWithPerson('test', 'prodyna',testData, function (err, createdUser) {
-                should(err).be.equal(null);
+                should.not.exist(err);
                 should(createdUser).be.equal(false);
                 done();
             });
@@ -184,7 +184,7 @@ describe('User Repository test', function () {
 
 
             repository.findUser('Tester', function (err, foundUser) {
-                should(err).be.equal(null);
+                should.not.exist(err);
                 should(foundUser).be.equal(false);
                 done();
             });
@@ -201,7 +201,7 @@ describe('User Repository test', function () {
 
             repository.findUser('Tester', function (err, foundUser) {
                 should(foundUser).be.equal(undefined);
-                should(err).not.be.equal(null);
+                should.exist(err);
                 done();
             });
         });
@@ -225,6 +225,7 @@ describe('User Repository test', function () {
             });
 
             repository.resolveUser('Tester', function (err, foundUser) {
+                should.not.exist(err);
                 should(foundUser.id).be.equal(1234);
                 should(foundUser.uid).be.equal('test');
                 should(foundUser.passwordMD5).be.equal('secure');
@@ -244,7 +245,7 @@ describe('User Repository test', function () {
             });
 
             repository.resolveUser('Tester', function (err, foundUser) {
-                should(err).be.equal(null);
+                should.not.exist(err);
                 should(foundUser).be.equal(false);
                 done();
             });
@@ -262,7 +263,7 @@ describe('User Repository test', function () {
 
             repository.findUser('Tester', function (err, foundUser) {
                 should(foundUser).be.equal(undefined);
-                should(err).not.be.equal(null);
+                should.exist(err);
                 done();
             });
         });

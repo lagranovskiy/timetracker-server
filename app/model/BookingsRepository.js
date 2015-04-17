@@ -1,4 +1,4 @@
-var async = require('async'),
+var async = require('neo-async'),
     config = require('../config/config'),
     neo4j = require('neo4j'),
     _ = require('underscore'),

@@ -10,6 +10,7 @@ var Booking = require('../model/Booking');
 var BookingModel = require('../model/BookingModel');
 var bookingModel = new BookingModel();
 
+
 /**
  * Lists all bookings the current authenticated user ever made
  * TODO: Implement limit functionality

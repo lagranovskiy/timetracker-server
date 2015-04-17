@@ -4,7 +4,7 @@
  * Controlls user actions
  **/
 
-var async = require('async');
+var async = require('neo-async');
 var _ = require('underscore');
 var UserModel = require('../model/UserModel');
 var userModel = new UserModel();

@@ -1,6 +1,6 @@
 var Project = require('./Project');
 var _ = require('underscore');
-var async = require('async');
+var async = require('neo-async');
 var md5 = require('MD5');
 
 var UserRepository = require('../model/UserRepository');

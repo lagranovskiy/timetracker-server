@@ -13,6 +13,7 @@ var express = require('express');
 var app = express();
 
 
+
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -74,6 +75,8 @@ exports.app = exports.setup(app);
  */
 if (config.httpPort) {
     var httpServer = http.createServer(exports.app).listen(config.httpPort);
+    var io = require('socket.io')(httpServer);
+    require('./config/sockets')(io);
     console.log('Timetracker server startet under http://' + config.host + ':' + config.httpPort);
 }
 
@@ -87,5 +90,7 @@ if (config.sslPort) {
     };
 
     var httpsServer = https.createServer(httpsCertificates, exports.app).listen(config.sslPort);
+    var io = require('socket.io')(httpsServer);
+    require('./config/sockets')(io);
     console.log('Timetracker server startet under https://' + config.host + ':' + config.sslPort);
 }

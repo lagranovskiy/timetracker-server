@@ -1,6 +1,6 @@
 var Project = require('./Project');
 var _ = require('underscore');
-var async = require('async');
+var async = require('neo-async');
 var moment = require('moment');
 var ProjectRepository = require('../model/ProjectRepository');
 var projectRepository = new ProjectRepository();

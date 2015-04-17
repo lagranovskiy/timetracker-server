@@ -1,4 +1,4 @@
-var async = require('async'),
+var async = require('neo-async'),
     Person = require('./Person'),
     Project = require('./Project'),
     _ = require('underscore'),

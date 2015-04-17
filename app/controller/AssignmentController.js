@@ -1,7 +1,7 @@
 /**
  * Created by lagranovskiy on 08.04.15.
  */
-var async = require('async');
+var async = require('neo-async');
 var newrelic = require('newrelic');
 var _ = require('underscore');
 var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');

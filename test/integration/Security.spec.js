@@ -16,7 +16,7 @@ describe('Authentication test', function() {
         it('After correct auth user core data sent to the user', function(done) {
             request(app)
                 .post('/auth/login').send({
-                    username: 'mmustermann',
+                    username: 'aschmidt',
                     password: 'prodyna'
                 })
                 .set('Accept', 'application/json')
@@ -24,7 +24,7 @@ describe('Authentication test', function() {
                 .expect(200)
                 .end(function(err, res) {
                     should.not.exist(err);
-                    res.body.userId.should.equal('mmustermann');
+                    res.body.userId.should.equal('aschmidt');
                     done();
                 });
 

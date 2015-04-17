@@ -1,6 +1,6 @@
 var Booking = require('./Booking');
 var _ = require('underscore');
-var async = require('async');
+var async = require('neo-async');
 var moment = require('moment');
 var BookingsRepository = require('../model/BookingsRepository');
 var bookingsRepository = new BookingsRepository();
@@ -262,7 +262,7 @@ var BookingModel = function () {
 
                     var bookingList = '';
                     _.each(result, function (collidatingBooking) {
-                        if (collidatingBooking.id != booking.id) {
+                        if (collidatingBooking.id !== booking.id) {
                             bookingList = bookingList + moment(collidatingBooking.workDay).format("L") + ' from: ' + moment(collidatingBooking.workStarted).format("HH:mm") + ' to: ' + moment(collidatingBooking.workFinished).format("HH:mm") + '\n';
                         }
                     });

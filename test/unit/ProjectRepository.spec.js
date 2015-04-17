@@ -85,7 +85,7 @@ describe('Project Repository test', function() {
 
             repository = new ProjectRepository();
             repository.createNewProject(testProjectData[0].project.data, function(err, createdProject) {
-                should(err).not.be.equal(undefined);
+                should.exist(err);
                 should(createdProject).be.equal(undefined);
                 done();
             });
@@ -118,7 +118,7 @@ describe('Project Repository test', function() {
 
             repository = new ProjectRepository();
             repository.saveProject(1234, testProjectData[0].project.data, function(err, savedProject) {
-                should(err).not.be.equal(undefined);
+                should.exist(err);
                 should(savedProject).be.equal(undefined);
                 done();
             });
@@ -168,7 +168,7 @@ describe('Project Repository test', function() {
 
             repository = new ProjectRepository();
             repository.deleteProject(1234, function(err, projectRemoved) {
-                should(err).not.be.equal(undefined);
+                should.not.exist(err);
                 should(projectRemoved).be.equal("ok");
                 done();
             });
