@@ -64,6 +64,7 @@ exports.setup = function (app) {
 
     // load routes
     require('./config/routes')(app, passport);
+    require('./config/eventPopulator')();
 
     return app;
 };
@@ -75,8 +76,6 @@ exports.app = exports.setup(app);
  */
 if (config.httpPort) {
     var httpServer = http.createServer(exports.app).listen(config.httpPort);
-    var io = require('socket.io')(httpServer);
-    require('./config/sockets')(io);
     console.log('Timetracker server startet under http://' + config.host + ':' + config.httpPort);
 }
 

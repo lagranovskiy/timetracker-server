@@ -1,21 +1,29 @@
 /**
- * Project Controller
+ * Bookings Controller
  *
- * Controlls project entities
+ * Controlls booking services
+ *
  **/
 var async = require('async');
 var newrelic = require('newrelic');
 var _ = require('underscore');
+var EventEmitter = require( "events" ).EventEmitter;
 var Booking = require('../model/Booking');
 var BookingModel = require('../model/BookingModel');
 var bookingModel = new BookingModel();
 
-
+var controller = new EventEmitter();
 /**
  * Lists all bookings the current authenticated user ever made
+ *
+ * Emits events:
+ *  - created
+ *  - updated
+ *  - deleted
+ *
  * TODO: Implement limit functionality
  */
-exports.listUserBookings = function (request, response, next) {
+controller.listUserBookings = function (request, response, next) {
     var userId = request.user.id * 1;
     console.info('Listing of all bookings of user with id' + userId);
 
@@ -23,7 +31,6 @@ exports.listUserBookings = function (request, response, next) {
         if (err) {
             return next(err);
         }
-
         response.send(results);
     });
 };
@@ -34,7 +41,7 @@ exports.listUserBookings = function (request, response, next) {
  * @param response
  * @param next
  */
-exports.listUserBookingsById = function (request, response, next) {
+controller.listUserBookingsById = function (request, response, next) {
     var userId = request.params.userId * 1;
     console.info('Listing of all bookings of user with id' + userId);
 
@@ -50,7 +57,7 @@ exports.listUserBookingsById = function (request, response, next) {
 /**
  * Lists all bookings user made for given project
  */
-exports.listUserProjectBookings = function (request, response, next) {
+controller.listUserProjectBookings = function (request, response, next) {
     var userId = request.user.id * 1;
     var projectId = request.params.projectId * 1;
     if (!projectId) {
@@ -74,7 +81,7 @@ exports.listUserProjectBookings = function (request, response, next) {
  * List all bookings ever made
  * TODO: IMplement limit functionality
  */
-exports.listBookings = function (request, response, next) {
+controller.listBookings = function (request, response, next) {
     console.info('Listing of all bookings');
 
 
@@ -90,7 +97,7 @@ exports.listBookings = function (request, response, next) {
 /**
  * Create a new booking
  */
-exports.createBooking = function (request, response, next) {
+controller.createBooking = function (request, response, next) {
     var userId = request.user.id * 1;
 
     console.info('Creating of a new booking for user ' + userId);
@@ -104,6 +111,7 @@ exports.createBooking = function (request, response, next) {
         }
         newrelic.incrementMetric('Custom/Booking/BookingCreated', 1);
         response.send(createdBooking);
+        controller.emit( "created",createdBooking.id );
     });
 
 
@@ -112,7 +120,7 @@ exports.createBooking = function (request, response, next) {
 /**
  * Updates existing booking
  */
-exports.saveBooking = function (request, response, next) {
+controller.saveBooking = function (request, response, next) {
     var userId = request.user.id * 1;
     var bookingId = request.params.bookingId * 1;
     var bookingData = request.body;
@@ -127,12 +135,13 @@ exports.saveBooking = function (request, response, next) {
         return next('Updating of booking is allowed only for the owner of the booking.');
     }
 
-    bookingModel.updateBooking(bookingData, function (err, createdBooking) {
+    bookingModel.updateBooking(bookingData, function (err, updatedBooking) {
         if (err) {
             return next(err);
         }
 
-        response.send(createdBooking);
+        response.send(updatedBooking);
+        controller.emit( "updated",updatedBooking.id );
     });
 
 
@@ -141,7 +150,7 @@ exports.saveBooking = function (request, response, next) {
 /**
  * Deletes booking from db
  */
-exports.deleteBooking = function (request, response, next) {
+controller.deleteBooking = function (request, response, next) {
     var userId = request.user.id * 1;
     var bookingId = request.params.bookingId * 1;
 
@@ -162,5 +171,8 @@ exports.deleteBooking = function (request, response, next) {
         }
         newrelic.incrementMetric('Custom/Booking/BookingRemoved', 1);
         response.send(result);
+        controller.emit( "deleted",bookingId );
     });
 };
+
+module.exports = controller;
