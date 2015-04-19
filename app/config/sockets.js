@@ -17,14 +17,14 @@ var sockets = function (io, config) {
 
     async.waterfall([
             function (callback) {
-                connection = amqp.createConnection({url: config.jmsUrl});
+                connection = amqp.createConnection({url: config.jmsUrl.url});
                 connection.once('ready', function () {
                     callback(null, connection);
                 });
             },
             function (connection, callback) {
                 console.log('JMS Reciever: Connection ' + connection + ' is open');
-                connection.exchange('timetracker-exchange', {}, function (exchange) {
+                connection.exchange(config.jmsUrl.exchangeName, {}, function (exchange) {
                     console.log('>>JMS Reciever:  Timetracker exchange ' + exchange.name + ' is open <<');
                     callback(null, exchange);
                 });

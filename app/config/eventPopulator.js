@@ -23,13 +23,13 @@ var eventPopulator = function (config) {
      */
     async.waterfall([
         function (callback) {
-            connection = amqp.createConnection({url: config.jmsUrl});
+            connection = amqp.createConnection({url: config.jmsUrl.url});
             connection.on('ready', function () {
                 callback(null, connection);
             });
         },
         function (connection, callback) {
-            connection.exchange('timetracker-exchange', {}, function (exchange) {
+            connection.exchange(config.jmsUrl.exchangeName, {}, function (exchange) {
                 console.log('Populator:  Exchange ' + exchange.name + ' is open');
                 callback(null, exchange);
             });

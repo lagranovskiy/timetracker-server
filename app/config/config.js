@@ -9,12 +9,15 @@ var config = {
         db: {
             url: 'http://localhost:7474'
         },
-        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+        jmsUrl: {
+            url:  "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+            exchangeName: 'timetracker-local'
+        },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function() {
+        init: function () {
             process.env.DEBUG = '*';
             return this;
         }
@@ -28,12 +31,15 @@ var config = {
         db: {
             url: 'http://localhost:7474'
         },
-        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+        jmsUrl: {
+            url:  "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+            exchangeName: 'timetracker-test'
+        },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function() {
+        init: function () {
             process.env.DEBUG = '*';
             return this;
         }
@@ -47,12 +53,15 @@ var config = {
         db: {
             url: 'http://localhost:7474'
         },
-        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+        jmsUrl: {
+            url:  "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+            exchangeName: 'timetracker-prod'
+        },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function() {
+        init: function () {
             return this;
         }
     },
@@ -66,8 +75,11 @@ var config = {
         db: {
             url: process.env.GRAPHENEDB_URL
         },
-        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
-        init: function() {
+        jmsUrl: {
+            url: process.env.CLOUDAMQP_URL,
+            exchangeName: 'timetracker-heroku'
+        },
+        init: function () {
             return this;
         }
     }
