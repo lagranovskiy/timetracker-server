@@ -7,7 +7,7 @@
 var async = require('async');
 var newrelic = require('newrelic');
 var _ = require('underscore');
-var EventEmitter = require( "events" ).EventEmitter;
+var EventEmitter = require("events").EventEmitter;
 var Booking = require('../model/Booking');
 var BookingModel = require('../model/BookingModel');
 var bookingModel = new BookingModel();
@@ -111,7 +111,10 @@ controller.createBooking = function (request, response, next) {
         }
         newrelic.incrementMetric('Custom/Booking/BookingCreated', 1);
         response.send(createdBooking);
-        controller.emit( "created",createdBooking.id );
+        controller.emit("created", {
+            booking: createdBooking.id,
+            userId: createdBooking.userId
+        });
     });
 
 
@@ -141,7 +144,10 @@ controller.saveBooking = function (request, response, next) {
         }
 
         response.send(updatedBooking);
-        controller.emit( "updated",updatedBooking.id );
+        controller.emit("updated", {
+            booking: updatedBooking.id,
+            userId: updatedBooking.userId
+        });
     });
 
 
@@ -171,7 +177,10 @@ controller.deleteBooking = function (request, response, next) {
         }
         newrelic.incrementMetric('Custom/Booking/BookingRemoved', 1);
         response.send(result);
-        controller.emit( "deleted",bookingId );
+        controller.emit("deleted", {
+            booking:bookingId,
+            userId: userId
+        });
     });
 };
 

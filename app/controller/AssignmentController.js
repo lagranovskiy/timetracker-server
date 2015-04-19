@@ -3,11 +3,12 @@
  */
 var async = require('neo-async');
 var newrelic = require('newrelic');
+var EventEmitter = require("events").EventEmitter;
 var _ = require('underscore');
 var ProjectAssignmentRepository = require('../model/ProjectAssignmentRepository');
 var personAssignmentRepository = new ProjectAssignmentRepository();
 
-
+var assignmentController = new EventEmitter();
 /**
  * Updates assignment data merges values
  *
@@ -23,7 +24,7 @@ var personAssignmentRepository = new ProjectAssignmentRepository();
  * @param response
  * @param next
  */
-exports.updateAssignments = function(request, response, next) {
+assignmentController.updateAssignments = function (request, response, next) {
     console.info('Updating of assignments');
 
     var assignmentData = request.body;
@@ -34,18 +35,18 @@ exports.updateAssignments = function(request, response, next) {
     newrelic.recordMetric('Custom/Assignments/DispoActivity', assignmentData.length);
 
     // Prepare assignment call with only needed data
-    async.eachSeries(assignmentData, function(assignment, callback) {
+    async.eachSeries(assignmentData, function (assignment, callback) {
 
         if (!assignment.person.id) {
-            callback('Cannot associate person null with a project');
+            return callback('Cannot associate person null with a project');
         }
 
         if (!assignment.project.id) {
-            callback('Cannot associate person  with a project null');
+            return callback('Cannot associate person  with a project null');
         }
 
         if (!assignment.role) {
-            callback('Cannot associate person with a project by role null');
+            return callback('Cannot associate person with a project by role null');
         }
         personAssignmentRepository.updateAssignment(
             assignment.person.id,
@@ -53,16 +54,18 @@ exports.updateAssignments = function(request, response, next) {
             assignment.role,
             callback);
 
-    }, function(err) {
+    }, function (err, data, data2) {
         // if any of the file processing produced an error, err would equal that error
         if (err) {
             // One of the iterations produced an error.
             // All processing will now stop.
-            console.log('A file failed to process');
+            console.log('A assignment failed to process');
             return next(err);
         } else {
-            console.log('All files have been processed successfully');
+            console.log('All assignments have been processed successfully');
             response.send("success");
+
+            assignmentController.emit("created", data);
         }
     });
 
@@ -75,7 +78,7 @@ exports.updateAssignments = function(request, response, next) {
  * @param response
  * @param next
  */
-exports.deleteAssignment = function(request, response, next) {
+assignmentController.deleteAssignment = function (request, response, next) {
     console.info('Deleting of assignment.');
     newrelic.incrementMetric('Custom/Assignments/DeletedDisposition', 1);
 
@@ -84,12 +87,17 @@ exports.deleteAssignment = function(request, response, next) {
         return next('Assignment id not set');
     }
 
-    personAssignmentRepository.deleteAssignment(assignmentId, function(err, data) {
+    personAssignmentRepository.deleteAssignment(assignmentId, function (err, data) {
         if (err) {
             return next(err);
         }
 
         response.send(data);
+
+        assignmentController.emit("deleted", data);
     });
 
 };
+
+
+module.exports = assignmentController;

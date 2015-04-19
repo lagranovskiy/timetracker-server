@@ -13,7 +13,6 @@ var express = require('express');
 var app = express();
 
 
-
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -64,7 +63,7 @@ exports.setup = function (app) {
 
     // load routes
     require('./config/routes')(app, passport);
-    require('./config/eventPopulator')();
+    require('./config/eventPopulator')(config);
 
     return app;
 };
@@ -76,7 +75,14 @@ exports.app = exports.setup(app);
  */
 if (config.httpPort) {
     var httpServer = http.createServer(exports.app).listen(config.httpPort);
-    console.log('Timetracker server startet under http://' + config.host + ':' + config.httpPort);
+
+    if (!config.sslPort) {
+        // Only enable unsecured sockets if no https connection is configured
+        var io = require('socket.io')(httpsServer);
+        require('./config/sockets')(io, config);
+    }
+
+    console.log('Timetracker server started under http://' + config.host + ':' + config.httpPort);
 }
 
 if (config.sslPort) {
@@ -90,6 +96,6 @@ if (config.sslPort) {
 
     var httpsServer = https.createServer(httpsCertificates, exports.app).listen(config.sslPort);
     var io = require('socket.io')(httpsServer);
-    require('./config/sockets')(io);
-    console.log('Timetracker server startet under https://' + config.host + ':' + config.sslPort);
+    require('./config/sockets')(io, config);
+    console.log('Timetracker server started under https://' + config.host + ':' + config.sslPort);
 }

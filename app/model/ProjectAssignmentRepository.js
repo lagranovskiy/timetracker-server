@@ -69,7 +69,12 @@ ProjectAssignmentRepository.prototype.updateAssignment = function (personId, pro
             db.query(query, parameters, callback);
         },
         function (results, callback) {
-            callback(null, true);
+            callback(null, {
+                assignmentId: results[0].r.id,
+                personId: results[0].person.id,
+                projectId: results[0].project.id,
+                role: results[0].r.role
+            });
         }
     ], retValCallback);
 };
@@ -82,18 +87,26 @@ ProjectAssignmentRepository.prototype.updateAssignment = function (personId, pro
  * @return {type}                description
  */
 ProjectAssignmentRepository.prototype.deleteAssignment = function (assignmentUid, retValCallback) {
+   var personId = null;
+
     async.waterfall([
         function (callback) {
             db.getRelationshipById(assignmentUid, callback);
         },
         function (result, callback) {
             if (result) {
+                personId = result.person.id;
                 result.del(callback);
             } else {
                 callback('Cannot find');
             }
         }
-    ], retValCallback);
+    ], function (err, data) {
+        retValCallback(err, {
+            assignmentId: assignmentUid,
+            personId: personId
+        });
+    });
 };
 
 module.exports = ProjectAssignmentRepository;

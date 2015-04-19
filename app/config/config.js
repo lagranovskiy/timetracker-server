@@ -9,6 +9,7 @@ var config = {
         db: {
             url: 'http://localhost:7474'
         },
+        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
@@ -27,6 +28,7 @@ var config = {
         db: {
             url: 'http://localhost:7474'
         },
+        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
@@ -45,6 +47,7 @@ var config = {
         db: {
             url: 'http://localhost:7474'
         },
+        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
@@ -63,6 +66,7 @@ var config = {
         db: {
             url: process.env.GRAPHENEDB_URL
         },
+        jmsUrl: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
         init: function() {
             return this;
         }
