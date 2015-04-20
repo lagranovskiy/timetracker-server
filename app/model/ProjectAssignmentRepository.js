@@ -73,40 +73,53 @@ ProjectAssignmentRepository.prototype.updateAssignment = function (personId, pro
                 assignmentId: results[0].r.id,
                 personId: results[0].person.id,
                 projectId: results[0].project.id,
-                role: results[0].r.role
+                role: results[0].r.data.role
             });
         }
-    ], retValCallback);
+    ], function (err, data) {
+        retValCallback(err, data);
+    });
 };
 
 
 /**
  * ProjectRepository.prototype.removePersonProjectRole - description
- * @param  {type} roleUid        description
+ * @param  {type} assignmentId        id of assignment to be removed
  * @param  {type} retValCallback description
  * @return {type}                description
  */
-ProjectAssignmentRepository.prototype.deleteAssignment = function (assignmentUid, retValCallback) {
-   var personId = null;
+ProjectAssignmentRepository.prototype.deleteAssignment = function (assignmentId, retValCallback) {
+    var query = [
+        'MATCH (person:Person)-[assignment]-(r:Role)-[]-(project:Project)',
+        'WHERE id(assignment)={assignmentId}',
+        'DELETE assignment',
+        'RETURN person, project'
+    ].join('\n');
+    var param = {
+        assignmentId: assignmentId
+    }
 
     async.waterfall([
+
         function (callback) {
-            db.getRelationshipById(assignmentUid, callback);
+            db.query(query, param, callback);
         },
-        function (result, callback) {
-            if (result) {
-                personId = result.person.id;
-                result.del(callback);
-            } else {
-                callback('Cannot find');
+        function (results, callback) {
+            if (!results || results.length != 1) {
+               return callback('Cannot unassign users');
             }
+
+            var data = results[0];
+
+            callback(null, {
+                assignmentId: assignmentId,
+                projectId: data.project.id,
+                personId: data.person.id
+            });
         }
-    ], function (err, data) {
-        retValCallback(err, {
-            assignmentId: assignmentUid,
-            personId: personId
-        });
-    });
+    ], retValCallback);
+
+
 };
 
 module.exports = ProjectAssignmentRepository;

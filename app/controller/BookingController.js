@@ -112,7 +112,8 @@ controller.createBooking = function (request, response, next) {
         newrelic.incrementMetric('Custom/Booking/BookingCreated', 1);
         response.send(createdBooking);
         controller.emit("created", {
-            booking: createdBooking.id,
+            bookingId: createdBooking.id,
+            projectId: createdBooking.projectId,
             userId: createdBooking.userId
         });
     });
@@ -145,7 +146,8 @@ controller.saveBooking = function (request, response, next) {
 
         response.send(updatedBooking);
         controller.emit("updated", {
-            booking: updatedBooking.id,
+            bookingId: updatedBooking.id,
+            projectId: updatedBooking.projectId,
             userId: updatedBooking.userId
         });
     });
@@ -168,9 +170,6 @@ controller.deleteBooking = function (request, response, next) {
     bookingId = bookingId * 1; // Convert bookingId to number
     userId = userId * 1; // Convert bookingId to number
 
-    var existingBooking = new Booking(bookingId, null, null, userId);
-
-
     bookingModel.deleteBooking(bookingId, userId, function (err, result) {
         if (err) {
             return next(err);
@@ -178,8 +177,9 @@ controller.deleteBooking = function (request, response, next) {
         newrelic.incrementMetric('Custom/Booking/BookingRemoved', 1);
         response.send(result);
         controller.emit("deleted", {
-            booking:bookingId,
-            userId: userId
+            bookingId: result.id,
+            projectId: result.projectId,
+            userId: result.userId
         });
     });
 };

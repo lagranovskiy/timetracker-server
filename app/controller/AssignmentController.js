@@ -35,7 +35,7 @@ assignmentController.updateAssignments = function (request, response, next) {
     newrelic.recordMetric('Custom/Assignments/DispoActivity', assignmentData.length);
 
     // Prepare assignment call with only needed data
-    async.eachSeries(assignmentData, function (assignment, callback) {
+    async.map(assignmentData, function (assignment, callback) {
 
         if (!assignment.person.id) {
             return callback('Cannot associate person null with a project');
@@ -54,7 +54,7 @@ assignmentController.updateAssignments = function (request, response, next) {
             assignment.role,
             callback);
 
-    }, function (err, data, data2) {
+    }, function (err, data) {
         // if any of the file processing produced an error, err would equal that error
         if (err) {
             // One of the iterations produced an error.
@@ -65,7 +65,10 @@ assignmentController.updateAssignments = function (request, response, next) {
             console.log('All assignments have been processed successfully');
             response.send("success");
 
-            assignmentController.emit("created", data);
+            _.each(data, function (result) {
+                assignmentController.emit("created", result);
+            });
+
         }
     });
 
@@ -82,7 +85,7 @@ assignmentController.deleteAssignment = function (request, response, next) {
     console.info('Deleting of assignment.');
     newrelic.incrementMetric('Custom/Assignments/DeletedDisposition', 1);
 
-    var assignmentId = request.params.assignmentId;
+    var assignmentId = request.params.assignmentId * 1;
     if (!assignmentId) {
         return next('Assignment id not set');
     }

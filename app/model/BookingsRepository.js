@@ -6,8 +6,8 @@ var async = require('neo-async'),
     Booking = require('./Booking'),
     db = new neo4j.GraphDatabase(config.db.url);
 
-function BookingsRepository() {}
-
+function BookingsRepository() {
+}
 
 
 /**
@@ -15,7 +15,7 @@ function BookingsRepository() {}
  *
  * @param {Function} retValCallback return value callback
  */
-BookingsRepository.prototype.listAllUserBookings = function(userId, retValCallback) {
+BookingsRepository.prototype.listAllUserBookings = function (userId, retValCallback) {
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(user)={userId}",
@@ -29,12 +29,12 @@ BookingsRepository.prototype.listAllUserBookings = function(userId, retValCallba
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, param, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             var bookingList = [];
-            _.each(results, function(result) {
+            _.each(results, function (result) {
                 bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId));
             });
 
@@ -48,7 +48,7 @@ BookingsRepository.prototype.listAllUserBookings = function(userId, retValCallba
  *
  * @param {Function} retValCallback return value callback
  */
-BookingsRepository.prototype.listUserProjectBookings = function(userId, projectId, retValCallback) {
+BookingsRepository.prototype.listUserProjectBookings = function (userId, projectId, retValCallback) {
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(user)={userId} and id(project) = {projectId}",
@@ -63,12 +63,12 @@ BookingsRepository.prototype.listUserProjectBookings = function(userId, projectI
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, param, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             var bookingList = [];
-            _.each(results, function(result) {
+            _.each(results, function (result) {
                 bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId));
             });
 
@@ -78,13 +78,12 @@ BookingsRepository.prototype.listUserProjectBookings = function(userId, projectI
 };
 
 
-
 /**
  * Lists all projects in system
  *
  * @param {Function} retValCallback return value callback
  */
-BookingsRepository.prototype.listBookings = function(retValCallback) {
+BookingsRepository.prototype.listBookings = function (retValCallback) {
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "RETURN user, booking, project",
@@ -93,12 +92,12 @@ BookingsRepository.prototype.listBookings = function(retValCallback) {
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, {}, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             var bookingList = [];
-            _.each(results, function(result) {
+            _.each(results, function (result) {
                 bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id));
             });
 
@@ -112,7 +111,7 @@ BookingsRepository.prototype.listBookings = function(retValCallback) {
  * @param booking booking to be persisted
  * @param retValCallback callback to be called after
  */
-BookingsRepository.prototype.createNewBooking = function(booking, retValCallback) {
+BookingsRepository.prototype.createNewBooking = function (booking, retValCallback) {
 
     var query = [
         "MATCH (project:Project)",
@@ -131,10 +130,10 @@ BookingsRepository.prototype.createNewBooking = function(booking, retValCallback
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, param, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             if (!results || results.length !== 1) {
                 return callback('User has no rights to book to the given projects. Please check if he is on project role.');
             }
@@ -155,12 +154,12 @@ BookingsRepository.prototype.createNewBooking = function(booking, retValCallback
  * @param booking booking to be persisted
  * @param retValCallback callback to be called after
  */
-BookingsRepository.prototype.updateExistingBooking = function(booking, retValCallback) {
+BookingsRepository.prototype.updateExistingBooking = function (booking, retValCallback) {
     async.waterfall([
-        function(callback) {
+        function (callback) {
             BookingsRepository.prototype.findBooking(booking, callback);
         },
-        function(foundBooking, callback) {
+        function (foundBooking, callback) {
             if (!foundBooking) {
                 callback('Cannot find booking by given id');
             }
@@ -168,10 +167,10 @@ BookingsRepository.prototype.updateExistingBooking = function(booking, retValCal
             if (booking.projectId === foundBooking.projectId) {
                 // by existing booking, only data need to be changed
                 async.waterfall([
-                    function(callback) {
+                    function (callback) {
                         db.getRelationshipById(booking.id, callback);
                     },
-                    function(relation, callback) {
+                    function (relation, callback) {
                         _.extend(relation.data, booking.data);
                         relation.save(callback);
                     }
@@ -180,18 +179,19 @@ BookingsRepository.prototype.updateExistingBooking = function(booking, retValCal
             } else {
                 // Changing of booking mean that a new relation need to be created and old one removed
                 async.waterfall([
-                    function(callback) {
+                    function (callback) {
                         db.getRelationshipById(booking.id, callback);
                     },
-                    function(relation, callback) {
-                        relation.del(function() {});
+                    function (relation, callback) {
+                        relation.del(function () {
+                        });
                         BookingsRepository.prototype.createNewBooking(booking, callback);
                     }
                 ], callback);
             }
 
         },
-        function(updatedBooking, callback) {
+        function (updatedBooking, callback) {
             BookingsRepository.prototype.findBookingById(updatedBooking.id, callback);
         }
     ], retValCallback);
@@ -201,7 +201,7 @@ BookingsRepository.prototype.updateExistingBooking = function(booking, retValCal
 /**
  * Process a search for a booking according to the given parameters
  */
-BookingsRepository.prototype.findBooking = function(booking, retValCallback) {
+BookingsRepository.prototype.findBooking = function (booking, retValCallback) {
 
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
@@ -216,10 +216,10 @@ BookingsRepository.prototype.findBooking = function(booking, retValCallback) {
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, param, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             if (!results || results.length !== 1) {
                 return callback('Booking not found!');
             }
@@ -235,15 +235,13 @@ BookingsRepository.prototype.findBooking = function(booking, retValCallback) {
 };
 
 
-
-
 /**
  * BookingsRepository.prototype.findBookingById - Process a search for a booking according to the given booking id
  *
  * @param  {Function} retValCallback callback
  * @param  {Number} bookingId      ID for search
  */
-BookingsRepository.prototype.findBookingById = function(bookingId, retValCallback) {
+BookingsRepository.prototype.findBookingById = function (bookingId, retValCallback) {
 
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
@@ -257,10 +255,10 @@ BookingsRepository.prototype.findBookingById = function(bookingId, retValCallbac
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, param, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             if (!results || results.length !== 1) {
                 return callback('Booking not found!');
             }
@@ -276,8 +274,6 @@ BookingsRepository.prototype.findBookingById = function(bookingId, retValCallbac
 };
 
 
-
-
 /**
  * BookingsRepository.prototype.testBookingAllowed - Evaluates if user may do such booking according to concurrency of times
  *
@@ -285,7 +281,7 @@ BookingsRepository.prototype.findBookingById = function(bookingId, retValCallbac
  * @param  {type} retValCallback description
  * @return {type}                description
  */
-BookingsRepository.prototype.findBookingCollidations = function(booking, retValCallback) {
+BookingsRepository.prototype.findBookingCollidations = function (booking, retValCallback) {
 
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
@@ -301,7 +297,7 @@ BookingsRepository.prototype.findBookingCollidations = function(booking, retValC
     ].join('\n');
 
     var beginning = moment(booking.workDay).hours(0).startOf('hour').valueOf();
-    var ending = moment(booking.workDay).add(1,'days').hours(0).endOf('hour').valueOf();
+    var ending = moment(booking.workDay).add(1, 'days').hours(0).endOf('hour').valueOf();
     var param = {
         minWorkDay: beginning,
         maxWorkDay: ending,
@@ -312,12 +308,12 @@ BookingsRepository.prototype.findBookingCollidations = function(booking, retValC
 
     async.waterfall([
 
-        function(callback) {
+        function (callback) {
             db.query(query, param, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             var bookingList = [];
-            _.each(results, function(result) {
+            _.each(results, function (result) {
                 bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id));
             });
 
@@ -336,28 +332,33 @@ BookingsRepository.prototype.findBookingCollidations = function(booking, retValC
  * @param booking booking to be persisted
  * @param retValCallback callback to be called after
  */
-BookingsRepository.prototype.deleteExistingBooking = function(booking, retValCallback) {
+BookingsRepository.prototype.deleteExistingBooking = function (booking, retValCallback) {
+    var projectId, userId;
     async.waterfall([
-        function(callback) {
+        function (callback) {
             BookingsRepository.prototype.findBooking(booking, callback);
         },
-        function(booking, callback) {
+        function (booking, callback) {
             if (!booking) {
                 return callback('Booking not found');
             }
 
             db.getRelationshipById(booking.id, callback);
         },
-        function(relation, callback) {
+        function (relation, callback) {
+            projectId = relation.end.id;
+            userId = relation.start.id;
             relation.del(callback);
         },
-        function(callback) {
-            callback(null, true);
+        function (callback) {
+            callback(null, {
+                id: booking.id,
+                projectId: projectId,
+                userId: userId
+            });
         }
     ], retValCallback);
 };
-
-
 
 
 module.exports = BookingsRepository;

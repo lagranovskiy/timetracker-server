@@ -22,11 +22,17 @@ exports.sendAuthData = function(req, res) {
         return res.status(500).send('No active session found.');
     }
 
-    res.status(200).json({
-        id: req.user.id,
-        userId: req.user.uid,
-        groups: req.user.groups,
-        session: req.sessionID
+    userModel.resolveUserPerson(req.user, function (err, person) {
+        if (err) {
+            callback('Cannot resolve person profile of user ' + user.id);
+        }
+        res.status(200).json({
+            id: req.user.id,
+            personId : person.id,
+            userId: req.user.uid,
+            groups: req.user.groups,
+            session: req.sessionID
+        });
     });
 };
 
