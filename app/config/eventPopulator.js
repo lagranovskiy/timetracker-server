@@ -71,6 +71,6 @@ var eventPopulator = function (config) {
         console.info('>> Populator: Assignment deleted notification (' + data + ')');
         exchange.publish('assignment.deleted', data);
     });
-}
+};
 
 module.exports = eventPopulator;

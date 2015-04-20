@@ -95,9 +95,10 @@ ProjectAssignmentRepository.prototype.deleteAssignment = function (assignmentId,
         'DELETE assignment',
         'RETURN person, project'
     ].join('\n');
+
     var param = {
         assignmentId: assignmentId
-    }
+    };
 
     async.waterfall([
 
@@ -105,8 +106,8 @@ ProjectAssignmentRepository.prototype.deleteAssignment = function (assignmentId,
             db.query(query, param, callback);
         },
         function (results, callback) {
-            if (!results || results.length != 1) {
-               return callback('Cannot unassign users');
+            if (!results || results.length !== 1) {
+                return callback('Cannot unassign users');
             }
 
             var data = results[0];

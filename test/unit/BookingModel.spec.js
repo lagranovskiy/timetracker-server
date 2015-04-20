@@ -307,7 +307,7 @@ describe('Booking model test', function() {
 
             bookingModel.deleteBooking(123, 1234, function(err, success) {
                 should.not.exist(err);
-                should(success).be.true;
+                should(success.id).be.equal(123);;
                 done();
             });
 

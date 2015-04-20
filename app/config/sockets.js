@@ -1,3 +1,5 @@
+'use strict';
+
 var amqp = require('amqp');
 var async = require('neo-async');
 
@@ -36,21 +38,22 @@ var sockets = function (io, config) {
                             connection.queue('booking-queue', function (queue) {
                                 console.log('JMS Reciever: Booking queue ' + queue.name + ' is open');
                                 queue.bind(exchange, 'booking.*');
-                                queueCB(null, queue)
+                                queueCB(null, queue);
                             });
                         },
                         assignment: function (queueCB) {
                             connection.queue('assignment-queue', function (queue) {
                                 console.log('JMS Reciever: Assignment queue ' + queue.name + ' is open');
                                 queue.bind(exchange, 'assignment.*');
-                                queueCB(null, queue)
+                                queueCB(null, queue);
                             });
                         }
                     },
                     function (err, results) {
                         callback(null, results.booking, results.assignment);
                     });
-            }],
+            }
+        ],
         function (err, bookingQueue, assignmentQueue) {
             if (err) {
                 return console.error(err);
@@ -77,6 +80,6 @@ var sockets = function (io, config) {
         });
 
 
-}
+};
 
 module.exports = sockets;

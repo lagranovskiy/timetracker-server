@@ -342,12 +342,13 @@ BookingsRepository.prototype.deleteExistingBooking = function (booking, retValCa
             if (!booking) {
                 return callback('Booking not found');
             }
+            projectId = booking.projectId;
+            userId = booking.userId;
 
             db.getRelationshipById(booking.id, callback);
         },
         function (relation, callback) {
-            projectId = relation.end.id;
-            userId = relation.start.id;
+
             relation.del(callback);
         },
         function (callback) {
