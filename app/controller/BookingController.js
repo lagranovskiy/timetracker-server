@@ -4,7 +4,7 @@
  * Controlls booking services
  *
  **/
-var async = require('async');
+var async = require('neo-async');
 var newrelic = require('newrelic');
 var _ = require('underscore');
 var EventEmitter = require("events").EventEmitter;
