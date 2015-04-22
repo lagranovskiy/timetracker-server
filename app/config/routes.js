@@ -5,6 +5,7 @@ var securityController = require('../controller/SecurityController');
 var userController = require('../controller/UserController');
 var assignmentController = require('../controller/AssignmentController');
 var dataController = require('../controller/DataController');
+var statisticController = require('../controller/StatisticController');
 var passport = require('passport');
 
 module.exports = function (app, passport) {
@@ -104,6 +105,7 @@ module.exports = function (app, passport) {
     app.post('/admin/user/:uid/pwdreset', isLoggedIn, userController.resetUserPassword);
     app.post('/admin/user/:uid/group/:groupId', isLoggedIn, userController.changeUserGroup);
 
+    app.get('/stat/management/booking', isLoggedIn, statisticController.calculateBookingStatistic);
     /**
      * Business methods misc
      */
