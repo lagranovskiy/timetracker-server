@@ -19,7 +19,7 @@ BookingsRepository.prototype.listAllUserBookings = function (userId, retValCallb
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(user)={userId}",
-        "RETURN booking, project",
+        "RETURN booking, project, person",
         "ORDER BY booking.workDay DESC, booking.workStarted"
     ].join('\n');
 
@@ -35,7 +35,7 @@ BookingsRepository.prototype.listAllUserBookings = function (userId, retValCallb
         function (results, callback) {
             var bookingList = [];
             _.each(results, function (result) {
-                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId));
+                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId, result.person.id));
             });
 
             retValCallback(null, bookingList);
@@ -52,7 +52,7 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(user)={userId} and id(project) = {projectId}",
-        "RETURN booking, project",
+        "RETURN booking, project, person",
         "ORDER BY booking.workDay DESC, booking.workStarted"
     ].join('\n');
 
@@ -69,7 +69,7 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
         function (results, callback) {
             var bookingList = [];
             _.each(results, function (result) {
-                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId));
+                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, userId, result.person.id));
             });
 
             retValCallback(null, bookingList);
@@ -86,7 +86,7 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
 BookingsRepository.prototype.listBookings = function (retValCallback) {
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
-        "RETURN user, booking, project",
+        "RETURN user, booking, project, person",
         "ORDER BY booking.workDay DESC, booking.workStarted"
     ].join('\n');
 
@@ -98,7 +98,7 @@ BookingsRepository.prototype.listBookings = function (retValCallback) {
         function (results, callback) {
             var bookingList = [];
             _.each(results, function (result) {
-                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id));
+                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id));
             });
 
             retValCallback(null, bookingList);
@@ -206,7 +206,7 @@ BookingsRepository.prototype.findBooking = function (booking, retValCallback) {
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(user) = {userId} and id(booking)={bookingId}",
-        "RETURN booking,project,user"
+        "RETURN booking,project,user,person"
     ].join('\n');
 
     var param = {
@@ -226,7 +226,7 @@ BookingsRepository.prototype.findBooking = function (booking, retValCallback) {
 
             var result = results[0];
 
-            var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id);
+            var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id);
             return callback(null, foundBooking);
 
         }
@@ -246,7 +246,7 @@ BookingsRepository.prototype.findBookingById = function (bookingId, retValCallba
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]->(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "WHERE id(booking)={bookingId}",
-        "RETURN booking,project,user"
+        "RETURN booking,project,user,person"
     ].join('\n');
 
     var param = {
@@ -265,7 +265,7 @@ BookingsRepository.prototype.findBookingById = function (bookingId, retValCallba
 
             var result = results[0];
 
-            var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id);
+            var foundBooking = new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id);
             return callback(null, foundBooking);
 
         }
@@ -293,7 +293,7 @@ BookingsRepository.prototype.findBookingCollidations = function (booking, retVal
         " or ",
         "booking.workStarted>{workStarted} and booking.workFinished<{workFinished}",
 
-        ") RETURN booking,project,user"
+        ") RETURN booking,project,user, person"
     ].join('\n');
 
     var beginning = moment(booking.workDay).hours(0).startOf('hour').valueOf();
@@ -314,7 +314,7 @@ BookingsRepository.prototype.findBookingCollidations = function (booking, retVal
         function (results, callback) {
             var bookingList = [];
             _.each(results, function (result) {
-                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id));
+                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id));
             });
 
 
@@ -333,7 +333,7 @@ BookingsRepository.prototype.findBookingCollidations = function (booking, retVal
  * @param retValCallback callback to be called after
  */
 BookingsRepository.prototype.deleteExistingBooking = function (booking, retValCallback) {
-    var projectId, userId;
+    var projectId, userId, personId;
     async.waterfall([
         function (callback) {
             BookingsRepository.prototype.findBooking(booking, callback);
@@ -344,7 +344,7 @@ BookingsRepository.prototype.deleteExistingBooking = function (booking, retValCa
             }
             projectId = booking.projectId;
             userId = booking.userId;
-
+            personId = booking.personId;
             db.getRelationshipById(booking.id, callback);
         },
         function (relation, callback) {
@@ -355,7 +355,8 @@ BookingsRepository.prototype.deleteExistingBooking = function (booking, retValCa
             callback(null, {
                 id: booking.id,
                 projectId: projectId,
-                userId: userId
+                userId: userId,
+                personId: personId
             });
         }
     ], retValCallback);

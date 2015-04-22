@@ -72,9 +72,9 @@ ProjectRepository.prototype.resolveProjectStatistics = function(projectId, retVa
  */
 ProjectRepository.prototype.resolveProjectBookings = function(projectId, retValCallback) {
     var query = [
-        "MATCH (u:User)-[]-()-[b:TIME_BOOKED]->(p:Project)",
+        "MATCH (u:User)-[]-(person:Person)-[b:TIME_BOOKED]->(p:Project)",
         "WHERE id(p)={projectId}",
-        "RETURN id(u) as userId, b as booking"
+        "RETURN id(u) as userId, b as booking, person"
     ].join('\n');
 
     var params = {
@@ -89,7 +89,7 @@ ProjectRepository.prototype.resolveProjectBookings = function(projectId, retValC
         function(results, callback) {
             var bookingList = [];
             _.each(results, function(result) {
-                bookingList.push(new Booking(result.booking.id, result.booking.data, projectId, result.userId));
+                bookingList.push(new Booking(result.booking.id, result.booking.data, projectId, result.userId, result.person.id));
             });
 
             callback(null, bookingList);

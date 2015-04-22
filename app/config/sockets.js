@@ -8,7 +8,7 @@ var async = require('neo-async');
  * @param io
  */
 var sockets = function (io, config) {
-
+    io.set('origins', '*:*');
     var timetrackerSocket = io.of('/');
 
     timetrackerSocket.on('connection', function (socket) {

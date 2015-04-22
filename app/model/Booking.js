@@ -6,7 +6,7 @@ var util = require('util'),
  * @param   {Object} node Node from db
  * @returns {Object} access api for entity
  */
-var Booking = function(bookingId, bookingData, projectId, userId) {
+var Booking = function(bookingId, bookingData, projectId, userId, personId) {
 
     var data = {};
     if (bookingData) {
@@ -77,6 +77,13 @@ var Booking = function(bookingId, bookingData, projectId, userId) {
          * */
         get userId() {
             return userId;
+        },
+
+        /**
+         *  Returns the person id the booking is assigned to
+         * */
+        get personId() {
+            return personId;
         }
 
     });

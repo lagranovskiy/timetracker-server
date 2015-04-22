@@ -60,10 +60,11 @@ var BookingModel = function () {
     function instanciateBooking(bookingData) {
         var bookingDataProjectId = bookingData.projectId;
         var bookingUserId = bookingData.userId;
+        var personId = bookingData.personId;
         var bookingId = bookingData.id;
 
         bookingData = _.pick(bookingData, ['workDay', 'workStarted', 'workFinished', 'pause', 'createdTime', 'lastUpdatedTime', 'comment']);
-        var newBooking = new Booking(bookingId, bookingData, bookingDataProjectId, bookingUserId);
+        var newBooking = new Booking(bookingId, bookingData, bookingDataProjectId, bookingUserId, personId);
 
         return newBooking;
     }
