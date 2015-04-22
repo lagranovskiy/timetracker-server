@@ -81,29 +81,57 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
 /**
  * Lists all projects in system
  *
+ * @param start starting from
+ * @param limit limit selection
+ *
  * @param {Function} retValCallback return value callback
  */
-BookingsRepository.prototype.listBookings = function (retValCallback) {
+BookingsRepository.prototype.listBookings = function (start, limit, retValCallback) {
+    var countQuery = [
+        "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
+        "RETURN count(booking) AS cnt"
+    ].join('\n');
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
-        "RETURN user, booking, project, person",
-        "ORDER BY booking.workDay DESC, booking.workStarted"
+        "RETURN  user, booking, project, person",
+        "ORDER BY booking.workDay DESC, booking.workStarted",
+        "SKIP {skip} LIMIT {limit}"
     ].join('\n');
 
+    var params = {
+        limit: limit,
+        skip: start // TODO: Evaluate if -1 is needed
+    }
+    var count = 0;
     async.waterfall([
-
         function (callback) {
-            db.query(query, {}, callback);
+            db.query(countQuery, {}, callback);
+        },
+        function (result, callback) {
+            count = result[0].cnt;
+            callback();
+        },
+        function (callback) {
+            db.query(query, params, callback);
         },
         function (results, callback) {
+            if (!results) {
+                return callback('Cannot get bookings');
+            }
+
             var bookingList = [];
             _.each(results, function (result) {
                 bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id));
             });
 
-            retValCallback(null, bookingList);
-        }
-    ]);
+            callback(null, {
+                count: count,
+                start: start,
+                limit: limit,
+                data: bookingList
+            })
+        }], retValCallback);
+
 };
 
 /**

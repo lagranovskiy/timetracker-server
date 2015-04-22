@@ -119,12 +119,16 @@ var BookingModel = function () {
         /**
          * listAllBookings - Lists all of booking entries
          *
+         * @param start starting from
+         * @param limit limit selection
          * @param  {type} callback description
          * @return {type}          description
          */
-        listAllBookings: function (callback) {
-
-            bookingsRepository.listBookings(function (err, results) {
+        listAllBookings: function (start, limit, callback) {
+            if (!_.isNumber(start) || !_.isNumber(limit)) {
+               return callback('Please select start and limit for query');
+            }
+            bookingsRepository.listBookings(start, limit, function (err, results) {
                 if (err) {
                     return callback(err);
                 }
@@ -267,7 +271,7 @@ var BookingModel = function () {
                             bookingList = bookingList + moment(collidatingBooking.workDay).format("L") + ' from: ' + moment(collidatingBooking.workStarted).format("HH:mm") + ' to: ' + moment(collidatingBooking.workFinished).format("HH:mm") + '\n';
                         }
                     });
-                    if(bookingList.length === 0){
+                    if (bookingList.length === 0) {
                         // Case where booking collidates with itself
                         return callback(null, true);
                     }

@@ -79,17 +79,17 @@ controller.listUserProjectBookings = function (request, response, next) {
 
 /**
  * List all bookings ever made
- * TODO: IMplement limit functionality
+ * Expects query and start parameter to be set or take defaults
  */
 controller.listBookings = function (request, response, next) {
     console.info('Listing of all bookings');
+    var start = request.query.start ? request.query.start * 1 : 0;
+    var limit = request.query.limit ? request.query.limit * 1 : 10;
 
-
-    bookingModel.listAllBookings(function (err, results) {
+    bookingModel.listAllBookings(start, limit, function (err, results) {
         if (err) {
             return next(err);
         }
-        newrelic.recordMetric('Custom/Booking/BookingsCount', results.length);
         response.send(results);
     });
 };
