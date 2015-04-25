@@ -52,11 +52,16 @@ var StatController = function () {
 
         _.each(bookingList, function (booking) {
             var workTime = moment.duration(booking.workFinished - booking.workStarted).subtract(booking.pause, 'minutes').hours();
+
             var date = moment(booking.workDay).format('l');
             if (!workTimeMap[date]) {
                 workTimeMap[date] = 0;
             }
             workTimeMap[date] = workTimeMap[date] + workTime;
+
+            if(workTime === 0){
+                return;
+            }
 
             var projectName = projectMap[booking.projectId].projectName;
             if (!projectWorkTimeMap[projectName]) {

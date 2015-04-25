@@ -7,17 +7,19 @@ var assignmentController = require('../controller/AssignmentController');
 var dataController = require('../controller/DataController');
 var statisticController = require('../controller/StatisticController');
 var passport = require('passport');
+var crossdomain = require('crossdomain');
 
 module.exports = function (app, passport) {
 
 
+
     var errorHandler = function (err, req, res, next) {
         console.error(err.stack);
+
         res.status(500).json({
             text: 'Internal error',
             error: err
         });
-
     };
     app.use(errorHandler);
 
@@ -35,7 +37,14 @@ module.exports = function (app, passport) {
         next();
     });
 
-    //DANEGER: Temp data pumping ONLY for DEV
+
+    var xml = crossdomain({ domain: '*' });
+    app.all('/crossdomain.xml', function (req, res, next) {
+        res.set('Content-Type', 'application/xml; charset=utf-8');
+        res.send(xml, 200);
+    });
+
+    //DANGER: Temp data pumping ONLY for DEV
     app.get('/init', dataController.reinitDB);
 
 
