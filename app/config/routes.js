@@ -106,6 +106,8 @@ module.exports = function (app, passport) {
     app.post('/admin/user/:uid/group/:groupId', isLoggedIn, userController.changeUserGroup);
 
     app.get('/stat/management/booking', isLoggedIn, statisticController.calculateBookingStatistic);
+    app.get('/stat/user/booking', isLoggedIn, statisticController.calculateUserLastBookingStatistic);
+    app.get('/stat/user/colleges', isLoggedIn, statisticController.searchForColleges);
     /**
      * Business methods misc
      */

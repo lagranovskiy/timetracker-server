@@ -165,7 +165,7 @@ ProjectRepository.prototype.listAllProjects = function(retValCallback) {
                 projectList.push(new Project(project.project.id, project.project.data));
             });
 
-            retValCallback(null, projectList);
+            callback(null, projectList);
         }
     ], retValCallback);
 };

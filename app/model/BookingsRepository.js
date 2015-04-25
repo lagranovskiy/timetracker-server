@@ -78,6 +78,46 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
 };
 
 
+
+/**
+ * Returns last bookings of employee by given data
+ * @param retValCallback
+ */
+BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, retValCallback) {
+
+    var query = [
+        'MATCH (user:User)--(person:Person)-[booking:TIME_BOOKED]->(project:Project)',
+        'WHERE id(user)={userId} AND booking.workDay>={workDaySince}',
+        'RETURN user, person, booking, project',
+        "ORDER BY booking.workDay, booking.workStarted"
+    ].join('\n');
+
+    var params = {
+        userId: userId,
+        workDaySince: workDaySince
+    }
+
+    async.waterfall([
+
+        function (callback) {
+            db.query(query, params, callback);
+        }
+
+    ], function (err, data) {
+        if (err) {
+            return retValCallback(err);
+        }
+
+        var retVal = [];
+        _.each(data, function (bookingData) {
+            retVal.push(new Booking(bookingData.booking.id, bookingData.booking.data, bookingData.project.id, userId, bookingData.person.id));
+        })
+
+        retValCallback(null, retVal);
+    });
+
+};
+
 /**
  * Lists all projects in system
  *

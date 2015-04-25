@@ -10,14 +10,14 @@ var config = {
             url: 'http://localhost:7474'
         },
         jmsUrl: {
-            url:  "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+            url: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
             exchangeName: 'timetracker-local'
         },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function () {
+        init: function() {
             process.env.DEBUG = '*';
             return this;
         }
@@ -29,17 +29,17 @@ var config = {
         sessionSecret: 'mykey',
         env: 'dev',
         db: {
-            url: 'http://localhost:7474'
+            url: 'http://timetrackertest:JjOf0u6Ac15qLNg01TWq@timetrackertest.sb04.stations.graphenedb.com:24789'
         },
         jmsUrl: {
-            url:  "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+            url: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
             exchangeName: 'timetracker-test'
         },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function () {
+        init: function() {
             process.env.DEBUG = '*';
             return this;
         }
@@ -54,14 +54,14 @@ var config = {
             url: 'http://localhost:7474'
         },
         jmsUrl: {
-            url:  "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+            url: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
             exchangeName: 'timetracker-prod'
         },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function () {
+        init: function() {
             return this;
         }
     },
@@ -70,7 +70,6 @@ var config = {
         httpPort: process.env.PORT || 8000,
         sslPort: false,
         sessionSecret: 'snp819819681INJUKNJ',
-        clientHost: process.env.TT_CLIENT_URL || 'TT_CLIENT_URL not set',
         env: 'prod',
         db: {
             url: process.env.GRAPHENEDB_URL
@@ -79,7 +78,7 @@ var config = {
             url: process.env.CLOUDAMQP_URL,
             exchangeName: 'timetracker-heroku'
         },
-        init: function () {
+        init: function() {
             return this;
         }
     }

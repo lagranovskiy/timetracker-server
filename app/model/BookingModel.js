@@ -71,6 +71,21 @@ var BookingModel = function () {
 
     var bookingModel = {
 
+        listLastBookings: function (userId, workDaySince, callback){
+            if (!userId) {
+                return callback('User userid is null');
+            }
+            if(!workDaySince){
+                return callback('workDaySince is null');
+            }
+            bookingsRepository.listLastBookings(userId, workDaySince, function (err, results) {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(null, results);
+            });
+        },
         /**
          * listUserBookings - List all bookings of given user
          *

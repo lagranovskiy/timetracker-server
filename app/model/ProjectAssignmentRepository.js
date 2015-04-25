@@ -18,10 +18,10 @@ function ProjectAssignmentRepository() {
  */
 ProjectAssignmentRepository.prototype.listProjectsOfPerson = function (userDbId, retValCallback) {
     var query = [
-        "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[r1:HAS_ROLE]->()-[r2:ON_PROJECT]->(project:Project)",
+        "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[r1:HAS_ROLE]->(role:Role)-[r2:ON_PROJECT]->(project:Project)",
         "WHERE id(user) = {userDbId}",
         "AND not has (project.deleted)",
-        "RETURN project"
+        "RETURN project, role"
     ]
         .join('\n');
 
@@ -36,8 +36,11 @@ ProjectAssignmentRepository.prototype.listProjectsOfPerson = function (userDbId,
         },
         function (results, callback) {
             var projectList = [];
-            _.each(results, function (project) {
-                projectList.push(new Project(project.project.id, project.project.data));
+            _.each(results, function (data) {
+
+                var project = new Project(data.project.id, data.project.data);
+                project.role = data.role.data.role;
+                projectList.push(project);
             });
 
             retValCallback(null, projectList);
