@@ -16,7 +16,7 @@ var config = {
 };
 
 
-describe('Booking model test', function() {
+describe('Booking model test', function () {
     var sandbox, bookingModel;
 
     var testBookingInput = {
@@ -57,6 +57,10 @@ describe('Booking model test', function() {
             id: 101
 
         },
+        person: {
+            id: 101
+
+        },
         user: {
             id: 1234
 
@@ -64,30 +68,30 @@ describe('Booking model test', function() {
     }];
 
 
-    beforeEach(function() {
+    beforeEach(function () {
         sandbox = sinon.sandbox.create();
 
     });
 
-    afterEach(function() {
+    afterEach(function () {
         sandbox.restore();
     });
 
 
-    describe('Test booking model', function() {
+    describe('Test booking model', function () {
 
-        it('Test if constructor works', function() {
+        it('Test if constructor works', function () {
             bookingModel = new BookingModel();
             should(bookingModel == null).eql(false);
         });
 
 
-        it('Test getting of all user booking', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test getting of all user booking', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            bookingModel.listAllUserBookings(1234, function(err, bookings) {
+            bookingModel.listAllUserBookings(1234, function (err, bookings) {
                 should(bookings.length).be.equal(1);
                 should(bookings[0].id).be.equal(100);
                 should(bookings[0].projectId).be.equal(101);
@@ -98,13 +102,12 @@ describe('Booking model test', function() {
         });
 
 
-
-        it('Test getting of all user project bookings', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test getting of all user project bookings', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            bookingModel.listUserProjectBookings(1234, 101, function(err, bookings) {
+            bookingModel.listUserProjectBookings(1234, 101, function (err, bookings) {
                 should(bookings.length).be.equal(1);
                 should(bookings[0].id).be.equal(100);
                 should(bookings[0].projectId).be.equal(101);
@@ -115,31 +118,35 @@ describe('Booking model test', function() {
         });
 
 
-        it('Test getting of all bookings', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
-                callback(null, testBookingRs);
+        it('Test getting of all bookings', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+                if (query.indexOf('cnt') >= 0) {
+                    callback(null, [{cnt: 30}]);
+                } else {
+                    callback(null, testBookingRs);
+                }
             });
 
-            bookingModel.listAllBookings(function(err, bookings) {
-                should(bookings.length).be.equal(1);
-                should(bookings[0].id).be.equal(100);
-                should(bookings[0].projectId).be.equal(101);
-                should(bookings[0].userId).be.equal(1234);
+            bookingModel.listAllBookings(0, 20, function (err, bookings) {
+                should(bookings.data.length).be.equal(1);
+                should(bookings.data[0].id).be.equal(100);
+                should(bookings.data[0].projectId).be.equal(101);
+                should(bookings.data[0].userId).be.equal(1234);
                 done();
             });
 
         });
 
-        it('Test updating of existing booking', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test updating of existing booking', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'getRelationshipById', function(relationId, callback) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'getRelationshipById', function (relationId, callback) {
                 var relation = {
                     id: relationId,
                     data: testBookingRs[0].booking.data,
-                    save: function(callback) {
+                    save: function (callback) {
                         return callback(null, testBookingRs[0]);
                     }
                 };
@@ -147,12 +154,12 @@ describe('Booking model test', function() {
             });
 
 
-            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
                 callback(null, []);
             });
 
 
-            bookingModel.updateBooking(testExistingBookingInput, function(err, booking) {
+            bookingModel.updateBooking(testExistingBookingInput, function (err, booking) {
                 should.not.exist(err);
                 (booking !== undefined).should.be.ok;
                 should(booking.id).be.equal(100);
@@ -163,18 +170,17 @@ describe('Booking model test', function() {
         });
 
 
-
-        it('Test creating of new booking', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test creating of new booking', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
                 callback(null, []);
             });
 
 
-            bookingModel.createNewBooking(testBookingInput, function(err, booking) {
+            bookingModel.createNewBooking(testBookingInput, function (err, booking) {
                 should.not.exist(err);
                 (booking !== undefined).should.be.ok;
                 should(booking.id).be.equal(100);
@@ -185,15 +191,14 @@ describe('Booking model test', function() {
         });
 
 
-        it('Test booking model validation finish before start', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test booking model validation finish before start', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
                 callback(null, []);
             });
-
 
 
             var testBookingInput1 = {
@@ -207,22 +212,21 @@ describe('Booking model test', function() {
 
             };
 
-            bookingModel.createNewBooking(testBookingInput1, function(err, booking) {
+            bookingModel.createNewBooking(testBookingInput1, function (err, booking) {
                 should(err).be.String;
                 done();
             });
 
         });
 
-        it('Test booking model validation pause must be >=0', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test booking model validation pause must be >=0', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
                 callback(null, []);
             });
-
 
 
             var testBookingInput1 = {
@@ -236,7 +240,7 @@ describe('Booking model test', function() {
 
             };
 
-            bookingModel.createNewBooking(testBookingInput1, function(err, booking) {
+            bookingModel.createNewBooking(testBookingInput1, function (err, booking) {
                 should(err).be.String;
                 done();
             });
@@ -244,12 +248,12 @@ describe('Booking model test', function() {
         });
 
 
-        it('Test booking collidation', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test booking collidation', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
                 var collisionBooking = new Booking(123, testBookingInput, 150, 105);
                 var collistionArray = [];
                 collistionArray.push(collisionBooking);
@@ -257,7 +261,7 @@ describe('Booking model test', function() {
             });
 
 
-            bookingModel.createNewBooking(testBookingInput, function(err, booking) {
+            bookingModel.createNewBooking(testBookingInput, function (err, booking) {
                 should(err).be.String;
                 done();
             });
@@ -265,13 +269,12 @@ describe('Booking model test', function() {
         });
 
 
-
-        it('Test booking collidation method', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test booking collidation method', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function(booking, callback) {
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
                 var collisionBooking = new Booking(133, testBookingInput, 150, 105);
                 var collistionArray = [];
                 collistionArray.push(collisionBooking);
@@ -280,7 +283,7 @@ describe('Booking model test', function() {
 
             var collisionBooking = new Booking(123, testBookingInput, 150, 105);
 
-            bookingModel.testBookingCollisions(collisionBooking, function(err, booking) {
+            bookingModel.testBookingCollisions(collisionBooking, function (err, booking) {
                 should.exist(err);
                 done();
             });
@@ -288,16 +291,16 @@ describe('Booking model test', function() {
         });
 
 
-        it('Test deletion of bookings', function(done) {
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
+        it('Test deletion of bookings', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
                 callback(null, testBookingRs);
             });
 
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'getRelationshipById', function(relationId, callback) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'getRelationshipById', function (relationId, callback) {
                 var relation = {
                     id: relationId,
                     data: testBookingRs[0].booking.data,
-                    del: function(callback) {
+                    del: function (callback) {
                         return callback(null);
                     }
                 };
@@ -305,14 +308,13 @@ describe('Booking model test', function() {
             });
 
 
-            bookingModel.deleteBooking(123, 1234, function(err, success) {
+            bookingModel.deleteBooking(123, 1234, function (err, success) {
                 should.not.exist(err);
                 should(success.id).be.equal(123);
                 done();
             });
 
         });
-
 
 
     });

@@ -17,7 +17,7 @@ describe('request.agent(app)', function() {
 
     beforeEach(function(done) {
         // Reset DB every time to get test a reproducable state
-        request(app).get('/init').expect(200, done);
+        request(app).get('/init').expect(200);
 
         request(app)
             .post('/auth/login').send({
@@ -29,6 +29,8 @@ describe('request.agent(app)', function() {
             .end(function(err, res) {
                 res.should.have.status(200);
                 cookie = res.headers['set-cookie'];
+
+                done();
             });
 
     });

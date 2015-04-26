@@ -78,7 +78,6 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
 };
 
 
-
 /**
  * Returns last bookings of employee by given data
  * @param retValCallback
@@ -95,7 +94,7 @@ BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, 
     var params = {
         userId: userId,
         workDaySince: workDaySince
-    }
+    };
 
     async.waterfall([
 
@@ -111,7 +110,7 @@ BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, 
         var retVal = [];
         _.each(data, function (bookingData) {
             retVal.push(new Booking(bookingData.booking.id, bookingData.booking.data, bookingData.project.id, userId, bookingData.person.id));
-        })
+        });
 
         retValCallback(null, retVal);
     });
@@ -127,10 +126,17 @@ BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, 
  * @param {Function} retValCallback return value callback
  */
 BookingsRepository.prototype.listBookings = function (start, limit, retValCallback) {
+    if(!start) {
+        start = 0;
+    }
+    if(!limit){
+        limit=10;
+    }
     var countQuery = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "RETURN count(booking) AS cnt"
     ].join('\n');
+
     var query = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",
         "RETURN  user, booking, project, person",
@@ -141,36 +147,38 @@ BookingsRepository.prototype.listBookings = function (start, limit, retValCallba
     var params = {
         limit: limit,
         skip: start // TODO: Evaluate if -1 is needed
-    }
+    };
     var count = 0;
-    async.waterfall([
-        function (callback) {
-            db.query(countQuery, {}, callback);
-        },
-        function (result, callback) {
-            count = result[0].cnt;
-            callback();
-        },
-        function (callback) {
-            db.query(query, params, callback);
-        },
-        function (results, callback) {
-            if (!results) {
-                return callback('Cannot get bookings');
+    async.waterfall(
+        [
+            function (callback) {
+                db.query(countQuery, {}, callback);
+            },
+            function (result, callback) {
+                count = result[0].cnt;
+                callback();
+            },
+            function (callback) {
+                db.query(query, params, callback);
+            },
+            function (results, callback) {
+                if (!results) {
+                    return callback('Cannot get bookings');
+                }
+
+                var bookingList = [];
+                _.each(results, function (result) {
+                    bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id));
+                });
+
+                callback(null, {
+                    count: count,
+                    start: start,
+                    limit: limit,
+                    data: bookingList
+                });
             }
-
-            var bookingList = [];
-            _.each(results, function (result) {
-                bookingList.push(new Booking(result.booking.id, result.booking.data, result.project.id, result.user.id, result.person.id));
-            });
-
-            callback(null, {
-                count: count,
-                start: start,
-                limit: limit,
-                data: bookingList
-            })
-        }], retValCallback);
+        ], retValCallback);
 
 };
 

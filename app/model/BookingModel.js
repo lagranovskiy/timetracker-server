@@ -71,11 +71,11 @@ var BookingModel = function () {
 
     var bookingModel = {
 
-        listLastBookings: function (userId, workDaySince, callback){
+        listLastBookings: function (userId, workDaySince, callback) {
             if (!userId) {
                 return callback('User userid is null');
             }
-            if(!workDaySince){
+            if (!workDaySince) {
                 return callback('workDaySince is null');
             }
             bookingsRepository.listLastBookings(userId, workDaySince, function (err, results) {
@@ -136,12 +136,12 @@ var BookingModel = function () {
          *
          * @param start starting from
          * @param limit limit selection
-         * @param  {type} callback description
+         * @param callback description
          * @return {type}          description
          */
         listAllBookings: function (start, limit, callback) {
             if (!_.isNumber(start) || !_.isNumber(limit)) {
-               return callback('Please select start and limit for query');
+                return callback('Please select start and limit for query');
             }
             bookingsRepository.listBookings(start, limit, function (err, results) {
                 if (err) {

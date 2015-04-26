@@ -23,6 +23,12 @@ describe('Project Assignment Repository test', function() {
                 customerName: 'PRODYNA',
                 description: 'Nabucco Framework'
             }
+        },
+        role: {
+            id: 1234,
+            data: {
+                role: 'Architect'
+            }
         }
     }];
 

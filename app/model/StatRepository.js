@@ -13,7 +13,6 @@ function StatRepository() {
 }
 
 
-
 /**
  * Returns the list of collegues data
  *
@@ -30,7 +29,7 @@ StatRepository.prototype.getCollegues = function (userId, retValCallback) {
 
     var params = {
         userId: userId
-    }
+    };
 
     async.waterfall([
 
@@ -53,7 +52,7 @@ StatRepository.prototype.getCollegues = function (userId, retValCallback) {
                 phone: collegeData.college.data.phone,
                 project: collegeData.project.data.projectName
             });
-        })
+        });
 
         retValCallback(null, retVal);
     });

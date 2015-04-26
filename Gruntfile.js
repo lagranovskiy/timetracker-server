@@ -23,8 +23,8 @@ module.exports = function(grunt) {
                 tasks: 'jshint'
             },
             test: {
-                files: ['test/unit/*.js', 'test/api/*.js', 'test/integration/*.js'],
-                tasks: ['jshint', 'mochaTest:unit', 'mochaTest:api', 'mochaTest:integration']
+                files: ['test/unit/*.js', 'test/api/*.js'], // , 'test/integration/*.js'
+                tasks: ['jshint', 'mochaTest:unit'] // , 'mochaTest:api', 'mochaTest:integration'
             }
         },
 
@@ -158,7 +158,7 @@ module.exports = function(grunt) {
     // tasks
     grunt.registerTask('server', ['concurrent:target']);
     grunt.registerTask('default', ['jshint', 'server']);
-    grunt.registerTask('test', ['mochaTest:unit', 'mochaTest:integration', 'mochaTest:api']);
+    grunt.registerTask('test', ['mochaTest:unit','mochaTest:integration',  'mochaTest:api']);// ,
 
     grunt.registerTask('coverage', ['jshint', 'clean', 'env:coverage', 'instrument', 'test', 'storeCoverage', 'makeReport', 'codeclimate']);
 

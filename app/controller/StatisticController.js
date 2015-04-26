@@ -16,7 +16,7 @@ var ProjectModel = require('../model/ProjectModel');
 var projectModel = new ProjectModel();
 
 
-var StatRepository = require('../model/StatRepository')
+var StatRepository = require('../model/StatRepository');
 var statRepository = new StatRepository();
 
 
@@ -112,11 +112,11 @@ var StatController = function () {
                 labels: employeeMapLabels,
                 data: employeeMapValues
             }
-        }
+        };
 
         return retVal;
 
-    };
+    }
 
 
     var controller = {
@@ -174,13 +174,13 @@ var StatController = function () {
                     if (err) {
                         return next('Cannot resolve data for statistics');
                     }
-                    var stat = processBookingStatistics(data, personMap, projectMap)
+                    var stat = processBookingStatistics(data, personMap, projectMap);
 
                     response.send(stat);
                 });
 
 
-            })
+            });
         },
 
 
@@ -219,17 +219,17 @@ var StatController = function () {
                         return next('Cannot resolve data for statistics');
                     }
 
-                    var stat = processBookingStatistics(data.data, personMap, projectMap)
+                    var stat = processBookingStatistics(data.data, personMap, projectMap);
 
                     response.send(stat);
                 });
 
 
-            })
+            });
         }
-    }
+    };
 
     return controller;
-}
+};
 
 module.exports = new StatController();

@@ -14,7 +14,9 @@ describe('Authentication test', function () {
 
     beforeEach(function (done) {
         // Reset DB every time to get test a reproducable state
-        request(app).get('/init').expect(200, done);
+        request(app).get('/init').expect(200, function (err, data) {
+            done();
+        });
 
     });
 
@@ -37,26 +39,26 @@ describe('Authentication test', function () {
 
     });
 
-    /*
-     it('After authentication failure 401 sent to user', function (done) {
-     var server = requireHelper('app');
-     var app = server.setup(express());
 
-     request(app)
-     .post('/auth/login').send({
-     username: 'hacker',
-     password: 'prodyna1'
-     })
-     .set('Accept', 'application/json')
-     .expect('Content-Type', /json/)
-     .expect(401)
-     .end(function (err, res) {
-     should.exist(err);
-     done();
-     });
+    it('After authentication failure 401 sent to user', function (done) {
+        var server = requireHelper('app');
+        var app = server.setup(express());
 
-     });
-     */
+        request(app)
+            .post('/auth/login').send({
+                username: 'hacker',
+                password: 'prodyna1'
+            })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(401)
+            .end(function (err, res) {
+                should.exist(err);
+                done();
+            });
+
+    });
+
 
     /**  Fails because passport caches stub somewhere in its implementation and says he is authenticated**/
 
