@@ -8,6 +8,7 @@ var async = require('neo-async');
  * @param io
  */
 var sockets = function (io, config) {
+    io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
     io.set('origins', '*:*');
     var timetrackerSocket = io.of('/');
 
