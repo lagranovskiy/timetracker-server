@@ -78,7 +78,7 @@ if (config.httpPort) {
 
     if (!config.sslPort) {
         // Only enable unsecured sockets if no https connection is configured
-        var io = require('socket.io')(httpsServer);
+        var io = require('socket.io')(httpServer);
         require('./config/sockets')(io, config);
     }
 
