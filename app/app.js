@@ -45,15 +45,16 @@ exports.setup = function (app) {
     app.use(methodOverride()); // simulate DELETE and PUT
     app.use(cookieParser(config.sessionSecret)); // read cookies (needed for auth)
 
+
     app.set('trust proxy', 1); // trust first proxy
 
     /***
      * Initlialize redis
      */
-
+    var redis = require('redis-url').connect(config.redis.url);
     var redisStore = new RedisStore({
-        url: config.redis.url,
-        ttl: 24 * 60 * 60 * 1000
+        client: redis,
+        ttl: 24 * 60 * 60
     });
 
     // Configuring Passport
@@ -64,7 +65,7 @@ exports.setup = function (app) {
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 24 * 60 * 60
         }
     })
     app.use(session);
@@ -77,37 +78,45 @@ exports.setup = function (app) {
     require('./config/routes')(app, passport);
     require('./config/eventPopulator')(config);
 
+    var socketServer = null;
+    /**
+     Configure if http server need to be still created
+     */
+    if (config.httpPort) {
+        var httpServer = http.createServer(app).listen(config.httpPort);
+
+        if (!config.sslPort) {
+            // Only enable unsecured sockets if no https connection is configured
+            socketServer = httpServer;
+        }
+
+        console.log('Timetracker server started under http://' + config.host + ':' + config.httpPort);
+    }
+
+    if (config.sslPort) {
+        /**
+         * Read HTTPS Certificates
+         */
+        var httpsCertificates = {
+            key: fs.readFileSync(config.options.key, 'utf8'),
+            cert: fs.readFileSync(config.options.cert, 'utf8')
+        };
+
+        var httpsServer = https.createServer(httpsCertificates, app).listen(config.sslPort);
+        socketServer = httpsServer;
+        console.log('Timetracker server started under https://' + config.host + ':' + config.sslPort);
+    }
+
+    var io = require('socket.io')(socketServer);
+    io.use(function (socket, next) {
+        session(socket.request, socket.request.res, next);
+    });
+    io.set('transports', ['websocket', 'xhr-polling', 'polling']);
+    io.set('origins', '*:*');
+
+    require('./config/sockets')(io, config);
+
     return app;
 };
 
 exports.app = exports.setup(app);
-
-/**
- Configure if http server need to be still created
- */
-if (config.httpPort) {
-    var httpServer = http.createServer(exports.app).listen(config.httpPort);
-
-    if (!config.sslPort) {
-        // Only enable unsecured sockets if no https connection is configured
-        var io = require('socket.io')(httpServer);
-        require('./config/sockets')(io, config);
-    }
-
-    console.log('Timetracker server started under http://' + config.host + ':' + config.httpPort);
-}
-
-if (config.sslPort) {
-    /**
-     * Read HTTPS Certificates
-     */
-    var httpsCertificates = {
-        key: fs.readFileSync(config.options.key, 'utf8'),
-        cert: fs.readFileSync(config.options.cert, 'utf8')
-    };
-
-    var httpsServer = https.createServer(httpsCertificates, exports.app).listen(config.sslPort);
-    var io = require('socket.io')(httpsServer);
-    require('./config/sockets')(io, config);
-    console.log('Timetracker server started under https://' + config.host + ':' + config.sslPort);
-}
