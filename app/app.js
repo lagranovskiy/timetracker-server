@@ -65,7 +65,7 @@ exports.setup = function (app) {
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            maxAge: 24 * 60 * 60
+            maxAge: 24 * 60 * 60 * 1000
         }
     })
     app.use(session);
@@ -108,9 +108,26 @@ exports.setup = function (app) {
     }
 
     var io = require('socket.io')(socketServer);
-    io.use(function (socket, next) {
-        session(socket.request, socket.request.res, next);
-    });
+    /*  io.use(function (socket, next) {
+     //      session(socket.request, socket.request.res, next);
+     });*/
+    var passportSocketIo = require('passport.socketio');
+    io.use(passportSocketIo.authorize({
+        cookieParser: cookieParser,       // the same middleware you registrer in express
+        key:          'connect.sid',       // the name of the cookie where express/connect stores its session_id
+        secret:       config.sessionSecret,    // the session_secret to parse the cookie
+        store:        redisStore,        // we NEED to use a sessionstore. no memorystore please
+        fail: function (data, message, error, accept) {
+            if(error)
+                accept(new Error(message));
+            console.error('failed connection to socket.io:', message);
+        },
+        success: function (data, accept) {
+            console.log('successful connection to socket.io');
+            accept();
+        }
+    }));
+
     io.set('transports', ['websocket', 'xhr-polling', 'polling']);
     io.set('origins', '*:*');
 

@@ -82,18 +82,19 @@ BookingsRepository.prototype.listUserProjectBookings = function (userId, project
  * Returns last bookings of employee by given data
  * @param retValCallback
  */
-BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, retValCallback) {
+BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, workDayTill, retValCallback) {
 
     var query = [
         'MATCH (user:User)--(person:Person)-[booking:TIME_BOOKED]->(project:Project)',
-        'WHERE id(user)={userId} AND booking.workDay>={workDaySince}',
+        'WHERE id(user)={userId} AND booking.workDay>={workDaySince} AND booking.workDay<={workDayTill} ',
         'RETURN user, person, booking, project',
         "ORDER BY booking.workDay, booking.workStarted"
     ].join('\n');
 
     var params = {
         userId: userId,
-        workDaySince: workDaySince
+        workDaySince: workDaySince,
+        workDayTill: workDayTill
     };
 
     async.waterfall([
@@ -126,11 +127,11 @@ BookingsRepository.prototype.listLastBookings = function (userId, workDaySince, 
  * @param {Function} retValCallback return value callback
  */
 BookingsRepository.prototype.listBookings = function (start, limit, retValCallback) {
-    if(!start) {
+    if (!start) {
         start = 0;
     }
-    if(!limit){
-        limit=10;
+    if (!limit) {
+        limit = 10;
     }
     var countQuery = [
         "MATCH (user:User)-[:HAS_PROFILE]-(person:Person)-[booking:TIME_BOOKED]->(project:Project)",

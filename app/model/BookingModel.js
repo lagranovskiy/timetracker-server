@@ -71,14 +71,18 @@ var BookingModel = function () {
 
     var bookingModel = {
 
-        listLastBookings: function (userId, workDaySince, callback) {
+        listLastBookings: function (userId, workDaySince, workDayTill, callback) {
             if (!userId) {
                 return callback('User userid is null');
             }
             if (!workDaySince) {
                 return callback('workDaySince is null');
             }
-            bookingsRepository.listLastBookings(userId, workDaySince, function (err, results) {
+
+            if (!workDayTill) {
+                return callback('workDayTill is null');
+            }
+            bookingsRepository.listLastBookings(userId, workDaySince, workDayTill, function (err, results) {
                 if (err) {
                     return callback(err);
                 }

@@ -49,17 +49,21 @@ var StatController = function () {
         var projectWorkTimeMap = {};
         var employeeMap = {};
         var bookingList = bookingData;
-
+        bookingList = _.sortBy(bookingList, 'workDay');
         _.each(bookingList, function (booking) {
-            var workTime = moment.duration(booking.workFinished - booking.workStarted).subtract(booking.pause, 'minutes').hours();
+            var workTime = moment.duration(booking.workFinished - booking.workStarted).asMinutes();
+            if (_.isNumber(booking.pause)) {
+                workTime = workTime - booking.pause * 1;
+            }
+            workTime = workTime / 60;
 
-            var date = moment(booking.workDay).format('l');
+            var date = moment(booking.workDay).format('DD.MM.YYYY');
             if (!workTimeMap[date]) {
                 workTimeMap[date] = 0;
             }
             workTimeMap[date] = workTimeMap[date] + workTime;
 
-            if(workTime === 0){
+            if (workTime === 0) {
                 return;
             }
 
@@ -131,8 +135,8 @@ var StatController = function () {
         searchForColleges: function (request, response, next) {
             var userId = request.user.id * 1;
 
-            statRepository.getCollegues(userId, function(err, data){
-                if(err){
+            statRepository.getCollegues(userId, function (err, data) {
+                if (err) {
                     return next(err);
                 }
                 response.send(data);
@@ -149,7 +153,8 @@ var StatController = function () {
             console.info("Calculating user booking stat");
             var userId = request.user.id * 1;
             var onlySince = moment().day(-14).valueOf();
-            bookingModel.listLastBookings(userId, onlySince, function (err, data) {
+            var onlyTill = moment().hours(23).valueOf();
+            bookingModel.listLastBookings(userId, onlySince,onlyTill, function (err, data) {
                 if (err) {
                     return next('Cannot calculate statistics');
                 }
