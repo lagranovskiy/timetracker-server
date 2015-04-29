@@ -49,6 +49,7 @@ exports.logout = function (req, res, next) {
 
     console.info('Session ' + req.sessionID + ' closed. User ' + req.user.uid + ' logger out.');
     req.logOut();
+    req.session.destroy();
     res.clearCookie('connect.sid');
     res.status(200).send('Logged out');
 };
@@ -137,7 +138,7 @@ exports.registerUser = function (req, username, password, done) {
             }
 
             var userData = req.body;
-            userModel.createUserWithPerson(userData, callback);
+            userModel.createUserWithPerson(username, userData.password, userData, callback);
         }
     ], function (error, user) {
         if (error) {

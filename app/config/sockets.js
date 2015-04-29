@@ -8,11 +8,16 @@ var async = require('neo-async');
  * @param io
  */
 var sockets = function (io, config) {
-    io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
+    io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling', 'polling']);
     io.set('origins', '*:*');
     var timetrackerSocket = io.of('/');
 
-    timetrackerSocket.on('connection', function (socket) {
+    // default socket.io config
+/*    var auth = require('passport.socket.io')(cookieParser, redisStore);
+    io.set('authorization', auth);*/
+
+    timetrackerSocket.on('connection', function (conn) {
+     //   console.log(conn);
         console.info(">> Connection to the socket established <<");
     });
 

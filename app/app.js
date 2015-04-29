@@ -18,8 +18,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var expressSession = require('express-session');
+var RedisStore = require('connect-redis')(expressSession);
 var passport = require('passport');
-var flash = require('connect-flash');
 var fs = require('fs');
 
 
@@ -47,16 +47,28 @@ exports.setup = function (app) {
 
     app.set('trust proxy', 1); // trust first proxy
 
+    /***
+     * Initlialize redis
+     */
+
+    var redisStore = new RedisStore({
+        url: config.redis.url,
+        ttl: 24 * 60 * 60 * 1000
+    });
+
     // Configuring Passport
-    app.use(expressSession({
+    var session = expressSession({
         secret: config.sessionSecret,
         resave: false,
+        store: redisStore,
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000
         }
-    }));
+    })
+    app.use(session);
+
 
     app.use(passport.initialize());
     app.use(passport.session());

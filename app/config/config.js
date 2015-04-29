@@ -13,11 +13,14 @@ var config = {
             url: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
             exchangeName: 'timetracker-local'
         },
+        redis: {
+            url: "redis://rediscloud:YgmAYK7qkMToFCEO@pub-redis-19055.eu-west-1-1.2.ec2.garantiadata.com:19055"
+        },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function() {
+        init: function () {
             process.env.DEBUG = '*';
             return this;
         }
@@ -35,11 +38,14 @@ var config = {
             url: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
             exchangeName: 'timetracker-test'
         },
+        redis: {
+            url: "redis://rediscloud:YgmAYK7qkMToFCEO@pub-redis-19055.eu-west-1-1.2.ec2.garantiadata.com:19055"
+        },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function() {
+        init: function () {
             process.env.DEBUG = '*';
             return this;
         }
@@ -57,11 +63,14 @@ var config = {
             url: "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
             exchangeName: 'timetracker-prod'
         },
+        redis: {
+            url: "redis://rediscloud:YgmAYK7qkMToFCEO@pub-redis-19055.eu-west-1-1.2.ec2.garantiadata.com:19055"
+        },
         options: {
             key: 'certs/timetracker.key.pem',
             cert: 'certs/timetracker.crt'
         },
-        init: function() {
+        init: function () {
             return this;
         }
     },
@@ -78,7 +87,10 @@ var config = {
             url: process.env.CLOUDAMQP_URL,
             exchangeName: 'timetracker-heroku'
         },
-        init: function() {
+        redis: {
+            url: process.env.REDISCLOUD_URL
+        },
+        init: function () {
             return this;
         }
     }
