@@ -32,7 +32,7 @@ assignmentController.updateAssignments = function (request, response, next) {
         return next('Cannot process assignments null');
     }
 
-    newrelic.recordMetric('Custom/Assignments/DispoActivity', assignmentData.length);
+    newrelic.recordCustomEvent('ProjectAssignmentEvent', assignmentData);
 
     // Prepare assignment call with only needed data
     async.map(assignmentData, function (assignment, callback) {
@@ -83,12 +83,11 @@ assignmentController.updateAssignments = function (request, response, next) {
  */
 assignmentController.deleteAssignment = function (request, response, next) {
     console.info('Deleting of assignment.');
-    newrelic.incrementMetric('Custom/Assignments/DeletedDisposition', 1);
-
     var assignmentId = request.params.assignmentId * 1;
     if (!assignmentId) {
         return next('Assignment id not set');
     }
+    newrelic.recordCustomEvent('ProjectUnAssignmentEvent', assignmentId);
 
     personAssignmentRepository.deleteAssignment(assignmentId, function (err, data) {
         if (err) {

@@ -20,7 +20,6 @@ exports.listPersons = function (request, response, next) {
         if (err) {
             return next(err);
         }
-        newrelic.recordMetric('Custom/Person/PersonCount', data.length);
         response.send(data);
     });
 };
@@ -71,7 +70,6 @@ exports.updatePerson = function (request, response, next) {
         next('Cannot update person. No personData not match with given id.');
         return;
     }
-
     userModel.updatePerson(personData, function (err, data) {
         if (err) {
             return next(err);

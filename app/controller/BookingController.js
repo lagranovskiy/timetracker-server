@@ -109,7 +109,7 @@ controller.createBooking = function (request, response, next) {
         if (err) {
             return next(err);
         }
-        newrelic.incrementMetric('Custom/Booking/BookingCreated', 1);
+        newrelic.recordCustomEvent('BookingCreatedEvent', bookingData);
         response.send(createdBooking);
         controller.emit("created", {
             bookingId: createdBooking.id,
@@ -174,7 +174,6 @@ controller.deleteBooking = function (request, response, next) {
         if (err) {
             return next(err);
         }
-        newrelic.incrementMetric('Custom/Booking/BookingRemoved', 1);
         response.send(result);
         controller.emit("deleted", {
             bookingId: result.id,

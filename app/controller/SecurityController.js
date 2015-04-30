@@ -9,7 +9,7 @@ var _ = require('underscore');
 var UserModel = require('../model/UserModel');
 var userModel = new UserModel();
 var md5 = require('MD5');
-
+var newrelic=require('newrelic');
 
 /**
  * Sends auth data to the user
@@ -48,6 +48,7 @@ exports.logout = function (req, res, next) {
     }
 
     console.info('Session ' + req.sessionID + ' closed. User ' + req.user.uid + ' logger out.');
+    newrelic.recordCustomEvent('UserLogoutEvent', req.user);
     req.logOut();
     req.session.destroy();
     res.clearCookie('connect.sid');
@@ -97,9 +98,11 @@ exports.authenticateUser = function (req, uid, password, done) {
             }
             var authenticationResult = md5(password) === user.passwordMD5;
             if (authenticationResult) {
+                newrelic.recordCustomEvent('UserSuccessLoginEvent', uid);
                 console.info('User ' + uid + ' logged in.');
                 callback(null, user);
             } else {
+                newrelic.recordCustomEvent('UserFailedLoginEvent', uid);
                 console.info('User ' + uid + ' password wrong');
                 callback(null, false);
             }
@@ -144,6 +147,7 @@ exports.registerUser = function (req, username, password, done) {
         if (error) {
             console.info('Cannot register User ' + username + ':' + error);
         }
+        newrelic.recordCustomEvent('UserRegisteredEvent', req.body);
         req.session.user = user;
         done(error, user);
 

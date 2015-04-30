@@ -70,7 +70,6 @@ exports.listProjects = function(request, response, next) {
         if (err) {
             return next(err);
         }
-        newrelic.recordMetric('Custom/Project/ProjectCount',results.length);
         response.send(results);
     });
 };
@@ -151,6 +150,7 @@ exports.createProject = function(request, response, next) {
         return next('Cannot create project. No project data found in request.');
     }
 
+    newrelic.recordCustomEvent('ProjectCreatedEvent', projectData);
     projectModel.createNewProject(projectData, function(err, results) {
         if (err) {
             return next(err);
@@ -195,7 +195,6 @@ exports.deleteProject = function(request, response, next) {
     if (!projectId) {
         return next('Cannot create project. No projectId found in request.');
     }
-    newrelic.incrementMetric('Custom/Project/DeletedProjects',1);
     projectModel.deleteProject(projectId, function(err, results) {
         if (err) {
             return next(err);
