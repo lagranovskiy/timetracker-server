@@ -14,7 +14,7 @@ var config = {
             exchangeName: 'timetracker-local'
         },
         redis: {
-            url: "redis://rediscloud:YgmAYK7qkMToFCEO@pub-redis-19055.eu-west-1-1.2.ec2.garantiadata.com:19055"
+            url: "redis://localhost:6379/0"
         },
         options: {
             key: 'certs/timetracker.key.pem',
