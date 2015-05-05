@@ -24,7 +24,7 @@ StatRepository.prototype.getCollegues = function (userId, retValCallback) {
     var query = [
         'MATCH (user:User)--(person:Person)-->(project:Project)<-[:TIME_BOOKED]-(college:Person)',
         'WHERE id(user)={userId} and not person = college',
-        'RETURN DISTINCT project, college'
+        'RETURN DISTINCT college, collect(DISTINCT project) as projects'
     ].join('\n');
 
     var params = {
@@ -44,13 +44,16 @@ StatRepository.prototype.getCollegues = function (userId, retValCallback) {
 
         var retVal = [];
         _.each(data, function (collegeData) {
+
+            var projectList = _.pluck(_.pluck(collegeData.projects, 'data'), 'projectName');
+            projectList = projectList.join(',');
             retVal.push({
                 forename: collegeData.college.data.forename,
                 surname: collegeData.college.data.surname,
                 birthday: collegeData.college.data.birthday,
                 email: collegeData.college.data.email,
                 phone: collegeData.college.data.phone,
-                project: collegeData.project.data.projectName
+                project: projectList
             });
         });
 
