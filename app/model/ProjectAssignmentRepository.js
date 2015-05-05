@@ -50,6 +50,17 @@ ProjectAssignmentRepository.prototype.listProjectsOfPerson = function (userDbId,
 
 
 ProjectAssignmentRepository.prototype.updateAssignment = function (personId, projectId, role, retValCallback) {
+    if (!personId) {
+        return retValCallback('Cannot update assignment with person id null');
+    }
+
+    if (!projectId) {
+        return retValCallback('Cannot update assignment with projectId null');
+    }
+
+    if (!role) {
+        return retValCallback('Cannot update assignment with role null');
+    }
     var query = [
         "MATCH (person:Person),(project:Project)",
         "WHERE id(person)={personId} and id(project)={projectId}",
@@ -92,6 +103,10 @@ ProjectAssignmentRepository.prototype.updateAssignment = function (personId, pro
  * @return {type}                description
  */
 ProjectAssignmentRepository.prototype.deleteAssignment = function (assignmentId, retValCallback) {
+    if (!assignmentId) {
+        return retValCallback('Cannot update assignment with assignmentId null');
+    }
+
     var query = [
         'MATCH (person:Person)-[assignment]-(r:Role)-[]-(project:Project)',
         'WHERE id(assignment)={assignmentId}',

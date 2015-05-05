@@ -247,6 +247,35 @@ describe('Booking model test', function () {
 
         });
 
+        it('Test booking model validation data', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+                callback(null, testBookingRs);
+            });
+
+            sandbox.stub(BookingsRepository.prototype, 'findBookingCollidations', function (booking, callback) {
+                callback(null, []);
+            });
+
+
+            var testBookingInput1 = {
+                userId: 101,
+                workDay: null,
+                workStarted: null,
+                workFinished: null,
+                pause: '-1',
+                comment: 'Test comment',
+                projectId: null
+
+            };
+
+            bookingModel.createNewBooking(testBookingInput1, function (err, booking) {
+                should(err).be.String;
+                done();
+            });
+
+        });
+
+
 
         it('Test booking collidation', function (done) {
             sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
@@ -313,6 +342,35 @@ describe('Booking model test', function () {
                 should(success.id).be.equal(123);
                 done();
             });
+
+        });
+
+
+        it('Test my last bookings works correctly', function (done) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+                callback(null, testBookingRs);
+            });
+
+
+
+            bookingModel.listLastBookings(123, 100, 500, function (err, bookings) {
+                should.not.exist(err);
+                should.exist(bookings);
+                should(bookings[0].id).be.equal(100);
+            });
+
+            bookingModel.listLastBookings(null, null, null, function (err, bookings) {
+                should.exist(err);
+            });
+
+            bookingModel.listLastBookings(123, null, null, function (err, bookings) {
+                should.exist(err);
+            });
+
+            bookingModel.listLastBookings(123, 500, null, function (err, bookings) {
+                should.exist(err);
+            });
+            done();
 
         });
 
