@@ -2,7 +2,7 @@ var sinon = require('sinon');
 var should = require('should');
 var neo4j = require('neo4j');
 var md5 = require('MD5');
-var requireHelper = require('../require_helper');
+var requireHelper = require('../../require_helper');
 var UserModel = requireHelper('model/UserModel');
 
 

@@ -23,7 +23,7 @@ module.exports = function(grunt) {
                 tasks: 'jshint'
             },
             test: {
-                files: ['test/unit/*.js', 'test/api/*.js'], // , 'test/integration/*.js'
+                files: ['test/unit/**/*.js', 'test/api/*.js'], // , 'test/integration/*.js'
                 tasks: ['jshint', 'mochaTest:unit'] // , 'mochaTest:api', 'mochaTest:integration'
             }
         },
@@ -54,7 +54,7 @@ module.exports = function(grunt) {
                 options: {
                     reporter: 'spec'
                 },
-                src: ['test/unit/*.js']
+                src: ['test/unit/**/*.js']
             },
             integration: {
                 options: {

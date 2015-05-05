@@ -1,7 +1,7 @@
 var sinon = require('sinon');
 var should = require('should');
 var neo4j = require('neo4j');
-var requireHelper = require('../require_helper');
+var requireHelper = require('../../require_helper');
 var ProjectRepository = requireHelper('model/ProjectRepository');
 var Project = requireHelper('model/Project');
 

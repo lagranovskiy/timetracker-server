@@ -1,6 +1,6 @@
 var sinon = require('sinon');
 var should = require('should');
-var requireHelper = require('../require_helper');
+var requireHelper = require('../../require_helper');
 var User = requireHelper('model/User');
 
 describe('User Model test', function() {
