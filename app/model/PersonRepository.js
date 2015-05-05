@@ -6,8 +6,8 @@ var async = require('neo-async'),
     neo4j = require('neo4j'),
     db = new neo4j.GraphDatabase(config.db.url);
 
-function PersonRepository() {}
-
+function PersonRepository() {
+}
 
 
 /**
@@ -32,8 +32,8 @@ PersonRepository.prototype.findPersonByUserId = function (userId, callback) {
             }
             userNode.getRelationshipNodes('HAS_PROFILE', callback);
         },
-        function(personList, callback){
-            if(!personList || personList.length !== 1){
+        function (personList, callback) {
+            if (!personList || personList.length !== 1) {
                 return callback('Illegal state by person profile resolving.');
             }
             var personNode = personList[0];
@@ -68,7 +68,6 @@ PersonRepository.prototype.findPerson = function (id, callback) {
 };
 
 
-
 /**
  * Updates person to the given state
  * @param user
@@ -84,6 +83,8 @@ PersonRepository.prototype.updatePerson = function (person, callback) {
     }, function (personNode, callback) {
         _.extend(personNode.data, person.data);
         personNode.save(callback);
+    }, function (updatedPerson, callback) {
+        callback(null, new Person(updatedPerson.id, updatedPerson.data));
     }], callback);
 };
 
@@ -94,26 +95,26 @@ PersonRepository.prototype.updatePerson = function (person, callback) {
  * @param  {type} retValCallback description
  * @return {type}                description
  */
-PersonRepository.prototype.listPersons = function(retValCallback) {
+PersonRepository.prototype.listPersons = function (retValCallback) {
     var query = [
-            "MATCH (person:Person)",
-            "RETURN person"
-        ]
+        "MATCH (person:Person)",
+        "RETURN person"
+    ]
         .join('\n');
 
     async.waterfall([
-        function(callback) {
+        function (callback) {
             db.query(query, {}, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             var personList = [];
-            _.each(results, function(result) {
+            _.each(results, function (result) {
                 personList.push(new Person(result.person.id, result.person.data));
             });
 
             callback(null, personList);
         }
-    ],retValCallback);
+    ], retValCallback);
 };
 
 
@@ -122,7 +123,7 @@ PersonRepository.prototype.listPersons = function(retValCallback) {
  *
  * @param retValCallback
  */
-PersonRepository.prototype.listRoles = function(retValCallback){
+PersonRepository.prototype.listRoles = function (retValCallback) {
     var query = [
         "MATCH (role:Role)",
         "RETURN DISTINCT role.role as role"
@@ -130,11 +131,11 @@ PersonRepository.prototype.listRoles = function(retValCallback){
         .join('\n');
 
     async.waterfall([
-        function(callback) {
+        function (callback) {
             db.query(query, {}, callback);
-        }, function(results,callback){
+        }, function (results, callback) {
             var roleList = [];
-            _.each(results, function(result) {
+            _.each(results, function (result) {
                 roleList.push(result.role);
             });
 

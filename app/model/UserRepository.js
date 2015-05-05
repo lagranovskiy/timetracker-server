@@ -34,7 +34,7 @@ UserRepository.prototype.listUsers = function (callback) {
                 var groupArray = [];
                 groupArray.push(result.MainGroup);
 
-                if (result.OtherGroups.length>0) {
+                if (result.OtherGroups && result.OtherGroups.length>0) {
                     var i, otherGroups = result.OtherGroups.toString().split(',');
 
                     for (i = 0; i < otherGroups.length; i++) {

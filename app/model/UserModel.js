@@ -180,6 +180,10 @@ var UserModel = function () {
             async.waterfall([function (callback) {
                 personRepository.findPerson(personData.id, callback);
             }, function (person, callback) {
+                var valRes = validatePerson(personData);
+                if (valRes) {
+                    return callback(valRes);
+                }
                 personData = _.extend(person.data, personData);
                 var personObject = instanciatePerson(personData.id, personData);
                 callback(validatePerson(personObject), personObject);
@@ -221,6 +225,11 @@ var UserModel = function () {
             async.waterfall([function (callback) {
                 userModel.resolveUser(uid, callback);
             }, function (user, callback) {
+                var valRes = validateUser(userData);
+                if (valRes) {
+                    return callback(valRes);
+                }
+
                 userData = _.omit(userData, 'passwordMD5', 'registrationDate', 'groups');
                 userData = _.extend(user.data, userData);
                 var userObject = instanciateUser(userData.id, userData, user.groups);
@@ -240,10 +249,10 @@ var UserModel = function () {
          */
         changeUserPassword: function (uid, passwordChangeData, callback) {
             if (!passwordChangeData) {
-                callback('Cannot change password data is null');
+                return callback('Cannot change password data is null');
             }
-            if (!passwordChangeData.oldPassword || passwordChangeData.newPassword) {
-                callback('Cannot change password, new or old password is null');
+            if (!passwordChangeData.oldPassword || !passwordChangeData.newPassword) {
+                return callback('Cannot change password, new or old password is null');
             }
 
             async.waterfall([function (callback) {
