@@ -4,7 +4,7 @@
 
 # Timetracker 1.0 (server part)
 **Leonid Agranovskiy, PRODYNA AG**
-
+ 
 Repository for PRODYNA Architecture Certification project
 
 The aim of the application is it to create a new time tracking software for the employees of a innovative company. 
