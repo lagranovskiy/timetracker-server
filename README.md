@@ -2,7 +2,9 @@
 [![Code Climate](https://codeclimate.com/github/lagranovskiy/timetracker-server/badges/gpa.svg)](https://codeclimate.com/github/lagranovskiy/timetracker-server)
 [![Test Coverage](https://codeclimate.com/github/lagranovskiy/timetracker-server/badges/coverage.svg)](https://codeclimate.com/github/lagranovskiy/timetracker-server/coverage)
 
-# timetracker-server
+# Timetracker 1.0 (server part)
+**Leonid Agranovskiy, PRODYNA AG**
+
 Repository for PRODYNA Architecture Certification project
 
 The aim of the application is it to create a new time tracking software for the employees of a innovative company. 
