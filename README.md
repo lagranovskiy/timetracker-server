@@ -12,10 +12,16 @@ It also provides a user management perspective as well as controlling and employ
 This documentation is made to cover the documentation requirements of the project. It consist of following chapters:
 
 [General setup and information](doc/general)
+
 [Build and release process overview](doc/buildAndRelease)
+
 [Architecture overview](doc/architecture)
 
 The working version of the software is availiable as a heroku app under:
+
 https://pac-timetracker-client.herokuapp.com
 
 Thanks for Marco Jahn for hints and tips by working with nodejs
+
+>I am the vine, ye are the branches: He that abideth in me, and I in him, the same bringeth forth much fruit: for without me ye can do nothing.
+>(John 15:5)
