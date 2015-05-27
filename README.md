@@ -13,11 +13,11 @@ It also provides a user management perspective as well as controlling and employ
 
 This documentation is made to cover the documentation requirements of the project. It consist of following chapters:
 
-[General setup and information](doc/general)
+[General setup and information](./doc/general)
 
-[Build and release process overview](doc/buildAndRelease)
+[Build and release process overview](./doc/buildAndRelease)
 
-[Architecture overview](doc/architecture)
+[Architecture overview](./doc/architecture)
 
 The working version of the software is availiable as a heroku app under:
 
