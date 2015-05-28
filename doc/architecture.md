@@ -1,6 +1,6 @@
 # Architecture overview about Timetracker implementation
 
-## Reference architecture
+## Architececture of the system (Wie ist die Architektur des Gesamtsystems?)
 <img referenzarchitectur.jpg>
 
 Timetracker consists of two parts: Client and server which communicate with each other only over HTTP / Web Sockets
@@ -69,5 +69,39 @@ Single model call can take use of multiple repository requests to process a resu
 Repository layer wrappes the database communication and handle databse responses. It uses prepared statements as well as neo4j lib API to communication with REST API of neo4j.
 It provides methods for different access levels, like admin methods or self administration. This separation can be taken from the jsDoc.
 
-## Architececture of the system (Wie ist die Architektur des Gesamtsystems?)
-## Security implementation (Wie funktioniert die Security
+
+## Security implementation (Wie funktioniert die Security)
+Security is implemented by passport and redis session store as middleware of the express framework. As mentioned above it is currently neo4j based. 
+
+### Authentication
+There are two authenticated strategies: local and localsign. Local strategy authenticates user over security controller. It takes userlogin and password and calls security service to check it. If ok, it saves user id serialized  data encrypted in the session.
+Localsign is used by the user registration. It takes all given signup data, and tests if username is unique and stores a new user to the database.
+
+### Authorization
+The are three user roles that are implemented: User, Manager and Administrator. There is also a fallback mechanist that is configured to make someone User and Manager if it has a admin level role as well as user if it is manager.
+It makes easier to level the access rights. This can be easily changed on the neo4j database.
+
+Router component handles a checking of authorization by service access. There are currently some services that can be accessed only by the administrators like password reset for a concrete user.
+
+## Persistence 
+<TimaxDatenstruktur.jpg>
+Neo4J is used as a business data storage. Graph database provides a possibility to handle the business data as a graph. It is near to read world abstraction and allowes to handle real world queries easily.
+Business Model is modelled as a graph of nodes and relations between them. Nodes are typed by labels what makes querying easier.
+Here is a briefly description of some of importan nodes and relations.
+
+### Person
+Stores basic person information. 
+It is a physical person - employee of a company that may or may not be a user (it it has or was cancelled). The separation between user and person is important because of the reason above.
+Person can have a relation to the ProjectRole on some project. Person may also have booked time on the project.
+
+### User
+User is a system user, that can login. it stores user account information like encrypted password, and other login information.
+
+### Project
+
+### Booking
+
+
+### ProjectRole
+
+### User Group
