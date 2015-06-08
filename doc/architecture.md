@@ -84,7 +84,7 @@ It makes easier to level the access rights. This can be easily changed on the ne
 Router component handles a checking of authorization by service access. There are currently some services that can be accessed only by the administrators like password reset for a concrete user.
 
 ## Persistence 
-<TimaxDatenstruktur.jpg>
+![TimaxDatenstruktur.jpg](TimaxDatenstruktur.jpg)
 Neo4J is used as a business data storage. Graph database provides a possibility to handle the business data as a graph. It is near to read world abstraction and allowes to handle real world queries easily.
 Business Model is modelled as a graph of nodes and relations between them. Nodes are typed by labels what makes querying easier.
 Here is a briefly description of some of importan nodes and relations.
