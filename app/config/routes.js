@@ -26,7 +26,7 @@ module.exports = function (app, passport) {
 
     // default route
     app.route('/').get(function (req, res, next) {
-        res.send(200, 'PAC timetracker3');
+        res.send(200, 'PAC Timetracker');
     });
 
     app.all('*', function (req, res, next) {

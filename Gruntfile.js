@@ -52,19 +52,22 @@ module.exports = function(grunt) {
         mochaTest: {
             unit: {
                 options: {
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 10000
                 },
                 src: ['test/unit/**/*.js']
             },
             integration: {
                 options: {
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 10000
                 },
                 src: ['test/integration/*.js']
             },
             api: {
                 options: {
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 10000
                 },
                 src: ['test/api/*.js']
             }
