@@ -95,13 +95,28 @@ It is a physical person - employee of a company that may or may not be a user (i
 Person can have a relation to the ProjectRole on some project. Person may also have booked time on the project.
 
 ### User
-User is a system user, that can login. it stores user account information like encrypted password, and other login information.
+User is a entity that represents a user, that can login. it stores user account information like encrypted password, and other login information.
 
 ### Project
+Project describes a project statical information like descriptions start and end date and so on. 
+It can be referenced by person by relation named "TIME_BOOKED" and by Project Role by "ON_PROJECT"
 
-### Booking
-
+### TIME_BOOKED
+This relation represent the actual time booking of a person on a project. One person can have a lot of bookings for a project. 
+The only restriction is that the booking times cannot be overlapped. It is not allowed by requirements that person can book same period of time
+on multiple projects.
 
 ### ProjectRole
+Project Role is a node that represent roles in a single project. Projecdt Role is automatically created as someone is assigned to the project on the role.
+Future feature: In a future it gives a possibility to assign multiple people on the same project role in different time periods. 
+For example Person A was Architect of a Project B from 01.01.15 till 01.04.15 and Person B from 01.04.15 till today. 
+
+### ON_PROJECT
+Relates project role and a project. Can be also extended with information about history roles. It can be usefull by long term projects.
+
+### HAS_ROLE
+Relates Person to the occupied project role. Can be extended with time and other information to cover extended requirements.
 
 ### User Group
+Group is a composite construct, that allow to create complex authorization models in the future. Actually it is simply used to say that Admin is also Manager and User, 
+and Manager has also User permissions. It can be extended with Teamleads and other company specifically staff.
