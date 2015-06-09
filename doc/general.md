@@ -33,6 +33,7 @@ https://github.com/lagranovskiy/timetracker-client
 ## Organization of sources (Wie sind die Sourcen organisiert?)
 
 Sources are organized on the following pattern:
+
 root 
   * technical files for 3rd party, version systems (new relic, travis ci, git)
   * build script for test, build and start of the application (Grund)
@@ -53,5 +54,43 @@ test
 * node, grunt-cli and npm in the in package json defined versions
 
 ##Naming Convention
+
+There are follofing filename conventions:
+* Controllers: xxxController.js
+* Model: xxxModel.js
+* Entity: xxx.js
+
 ##Standards for Code Style
+
+As a standard for code style jshint is used. The settings set for it is defined in jshint file in root of the project. 
+
+```
+{
+    "node": true,
+    "browser": false,
+    "bitwise": true,
+    "camelcase": true,
+    "curly": false,
+    "eqeqeq": true,
+    "forin": true,
+    "eqnull": true,
+    "indent": 4,
+    "newcap": true,
+    "noarg": true,
+    "undef": true,
+    "strict": false,
+    "trailing": true,
+    "smarttabs": false,
+    "loopfunc": true,
+    "globals": {
+        "describe": false,
+        "it": false,
+        "before": false,
+        "beforeEach": false,
+        "after": false,
+        "afterEach": false
+    }
+}
+```
+
 ##Standards for Tests
