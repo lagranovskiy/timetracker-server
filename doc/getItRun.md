@@ -59,9 +59,12 @@ The old, bad, awful and dirty way to get things installed is to download them se
 As far as you cannot use docker and a "bad way" because you dont have admin rights on the server etc. you still can use cloud services to
 do it. There are a lot of vendors who offer reddis, neo4j and rabbit as a cloud. The simpliest tarif is normally free and can be used to get started.
 To go this way, get your own instances on following services:
-(https://cloudamqp.com)
-(https://graphinedb.com)
-(https://rediscloud.....)
+
+[CloudAMQP](https://cloudamqp.com)
+
+[GrapheneDB](https://graphinedb.com)
+
+[Redis Cloud](https://rediscloud.....)
 
 ## Node installation
 
