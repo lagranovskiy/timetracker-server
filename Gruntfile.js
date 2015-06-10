@@ -1,5 +1,5 @@
 // https://github.com/gregjopa/express-app-testing-demo
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     // configuration
     grunt.initConfig({
@@ -72,8 +72,6 @@ module.exports = function(grunt) {
                 src: ['test/api/*.js']
             }
         },
-
-
 
 
         // start - code coverage settings
@@ -164,5 +162,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mochaTest:unit']);// 'mochaTest:api','mochaTest:integration',
 
     grunt.registerTask('coverage', ['jshint', 'clean', 'env:coverage', 'instrument', 'test', 'storeCoverage', 'makeReport', 'codeclimate']);
+    grunt.registerTask('build', ['coverage']);
 
 };
