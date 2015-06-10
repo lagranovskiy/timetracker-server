@@ -1,4 +1,5 @@
-# Development workflow about Timetracker implementation
+# Build & Release
+In the following page you will find information about build and release of timetracker application.
 
 ## Information about release units (Welche Release Units gibt es?)
 
@@ -61,3 +62,4 @@ git push origin Release_<Version>
 
 ## Explanation of artifacts (Welche Artefakte existieren, welches Format haben sie und wo sind sie zu finden?)
 
+The main artifact repository is heroku version system mentioned above. 
