@@ -101,3 +101,32 @@ Integration tests partially mock the tested functionality, or use test instanced
 Integration tests are located in folder <code>test/api</code>
 Unit Tests isolates the unit of testing and provides analyses functionality according to mocked output/input data.
 Unit Tests are located in folder <code>test/unit</code>
+
+Project uses <code>mocha</code> test framework to run and write tests. Mocks are written with  <code>sinon</code> and assertions with <code>should</code>
+Codecoverage is covered with  <code>istanbul</code> code coverage framework.
+
+Test files need to be named on following pattern: <code><testing js module>.spec.js</code>
+
+Please consider to write meaningfull test descprion as well as group tests together in units according to the pattern:
+ 1. Testing Module (e.c. 'Testing of BookingModel') 
+ 2. Testing Functionality (example 'Testing booking creation')
+ 3. Description of test target (example 'Test if exception thrown if booking has no start time set')
+ 
+ Here is a example of a simple test in Booking Model
+ 
+ ```
+ describe('Booking model test', function () {
+     describe('Test accessing bookings', function () {
+            it('Test if we can get all bookings of a project according to spec', function (done) {
+                sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+                    callback(null, testBookingRs);
+                });
+                bookingModel.listAllBookings(0, 20, function (err, bookings) {
+                    should(bookings.data.length).be.equal(1);
+                    done();
+                });
+    
+            });
+      };
+  };
+  ```

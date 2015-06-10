@@ -64,7 +64,7 @@ To go this way, get your own instances on following services:
 
 [GrapheneDB](https://graphinedb.com)
 
-[Redis Cloud](https://rediscloud.....)
+[Redis Cloud](https://redislabs.com)
 
 ## Node installation
 
@@ -105,7 +105,7 @@ There is also other "development" method to reset the state: trigger the REST re
 It will remove all data and store initial state. This service is only enabled if NODE_ENV variable is not set or is 'dev'.
 After the service executed you can use following users to access the application:
 
-Username | Name | Role | Password
+Username | Name | Role | Initial password
 -------------|-------------|-------------|-------------
 mmustermann | Max Mustermann | User | prodyna
 mdoener | Michael Döner | Manager | prodyna
