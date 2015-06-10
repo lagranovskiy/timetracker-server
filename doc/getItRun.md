@@ -14,7 +14,7 @@ In this documentation you can find information about multiple ways to get runnin
 
 ## Configure application properties
 
-Environment Variable  | Default value if nothing set
+Environment Variable  | Default value if nothing set | Deescription
 ------------- | -------------
 HOST  | 'localhost' | host to bind to
 PORT  | 8484 | Port for the http webserver to listen for
@@ -101,8 +101,9 @@ There is also other "development" method to reset the state: trigger the REST re
 <code>GET https://localhost:<port>/init</code>
 It will remove all data and store initial state. This service is only enabled if NODE_ENV variable is not set or is 'dev'.
 After the service executed you can use following users to access the application:
+
 Username | Name | Role | Password
----------|------|-------|------
+-------------|-------------|-------------|-------------
 mmustermann | Max Mustermann | User | prodyna
 mdoener | Michael Döner | Manager | prodyna
 aschmidt | Alice Schmidt | Admin | prodyna
