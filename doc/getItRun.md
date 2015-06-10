@@ -14,8 +14,8 @@ In this documentation you can find information about multiple ways to get runnin
 
 ## Configure application properties
 
-Environment Variable  | Default value if nothing set | Deescription
-------------- | -------------
+Environment Variable  | Default value if nothing set | Description
+------------- | ------------- | -------------
 HOST  | 'localhost' | host to bind to
 PORT  | 8484 | Port for the http webserver to listen for
 SSLPORT | 4433 | Port to be used by ssl connection or false if no ssl needed
