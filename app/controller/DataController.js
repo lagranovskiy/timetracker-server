@@ -10,29 +10,37 @@ var dataRepository = new DataRepository();
  * Resets database with default data set
  *
  */
-exports.reinitDB = function(request, response, next) {
+exports.reinitDB = function (request, response, next) {
+    if (config.env === 'dev') {
+        async.waterfall([
+            function (callback) {
+                dataRepository.removeAllData(callback);
+            },
+            function (callback) {
+                dataRepository.importData(callback);
+            }
+        ], function (err) {
+            if (err) {
+                return next({
+                    success: false,
+                    total: 1,
+                    data: err
+                });
+            }
 
-    async.waterfall([
-        function(callback) {
-            dataRepository.removeAllData(callback);
-        },
-        function(callback) {
-            dataRepository.importData(callback);
-        }
-    ], function(err, results) {
-        if (err) {
-            return next({
-                success: false,
+            return response.json({
+                success: true,
                 total: 1,
-                data: err
+                data: 'ok'
             });
-        }
-
-        return response.json({
-            success: true,
-            total: 1,
-            data: 'ok'
         });
-    });
+    } else {
+        return response.json({
+            success: false,
+            total: 0,
+            data: 'you are runnign productive mode!! Incident will be reported.'
+        });
+    }
+
 
 };

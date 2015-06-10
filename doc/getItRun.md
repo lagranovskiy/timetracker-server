@@ -91,3 +91,26 @@ As far you have node over nvm running, you need to install grunt build worker fo
 <code>grunt test</code> run tests for the application
 
 <code>grunt server</code> start server part locally according to the configuration
+
+## Reset Initial state
+
+As you have started the server, it listens on given or default port and you can access the REST interface with SoapUI or other Client.
+The initial state for the application (roles, default users etc) can be deployed manually by execution of <code>dml.cypher</code> in the root of the repository directly in neo4j webconsole.
+
+There is also other "development" method to reset the state: trigger the REST reset service:
+<code>GET https://localhost:<port>/init</code>
+It will remove all data and store initial state. This service is only enabled if NODE_ENV variable is not set or is 'dev'.
+After the service executed you can use following users to access the application:
+Username | Name | Role | Password
+---------|------|-------|------
+mmustermann | Max Mustermann | User | prodyna
+mdoener | Michael Döner | Manager | prodyna
+aschmidt | Alice Schmidt | Admin | prodyna
+mdobro | Mischa Dombrowsky | User | prodyna
+dbero | David Bero | User | prodyna
+dkeller | Daniel Keller| User | prodyna
+dschmidt | Dorechy Schmidt | User | prodyna
+rmachno | Tolend Mancho| User | prodyna
+tagranovskiy | Tim Agranovskiy| User | prodyna
+lagranovskiy | Leo Agranovskiy| User | prodyna
+pagranovskiy | Paul Agranovskiy| User | prodyna
