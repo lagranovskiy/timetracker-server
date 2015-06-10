@@ -1,4 +1,4 @@
-# General Information about Timetracker implementation
+# General Development Information
 
 ## Used technologies (Welche Technologien werden verwendet?)
 Following technologies was used in the solution:
