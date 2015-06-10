@@ -3,7 +3,6 @@ var request = require('supertest'),
 var should = require('should');
 var requireHelper = require('../require_helper');
 
-
 describe('Authentication test', function () {
 
     var server = requireHelper('app');
@@ -12,7 +11,7 @@ describe('Authentication test', function () {
 
     beforeEach(function (done) {
         // Reset DB every time to get test a reproducable state
-        request(app).get('/init').expect(200, function (err, data) {
+        request(app).get('/init').expect(200, function () {
             done();
         });
 
@@ -50,7 +49,7 @@ describe('Authentication test', function () {
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(401)
-            .end(function (err, res) {
+            .end(function (err) {
                 should.exist(err);
                 done();
             });
