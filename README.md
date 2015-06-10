@@ -21,6 +21,8 @@ This documentation is made to cover the documentation requirements of the projec
 
 [Architecture overview](./doc/architecture.md)
 
+[Monitoring](./doc/monitoring.md)
+
 The working version of the software is availiable as a heroku app under:
 
 https://pac-timetracker-client.herokuapp.com
