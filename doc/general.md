@@ -94,3 +94,10 @@ As a standard for code style jshint is used. The settings set for it is defined 
 ```
 
 ##Standards for Tests
+
+There are two types of tests in the project: integration tests and unit tests.
+
+Integration tests partially mock the tested functionality, or use test instanced for 3rd party cloud services that are attended to test a vertical unit.
+Integration tests are located in folder <code>test/api</code>
+Unit Tests isolates the unit of testing and provides analyses functionality according to mocked output/input data.
+Unit Tests are located in folder <code>test/unit</code>

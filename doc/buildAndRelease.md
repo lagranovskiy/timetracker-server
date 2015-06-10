@@ -4,6 +4,22 @@
 
 There are two release units: timetracker-client and timetracker server.
 
+## Configure application properties
+
+Environment Variable  | Default value if nothing set
+------------- | -------------
+HOST  | 'localhost' | host to bind to
+PORT  | 8484 | Port for the http webserver to listen for
+SSLPORT | 4433 | Port to be used by ssl connection or false if no ssl needed
+SESSION_SECRET | 'mykey' | Secret string to encrypt cookies
+NODE_ENV | 'dev' | Environment
+GRAPHENEDB_URL| 'http://localhost:7474' | URL to the neo4j instance
+CLOUDAMQP_URL| 'amqp://admin:i9lmgtjm0Jzj@localhost:5672' | URL to the amqp instance
+EXCHANGE_NAME | 'timetracker-local' | Name of exchange to be used for event population in the cloud
+REDISCLOUD_URL | 'redis://localhost:6379/0' | URL to the redis instance
+KEY_PATH | 'certs/timetracker.key.pem' | Path to the key certificate key
+CERT_PATH| 'certs/timetracker.crt' | Path to the certificate for ssl
+
 ## Explanation of building process (Wie funktioniert der Build?)
 
 Build is processed by travis ci. It is informed by every pushed commit and triggers the build automatically.

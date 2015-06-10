@@ -1,9 +1,7 @@
 var request = require('supertest'),
-    express = require('express'),
-    sinon = require('sinon');
+    express = require('express');
 var should = require('should');
 var requireHelper = require('../require_helper');
-var request = require('supertest');
 
 
 describe('Authentication test', function () {

@@ -15,6 +15,8 @@ This documentation is made to cover the documentation requirements of the projec
 
 [General setup and information](./doc/general.md)
 
+[Get it running locally](./doc/getItRun.md)
+
 [Build and release process overview](./doc/buildAndRelease.md)
 
 [Architecture overview](./doc/architecture.md)
