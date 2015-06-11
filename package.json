@@ -17,6 +17,7 @@
     "events": "^1.0.2",
     "express": "^4.10.7",
     "express-session": "^1.10.1",
+    "forever": "^0.14.1",
     "later": "^1.1.6",
     "md5": "^1.0.0",
     "method-override": "2.3.1",

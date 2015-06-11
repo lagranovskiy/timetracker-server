@@ -43,8 +43,7 @@ app
   * includes the running sources groups by type in folders like controller, model, config etc.
 
 test
-  * Tests for the application
-  * 
+  * Tests for the application 
   
 ## Development Software Kit (Welche Software brauche ich, um entwickeln zu können?)
 
