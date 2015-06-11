@@ -85,7 +85,7 @@ exports.setup = function (app) {
     if (config.httpPort) {
         var httpServer = http.createServer(app).listen(config.httpPort);
 
-        if (!config.sslPort) {
+        if (!config.sslPort || config.sslPort === 'false') {
             // Only enable unsecured sockets if no https connection is configured
             socketServer = httpServer;
         }
@@ -93,7 +93,7 @@ exports.setup = function (app) {
         console.log('Timetracker server started under http://' + config.host + ':' + config.httpPort);
     }
 
-    if (config.sslPort && config.sslPort !== 'false' ) {
+    if (config.sslPort && config.sslPort != 'false' ) {
         /**
          * Read HTTPS Certificates
          */
