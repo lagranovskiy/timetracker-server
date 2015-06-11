@@ -13,6 +13,7 @@ In this documentation you can find information about multiple ways to get runnin
 
 
 ## Configure application properties
+![heroku_vars.jpg](heroku_vars.jpg)
 
 Environment Variable  | Default value if nothing set | Description
 ------------- | ------------- | -------------
