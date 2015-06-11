@@ -49,10 +49,10 @@ The build process consist on following build steps:
     
 Release management gate happens in heroku PAAS. As far Quality gate is passed, heroku build manager takes the sources and creates a docker image with version.
 This image will be historized for rollback. If build is succeded, heroku stops old and starts a new container containing the newest version of the application.
-![heroku_activity.jpg](heroku_activity.jpg)
+![heroku_activity.png](heroku_activity.png)
 
 ## Explanation about deployment process (Wie funktioniert das Deployment?)
-![heroku_environments.jpg](heroku_environments.jpg)
+![heroku_environments.png](heroku_environments.png)
 Timetracker is based on heroku pipeline concept supported by git workflow. We define 3 release stages of the development: nightly, staging and productive.
 Ofcause we can add more of them if we need. Here is a description of process behind of every of them.
 
@@ -112,6 +112,6 @@ git push staging Release_<Version>_alpha
 
 ## Explanation of artifacts (Welche Artefakte existieren, welches Format haben sie und wo sind sie zu finden?)
 
-![heroku_activity.jpg](heroku_activity.jpg)
+![heroku_activity.png](heroku_activity.png)
 
 The main artifact repository is heroku version system mentioned above. 
