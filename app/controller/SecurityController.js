@@ -9,7 +9,7 @@ var _ = require('underscore');
 var UserModel = require('../model/UserModel');
 var userModel = new UserModel();
 var md5 = require('MD5');
-var newrelic=require('newrelic');
+var newrelic = require('newrelic');
 
 /**
  * Sends auth data to the user
@@ -96,15 +96,21 @@ exports.authenticateUser = function (req, uid, password, done) {
             if (!user) {
                 return callback(null, false);
             }
-            var authenticationResult = md5(password) === user.passwordMD5;
-            if (authenticationResult) {
-                newrelic.recordCustomEvent('UserSuccessLoginEvent', uid);
-                console.info('User ' + uid + ' logged in.');
-                callback(null, user);
-            } else {
-                newrelic.recordCustomEvent('UserFailedLoginEvent', uid);
-                console.info('User ' + uid + ' password wrong');
-                callback(null, false);
+
+            if (user['active'] === undefined || user['active'] === true) {
+                var authenticationResult = md5(password) === user.passwordMD5;
+                if (authenticationResult) {
+                    newrelic.recordCustomEvent('UserSuccessLoginEvent', uid);
+                    console.info('User ' + uid + ' logged in.');
+                    callback(null, user);
+                } else {
+                    newrelic.recordCustomEvent('UserFailedLoginEvent', uid);
+                    console.info('User ' + uid + ' password wrong');
+                    callback(null, false);
+                }
+            } else{
+                console.info('User ' + uid + ' is deactivated.');
+                callback('User is not active', false);
             }
         }
 
