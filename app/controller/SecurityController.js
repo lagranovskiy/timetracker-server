@@ -42,7 +42,7 @@ exports.sendAuthData = function (req, res) {
  * @param {Object} req request
  * @param {Object}   res resonse
  */
-exports.logout = function (req, res, next) {
+exports.logout = function (req, res) {
     if (req.user === undefined) {
         return res.status(500).send('No active session found.');
     }
@@ -60,7 +60,7 @@ exports.logout = function (req, res, next) {
  * Search for user entry in db and resolve it
  *
  * @param   {String}   uid      Userid to be searched
- * @param   {Function} callback function that need to be callbacked
+ * @param   {Function} done     function that need to be callbacked
  * @returns {Function} callback
  */
 exports.resolveUser = function (uid, done) {
@@ -80,6 +80,7 @@ exports.resolveUser = function (uid, done) {
 /**
  * Process user authorization
  *
+ * @param {String}   req request
  * @param {String}   uid Username
  * @param {String}   password Password
  * @param {Function} done Callback funtion
@@ -97,7 +98,7 @@ exports.authenticateUser = function (req, uid, password, done) {
                 return callback(null, false);
             }
 
-            if (user['active'] === undefined || user['active'] === true) {
+            if (user.active === undefined || user.active === true) {
                 var authenticationResult = md5(password) === user.passwordMD5;
                 if (authenticationResult) {
                     newrelic.recordCustomEvent('UserSuccessLoginEvent', uid);
@@ -108,7 +109,7 @@ exports.authenticateUser = function (req, uid, password, done) {
                     console.info('User ' + uid + ' password wrong');
                     callback(null, false);
                 }
-            } else{
+            } else {
                 console.info('User ' + uid + ' is deactivated.');
                 callback('User is not active', false);
             }
