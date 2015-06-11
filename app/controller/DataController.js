@@ -11,7 +11,7 @@ var dataRepository = new DataRepository();
  *
  */
 exports.reinitDB = function (request, response, next) {
-    if (config.env === 'dev') {
+    if (process.env.NODE_ENV === 'dev') {
         async.waterfall([
             function (callback) {
                 dataRepository.removeAllData(callback);
