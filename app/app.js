@@ -114,11 +114,11 @@ exports.setup = function (app) {
     var passportSocketIo = require('passport.socketio');
     io.use(passportSocketIo.authorize({
         cookieParser: cookieParser,       // the same middleware you registrer in express
-        key:          'connect.sid',       // the name of the cookie where express/connect stores its session_id
-        secret:       config.sessionSecret,    // the session_secret to parse the cookie
-        store:        redisStore,        // we NEED to use a sessionstore. no memorystore please
+        key: 'connect.sid',       // the name of the cookie where express/connect stores its session_id
+        secret: config.sessionSecret,    // the session_secret to parse the cookie
+        store: redisStore,        // we NEED to use a sessionstore. no memorystore please
         fail: function (data, message, error, accept) {
-            if(error)
+            if (error)
                 accept(new Error(message));
             console.error('failed connection to socket.io:', message);
         },
@@ -128,7 +128,7 @@ exports.setup = function (app) {
         }
     }));
 
-    io.set('transports', ['websocket', 'xhr-polling', 'polling']);
+    io.set('transports', ['websocket', 'polling', 'xhr-polling']);
     io.set('origins', '*:*');
 
     require('./config/sockets')(io, config);
