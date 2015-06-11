@@ -31,13 +31,13 @@ https://pac-timetracker-client.herokuapp.com
 
 here are some screens from it to get a first feeling.
 
- ![screen_admin.png](screen_admin.png)
+ ![screen_admin.png](./doc/screen_admin.png)
  
- ![screen_assignment.png](screen_assignment.png)
+ ![screen_assignment.png](./doc/screen_assignment.png)
  
- ![screen_dashboard.png](screen_dashboard.png)
+ ![screen_dashboard.png](./doc/screen_dashboard.png)
  
- ![screen_management.png](screen_management.png)
+ ![screen_management.png](./doc/screen_management.png)
  
 
 Thanks for Marco Jahn for hints and tips by working with nodejs
