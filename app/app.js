@@ -93,7 +93,7 @@ exports.setup = function (app) {
         console.log('Timetracker server started under http://' + config.host + ':' + config.httpPort);
     }
 
-    if (config.sslPort) {
+    if (config.sslPort && config.sslPort !== 'false' ) {
         /**
          * Read HTTPS Certificates
          */
