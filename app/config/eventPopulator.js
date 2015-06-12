@@ -46,28 +46,43 @@ var eventPopulator = function (config) {
      * Listening on emitted events and push them to the exchange
      */
     bookingController.on('created', function (data) {
+        if(!exchange){
+            return console.error('exchange not initialized');
+        }
         console.info('>> Populator: Booking created notification (' + data + ')');
         exchange.publish('booking.created', data);
     });
 
 
     bookingController.on('updated', function (data) {
+        if(!exchange){
+            return console.error('exchange not initialized');
+        }
         console.info('>> Populator: Booking updated notification (' + data + ')');
         exchange.publish('booking.updated', data);
     });
 
     bookingController.on('deleted', function (data) {
+        if(!exchange){
+            return console.error('exchange not initialized');
+        }
         console.info('>> Populator: Booking deleted notification (' + data + ')');
         exchange.publish('booking.deleted', data);
     });
 
 
     assignmentController.on('created', function (data) {
+        if(!exchange){
+            return console.error('exchange not initialized');
+        }
         console.info('>> Populator: Assignment created notification (' + data + ')');
         exchange.publish('assignment.created', data);
     });
 
     assignmentController.on('deleted', function (data) {
+        if(!exchange){
+            return console.error('exchange not initialized');
+        }
         console.info('>> Populator: Assignment deleted notification (' + data + ')');
         exchange.publish('assignment.deleted', data);
     });

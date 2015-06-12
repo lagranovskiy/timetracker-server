@@ -10,7 +10,7 @@ var config = {
         url: process.env.GRAPHENEDB_URL || 'http://localhost:7474'
     },
     jmsUrl: {
-        url: process.env.CLOUDAMQP_URL || "amqp://admin:i9lmgtjm0Jzj@localhost:5672",
+        url: process.env.CLOUDAMQP_URL || "amqp://guest@localhost:5672",
         exchangeName: process.env.EXCHANGE_NAME || 'timetracker-local'
     },
     redis: {
