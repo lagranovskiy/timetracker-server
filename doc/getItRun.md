@@ -23,12 +23,12 @@ SSLPORT | 4433 | Port to be used by ssl connection or false if no ssl needed
 SESSION_SECRET | 'mykey' | Secret string to encrypt cookies
 NODE_ENV | 'dev' | Environment
 GRAPHENEDB_URL| 'http://localhost:7474' | URL to the neo4j instance
-CLOUDAMQP_URL| 'amqp://admin:i9lmgtjm0Jzj@localhost:5672' | URL to the amqp instance
+CLOUDAMQP_URL| 'amqp://guest@localhost:5672' | URL to the amqp instance
 EXCHANGE_NAME | 'timetracker-local' | Name of exchange to be used for event population in the cloud
 REDISCLOUD_URL | 'redis://localhost:6379/0' | URL to the redis instance
 KEY_PATH | 'certs/timetracker.key.pem' | Path to the key certificate key
 CERT_PATH| 'certs/timetracker.crt' | Path to the certificate for ssl
-NEW_RELIC_LICENSE_KEY | null | key to use for new relic application monitoring
+NEW_RELIC_LICENSE_KEY | '81d71f9a2e68f79050c3b13f132877a7d82ab54b' | key to use for new relic application monitoring
 
 ## Docker way
 Docker is a modern contaner engine, it allows you to pull and run multiple prepared docker images in locally stored containers or build and run your own buildfile.
