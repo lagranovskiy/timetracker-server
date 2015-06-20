@@ -1,0 +1,63 @@
+Fachliche Anforderungen
+ 
+Es soll eine Zeitverwaltung entwickelt werden. Die Anwender sind Mitarbeiter einer Firma, die ihre Zeiten und Aufwände gegen Projekte buchen können. Es gibt die folgenden Entitäten:
+Project: Jedes Project hat eine eine eindeutige Kennung und eine Beschreibung
+Booking: Ist eine Zeitbuchung. Es gehört einem User, hat eine Anfangs- und eine Endzeit und bezieht sich auf ein Project. Bookings eines Benutzers dürfen sich nicht zeitlich überschneiden.
+User: Benutzer können sich am System anmelden und mit dem System agieren. Es gibt verschiedene Rollen. Ein Benutzer kann gehört zu einer der Rollen:
+·          
+User: Normaler Benutzer, kann seine eigenen Bookings sehen, hinzufügen, ändern und löschen. Ein User kann zu beliebig vielen Projects hinzufüget werden
+Manager: Kann User zu Projects zuordnen und alle Bookings sehen
+Administrator: Darf alles
+Innerhalb der Applikation gibt es die folgenden Sichten:
+Users: Liste der Benutzer
+Projects: Liste der Projekte
+Bookings: Liste der Buchungen für ein Projekt
+Wenn sich Sichten ändern, sollen die Benutzer das sofort im Frontend sehen, ohne, dass die einen Reload machen müssen.
+ 
+NFR
+ 
+Es gibt einen klare Trennung zwischen Frontend und Backend
+Das Backend legt seine Daten in einer Datenbank ab. Die Standarddatenbank ist MySQL oder Postgres, allerdings darf auf Cassandra, MongoDB, CouchDB oder Neo4j verwendet werden.
+Die Backend enthält die Geschäftslogik und steht als Serviceschicht zur Verfügung.
+·          
+Die Serviceschicht ist secure, d.h. kein Zugriff ohne Authentifizierung
+Die Architektur muss es erlauben, dass neben einer internen Benutzerverwaltung auch ein externer Services (z.B. LDAP) integriert wird. Letztere muss nicht implementiert werden, aber architektonisch beschrieben werden
+Die Serviceschicht muss per REST (over HTTPS) extern zugreifbar sein, damit die Integration in andere Unternehmenssysteme vereinfacht wird.
+Die Standardtechnologie ist Java EE 7, allerdings können auch andere Technologien verwendet werden
+Das Backend muss über automatische Tests mit einer vollständigen Abdeckung verfügen
+Es muss ein Frontend implementiert werden.
+·          
+Das Frontend kommuniziert über die Serviceschicht mit dem Backend
+Das Frontend kommuniziert mit dem Backend über eine verschlüsselte Verbindung
+Der gesamte Build soll auf einem CI-System laufen können
+Die Datenbankzugriffe sollen per Prepared Statement erfolgen, damit die Datenbank nicht unnötig belastet wird
+Alle fachlichen Aktionen muss geloggt werden
+Die Zugriffszeiten auf alle fachlichen Methoden müssen in einem Monitoring-Lösung integriert werden können
+ 
+Aufgaben
+ 
+Erstellung einer Architektur-Dokumentation, die es erlaubt die Applikation von anderen Entwicklern weiterzuentwickeln. Diese Dokumentation muss die folgenden Fragen klären:
+·          
+Welche Technologien werden verwendet?
+Welche Skills sind für die Weiterentwicklung notwendig?
+Wie ist die Architektur des Gesamtsystems?
+Wie befinden sich die Sourcen des Systems?
+Wie sind die Sourcen organisiert?
+Welche Software brauche ich, um entwickeln zu können?
+Welche Release Units gibt es?
+Wie erfolgt ein Release?
+Welche Artefakte existieren, welches Format haben sie und wo sind sie zu finden?
+Wie funktioniert die Security?
+Wie funktioniert der Build?
+Wie funktioniert das Deployment?
+Standards für Names und Namespaces (z.B. Packages, Klassen, Exceptions, Interfaces, Services, Artefakte)
+Standards für Code Style
+Standards für Tests und automatisierte Tests
+Implementierung der Lösung anhand der o.g. Dokumentation, dabei muss geliefert werden:
+·          
+Ein versionierter Stand
+Die Quelltexte
+Die lauffähigen Artefakte
+DDL für die Datenbankstruktur (falls notwendig) und DML für die Stammdaten (falls notwendig)
+Die Ergebnisse (Dokumentation und Quelltexte) müssen in einem Sourcecode-Repository zur Verfügung gestellt werden.
+Vorstellung der Architektur-Dokumentation und der Implementierung in einem Zeitfenster von 45 Minuten
