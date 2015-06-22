@@ -61,3 +61,57 @@ Die lauffähigen Artefakte
 DDL für die Datenbankstruktur (falls notwendig) und DML für die Stammdaten (falls notwendig)
 Die Ergebnisse (Dokumentation und Quelltexte) müssen in einem Sourcecode-Repository zur Verfügung gestellt werden.
 Vorstellung der Architektur-Dokumentation und der Implementierung in einem Zeitfenster von 45 Minuten
+
+
+
+
+danke für die Fragen
+ 
+1.       Mit welcher Datenmenge ist schätzungsweise zu rechnen?
+a.       Anzahl der Anwender
+
+Die Applikation soll erst im eigenen Unternehmen eingesetzt werden (250 Mitarbeiter), falls das Produkt im eigenen Unternehmen erfolgreich ist, soll es später auch an andere Unternehmen verkauft werden. Einige interessierte Kunden haben über 100.000 Mitarbeiter
+
+
+b.      Anzahl der Projekte bzw. das Inkrement an neuen Projekten pro Monat/Jahr?
+
+Das ist natürlich abhängig von der Grösse der Firma. Es können aber durchaus 1000 Projekte sein und pro Jahr 100 neue dazukommen
+
+
+c.       Größenordnung für die Anzahl der Buchungen
+
+Effekt macht jeder Mitarbeiter zwei bis drei Buchungen pro Arbeitstag.
+
+
+2.       Wie viele Anwender werden schätzungsweise gleichzeitig mit der Anwendung arbeiten?
+
+Jeder Mitarbeiter der Firma, aber starke Häufungen gegen Ende des Tages, Ende der Woche und insbesondere Ende des Monats.
+
+
+3.       Gibt es Anforderungen an die Reaktionszeit einer Benutzerinteraktion, z.B. für das Speichern einer Buchung oder bis die Daten einer Sicht geladen sind?
+
+90% der Benutzeranfragen sollen innerhalb von 1s beantwortet werden, 100% innerhalb von 3s. Falls die eigentliche Antwort länger als 3s braucht, muss eine Anzeige erscheinen, die anzeigt, dass es noch dauert und wie lange es noch schätzungsweise dauert
+
+
+4.       Gibt es Anforderungen an die Verfügbarkeit / Ausfallsicherheit der Anwendung?
+
+99,5% Prozent Verfügbarkeit pro Monat
+
+
+5.       Gibt es eine fiktive bestehende IT-Systemlandschaft, die es zu berücksichtigen gilt?
+a.       Integration bzw. Interaktion mit anderen Systemen (CI, LDAP, Monitoring-Lösung und mögliche Anbindung an ein ESB wurden schon erwähnt)
+
+Eine Anbindung an andere Authentifizierungssysteme muss einfach (und pro Installation) möglich sein. Die Integration in die restliche Systemlandschaft sollte später per REST erfolgen. Ein ESB würde per REST die Werte z.B. abholen.
+
+
+6.       Gibt es eine fiktive Skill-Matrix der späteren Entwickler und des Betriebspersonals?
+
+In der Praxis würde man sowas natürlich fragen und eine konkrete Antwort erhalten. Hier würde ich bewusst sagen, dass der Kunde da sehr offen ist, da er wenig IT-Kompetenz hat und bereit ist welche aufzubauen, das aber von der Architektur und der Technologie der Lösung macht.
+
+
+7.       Hast du für die Architektur-Vorstellung genaue Vorgaben oder lässt du dich überraschen was wir draus machen?
+a.       Inhaltlich, sprachlich, zeitlich..
+
+Wir gehen das Thema mal am Freitag durch. Aber stellt euch mal die folgende Situation vor. Ihr seid als Architekt beauftragt, die Architektur vorzuschlagen und habt eine Audienz wo diverse Leute sind, und sicherlich auch Entscheider. Ihr habt ein Zeitfenster von ca. 30 Minuten. Welche Möglichkeiten der Präsentation würdet ihr machen? Welche Inhalte würdet ihr zeigen?
+
+Habe ich alle Fragen beantwortet?
